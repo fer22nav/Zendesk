@@ -55,6 +55,7 @@ function getFilterData() {
     });
     return result;
   }
+
   const opciones = serviceNestsuite(
     restDomainBase,
     accountId,
