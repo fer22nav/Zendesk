@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <!--   See Using Zendesk Garden:
+    https://developer.zendesk.com/apps/docs/developer-guide/setup#using-zendesk-garden
+    https://garden.zendesk.com/css-components/bedrock/
+    https://garden.zendesk.com/css-components/utilities/typography/
+   -->
+  <link rel="stylesheet" type="text/css" href="./css/style.css" />
+  <link rel="shortcut icon" href="./logo-small.png" type="image/x-icon" />
+  <!--STYLES-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous" />
+  <!--FONTS-->
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet" />
+  <!--ICONS-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+    crossorigin="anonymous" />
+</head>
+
+<body class="body">
+  <div id="info"></div>
+  <div id="home"></div>
+
+  <footer>
+    <div id="content"></div>
+    <div class="footer-inner v-align bg-white">
+      <img class="img-footer" src="./img/logo-strongpoint.png" alt="Strongpoint" />
+      <p class="m-0">
+        For issues you can
+        <a href="https://mysite.github.io/support" target="_blank">Report bugs</a>
+      </p>
+    </div>
+  </footer>
+
+  <!--HOME-->
+  <!--INFO TICKET-->
+  <script id="info-template" type="text/x-handlebars-template">
+      <div class='user container py-3'>
+        <div class='row'>
+          <div class='col-7 px-0 v-align-col'>
+            <h3 class='os-12 m-0 w-100'>
+              <span class='fw-bold os-16'>User: </span>{{user}}
+            </h3>
+          </div>
+          <div class='col-5 px-0 v-align-col'>
+            <button class='btn-acount os-10'>
+              Change Account
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class='user container py-3'>        
+        <div class='row'>
+          <div class='col px-0 v-align-col'>
+            <h3 class='os-12 m-0 w-100 '>
+              <span class='fw-bold os-16 me-2'>Status: </span><span class="status">PENDING APPROVAL</span>
+            </h3>
+            <h3 class='os-12 m-0 w-100 mt-3 '>
+              <span class='fw-bold os-16 me-2'>Link: </span><span class="link">Go to Record</span>
+            </h3>
+          </div>          
+        </div>
+      </div>
+      <div class='info container py-3 px-0'>
+        <div class='row'>
+          <div class='col'>
+            <h3 class='os-12 w-100'>
+              <span class='fw-bold os-16'>
+                Synchronized with:
+              </span> Strongpoint CS Testing
+            </h3>
+            <h3 class='os-12 w-100'>
+              <span class='fw-bold os-16'>
+                Policy:
+              </span> Default
+            </h3>
+            <h3 class="os-12 w-100">
+              <span class='fw-bold os-16'>
+                Change Level Required:
+              </span> Log Changes Only
+            </h3>
+          </div>
+          
+        </div>
+      </div>
+    </script>
+
+  <script id="home-template" type="text/x-handlebars-template">
+      <div class='body'>
+        <div class='accordion' id='accordionExample'>
+          <div class="accordion-item">
+            <h2 class="accordion-header p-0 pt-2" id="headingOne">
+              <button class="accordion-button os-12 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Bundle ID
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" >
+              <div class="accordion-body p-0 pt-2">
+                <div class='container'>
+                  <div class='row mb-2'>
+                    <div class='col px-0'>                      
+                      <div class="v-align">
+                        <input
+                          class='os-10 me-1'
+                          type='text'
+                          name='addbundle'
+                          placeholder=''
+                          id='inp-bundle'
+                        />
+                        <button type="button" class="btn-plus" >+</button>
+                      </div>      
+                      <div class='bundle-id-lista'>
+                        <ul class='bundle-lista listas my-0 py-2'>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class='accordion-item'>
+            <h2 class='accordion-header v-align' id='headingThree'>
+              <button
+                class='accordion-button collapsed os-12 fw-bold'
+                type='button'
+                data-bs-toggle='collapse'
+                data-bs-target='#collapseThree'
+                aria-expanded='false'
+                aria-controls='collapseThree'
+              >
+                Existing Customization
+              </button>              
+            </h2>
+            <div
+              id='collapseThree'
+              class='accordion-collapse collapse'
+              aria-labelledby='headingThree'
+            >
+              <div class='accordion-body p-0 pt-2'>
+                <button class='btn-search os-12 v-align justify-content-center' id="ventana2">
+                  <img class="icon-load" src="./img/loupe.svg" alt="">
+                  <p class='mb-0 mx-2 w-75'>
+                    Look up Customization
+                  </p>                  
+                </button>
+                <h3 class='os-16 fw-bold'>
+                  Existing Customizations
+                </h3>
+                <div class='bundle-id-lista'>
+                  <ul class='lookup-lista listas my-0 py-2'>
+                  </ul>
+                </div>                
+              </div>
+            </div>
+          </div>
+          <div class='accordion-item'>
+            <h2 class='accordion-header p-0 pt-2' id='headingTwo'>
+              <button
+                class='accordion-button collapsed os-12 fw-bold'
+                type='button'
+                data-bs-toggle='collapse'
+                data-bs-target='#collapseTwo'
+                aria-expanded='false'
+                aria-controls='collapseTwo'
+              >
+                Proposed Customization
+              </button>
+            </h2>
+            <div
+              id='collapseTwo'
+              class='accordion-collapse collapse'
+              aria-labelledby='headingTwo'
+            >
+              <div class='accordion-body p-0 pt-2'>
+                <button class='btn-search os-12 v-align justify-content-center' id="ventana1">
+                  <p class='mb-0 ms-2 mb-1 w-75'>
+                    Add Proposed Customization
+                  </p>
+                  
+                </button>
+                <h3 class='os-16 fw-bold'>
+                  Proposed Customizations
+                </h3>
+                <div class='bundle-id-lista'>
+                  <ul class='proposed-lista listas my-0 py-2'>
+                  </ul>
+                </div>   
+              </div>
+            </div>
+          </div>          
+        </div>
+        <div class='container'>
+          <div class='row'>
+            <div class='col-4 p-0'>
+              <button class='btn-send os-10'>
+                Impact Analisis
+              </button>
+            </div>
+            <div class='col-4 p-0'>              
+            </div>
+            <div class='col-4 p-0'>              
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+
+  <!--iNFO-->
+  <script id="requester-template" type="text/x-handlebars-template">
+      <table>
+        <tr>
+          <td>
+            Customer:
+          </td>
+          <td class='data'>
+            {{name}}
+          </td>
+        </tr>
+        {{#if tags}}
+          <tr>
+            <td>
+              Tags:
+            </td>
+            <td class='data'>
+              {{#each tags}}
+                {{this}}
+              {{/each}}
+            </td>
+          </tr>
+        {{/if}}
+        <tr>
+          <td>
+            Added:
+          </td>
+          <td class='data'>
+            {{created_at}}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Last signed in:
+          </td>
+          <td class='data'>
+            {{last_login_at}}
+          </td>
+        </tr>
+      </table>
+    </script>
+  <!--ERRORES-->
+  <script id="error-template" type="text/x-handlebars-template">
+      <p>
+        {{status}} - {{
+          statusText
+        }} error. Please report a bug at the link below.
+      </p>
+    </script>
+
+  <!--HANDLEBAR-->
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@4.3.3/dist/handlebars.min.js"></script>
+  <!--JQUERY-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous"></script>
+  <!--BOOTSTRAP-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+    crossorigin="anonymous"></script>
+  <!--ZENDESK-->
+  <script type="text/javascript"
+    src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
+
+
+  <script src="js/oauth-1.0a.js"></script>
+  <script src="js/crypto-js.js"></script>
+  <script src="js/index.js"></script>
+
+
+</body>
+
+</html>

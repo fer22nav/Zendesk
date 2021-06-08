@@ -1,0 +1,23 @@
+{
+  "name": "Stongpoint Integration",
+  "author": {
+    "name": "Strongpoint",
+    "email": "javier@robotly.io",
+    "url": ""
+  },
+  "defaultLocale": "en",
+  "private": true,
+  "singleInstall": true,
+  "location": {
+    "support": {
+      "ticket_sidebar": "assets/iframe.html",
+      "modal": "assets/modal.html"
+    }
+  },
+  "version": "1.0",
+  "frameworkVersion": "2.0",
+  "domainWhitelist": [
+    "localhost:4567",
+    "https://strongpoint5023.zendesk.com/"
+  ]
+}
