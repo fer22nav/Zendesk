@@ -156,7 +156,7 @@ function renderProposed() {
   let ProposedCustomization = JSON.parse(
     localStorage.getItem('ProposedCustomization')
   );
-  console.log('esto es lo q tengo q ver');
+  console.log('esto es');
   let i = 0;
   // ProposedCustomization.forEach((item) => {
   //   const li = document.createElement('li');
