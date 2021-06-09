@@ -3,7 +3,7 @@ var client = ZAFClient.init();
 document
   .querySelector('#modal')
   .addEventListener('submit', this.onModalSubmit.bind());
-//SUBMIT modal
+//SUBMIT
 function onModalSubmit() {
   event.preventDefault();
   submitData();
