@@ -1,4 +1,4 @@
-//INICIA EL CLIENTE
+//init client
 var client = ZAFClient.init();
 document
   .querySelector('#modal')
@@ -9,9 +9,12 @@ function onModalSubmit() {
   submitData();
   client.invoke('destroy');
 }
+
 function submitData() {
-  const resultado = obtenerDatos();
-  localStorage.setItem('ProposedCustomization', JSON.stringify(resultado));
+  const result = getFormData();
+  const localData = JSON.parse(localStorage.getItem('ProposedCustomization'));
+  localData.push(result);
+  localStorage.setItem('ProposedCustomization', JSON.stringify(localData));
 }
 $('#inp-type').change(function () {
   var prefix = $(this).val();
@@ -21,15 +24,6 @@ $('#inp-type').change(function () {
     document.getElementById('inp-scriptid').value = '';
   }
 });
-// function obtenerDatos() {
-//     type = document.getElementById("inp-type").value;
-//     scriptid = document.getElementById("inp-scriptid").value;
-//     let r = []
-//     if (scriptid !== '') {
-//         r.push(scriptid)
-//     }
-//     if (type !== '') {
-//         r.push(type)
-//     }
-//     return r;
-// }
+function getFormData() {
+  return (scriptid = document.getElementById('inp-scriptid').value);
+}
