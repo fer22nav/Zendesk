@@ -9,7 +9,7 @@ let existingProp = {};
 
 let name, scriptid, bundleid, type, from, to;
 let resultado;
-localStorage.setItem('ProposedCustomization', JSON.stringify([]));
+
 var client = ZAFClient.init();
 client.invoke('resize', {width: '100%', height: '900px'});
 //FORMATO DE FECHA
@@ -79,8 +79,8 @@ function clickDelete(name) {
   renderBundle(bundles);
 }
 function renderBundle() {
-  let bundleList = document.querySelector('.bundle-lista');
-  bundleList.innerHTML = '';
+  let bundleLista = document.querySelector('.bundle-lista');
+  bundleLista.innerHTML = '';
   let i = 0;
   let bundles = JSON.parse(localStorage.getItem('bundle-id'));
   bundles.forEach((bundle) => {
@@ -93,7 +93,7 @@ function renderBundle() {
         <ul class="dropdown-menu">
           <li><button class="dropdown-item" onclick="clickDelete('${bundle}')" data-value="${i}" id="bundle-delete">Remove</button></li>
       </div>`;
-    bundleList.appendChild(li);
+    bundleLista.appendChild(li);
     i++;
   });
 }
@@ -109,8 +109,8 @@ function addBundle() {
 }
 //Existing Customizations
 function renderlookup() {
-  let bundleList = document.querySelector('.lookup-lista');
-  bundleList.innerHTML = '';
+  let bundleLista = document.querySelector('.lookup-lista');
+  bundleLista.innerHTML = '';
   let selectedCustomizationValues = JSON.parse(
     localStorage.getItem('selectedCustomizationValues')
   );
@@ -127,7 +127,7 @@ function renderlookup() {
           <li><button class="dropdown-item" onclick="clickDeleteLookup('${item}')" data-value="${i}" id="bundle-delete">Remove</button></li>
           <li><button class="dropdown-item" data-value="${i}" id="ver-erd">ERD</button></li>
       </div>`;
-    bundleList.appendChild(li);
+    bundleLista.appendChild(li);
     i++;
   });
 }
@@ -149,26 +149,25 @@ function clickDeleteLookup(name) {
 }
 //Proposed Customization
 function renderProposed() {
-  let bundleList = document.querySelector('.proposed-lista');
-  bundleList.innerHTML = '';
+  let bundleLista = document.querySelector('.proposed-lista');
+  bundleLista.innerHTML = '';
   let ProposedCustomization = JSON.parse(
     localStorage.getItem('ProposedCustomization')
   );
-  console.log('esto es lo q tengo q ver');
   let i = 0;
-  // ProposedCustomization.forEach((item) => {
-  //   const li = document.createElement('li');
-  //   li.className = 'bundle-li';
-  //   li.innerHTML = `
-  //     <span class="w-75 ps-2">${item}</span>
-  //     <div class="btn-group dropdown w-25">
-  //       <button type="button" class="btn-up dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
-  //       <ul class="dropdown-menu">
-  //         <li><button class="dropdown-item" onclick="clickDeletePoposed('${item}')" data-value="${i}" id="bundle-delete">Remove</button></li>
-  //     </div>`;
-  //   bundleList.appendChild(li);
-  //   i++;
-  // });
+  ProposedCustomization.forEach((item) => {
+    const li = document.createElement('li');
+    li.className = 'bundle-li';
+    li.innerHTML = `      
+      <span class="w-75 ps-2">${item}</span>
+      <div class="btn-group dropdown w-25">
+        <button type="button" class="btn-up dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
+        <ul class="dropdown-menu">
+          <li><button class="dropdown-item" onclick="clickDeletePoposed('${item}')" data-value="${i}" id="bundle-delete">Remove</button></li>
+      </div>`;
+    bundleLista.appendChild(li);
+    i++;
+  });
 }
 function clickDeletePoposed(name) {
   let ProposedCustomization = JSON.parse(
@@ -377,7 +376,7 @@ function popModal(url, h) {
       modalClient.on('modal.close', function () {
         renderlookup();
         renderProposed();
-        console.log('The modal has been closed.');
+        // The modal has been closed.
       });
     });
 }

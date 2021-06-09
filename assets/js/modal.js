@@ -1,8 +1,13 @@
 //client init
 var client = ZAFClient.init();
-document
-  .querySelector('#modal')
-  .addEventListener('submit', this.onModalSubmit.bind());
+localStorage.setItem('filter1','[]');
+//console.log('filtro', filter);
+
+
+document.querySelector('#modal').addEventListener('submit', this.onModalSubmit.bind());
+
+
+
 var accountId = 'TSTDRV1724328';
 var consumerKey =
   '35f13daf104282ea3edfdd67cf3f21f58b8d9b1914305d7ec451aee0888ed112';
@@ -44,8 +49,7 @@ function onModalSubmit() {
   event.preventDefault();
   getFilterData();
 }
-let filter = JSON.parse(localStorage.getItem('filter1'));
-console.log('filtro', filter);
+
 function getFilterData() {
   function setPath(baseObject) {
     var result = '';
@@ -55,6 +59,7 @@ function getFilterData() {
     });
     return result;
   }
+  const filter = obtData()
 
   const opciones = serviceNestsuite(
     restDomainBase,
@@ -67,14 +72,19 @@ function getFilterData() {
       filter
     )}`
   );
+
   console.log('2', opciones);
   client.request(opciones).then((results) => {
     objectResp = JSON.parse(results);
+    objectResp = objectResp.results
     console.log('esto es lo q me responde', objectResp);
-    renderlook(filter);
+    renderlook(objectResp);
   });
 }
-function obtenerDatos() {
+
+
+
+function obtData() {
   value = document.getElementById('inp-name').value;
   modifiedby = document.getElementById('inp-modif').value;
   scriptid = document.getElementById('inp-scriptid').value;
@@ -97,17 +107,18 @@ function obtenerDatos() {
 function renderlook(res) {
   let resultList = document.querySelector('.resultList');
   resultList.innerHTML = '';
-  for (const property in res) {
-    if (res[property] !== '') {
+  for (let i = 0; i < res.length; i++) {
+     console.log(res[i])
+    if (res[i] !== '') {
       const tr = document.createElement('tr');
       tr.className = 'look-tr';
       tr.innerHTML = `
-                        <td headers="name" class="d-flex w-50">
-                            <input type="checkbox" class="lookupSelectedCusts my-auto check" name="lookupSelectedCusts" value="${res[property]}">
-                            <span class="my-auto">${res[property]}</span>                            
+                        <td headers="name" class="d-flex w-60">
+                            <input type="checkbox" class="lookupSelectedCusts my-auto check" name="lookupSelectedCusts" value="${res[i].values.name}">
+                            <span class="my-auto os-12">${res[i].values.name}</span>                            
                         </td>
-                        <td class="look-th d-flex">
-                            <p><strong>Type</strong>: <i>${property}</i></p>
+                        <td class="look-th d-flex w-40">
+                            <p class="os-12"><strong>Record Type</strong>:<i>${res[i].recordType}</i></p>
                         </td>`;
       resultList.appendChild(tr);
     }
