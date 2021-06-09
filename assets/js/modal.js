@@ -1,12 +1,11 @@
 //client init
 var client = ZAFClient.init();
-localStorage.setItem('filter1','[]');
+localStorage.setItem('filter1', '[]');
 //console.log('filtro', filter);
 
-
-document.querySelector('#modal').addEventListener('submit', this.onModalSubmit.bind());
-
-
+document
+  .querySelector('#modal')
+  .addEventListener('submit', this.onModalSubmit.bind());
 
 var accountId = 'TSTDRV1724328';
 var consumerKey =
@@ -21,7 +20,7 @@ var tokenSecret =
 var restDomainBase = `https://${accountId.toLowerCase()}.restlets.api.netsuite.com`;
 var httpMethod = 'GET';
 
-/*SELECT MODIFY BY*/
+//SELECT MODIFY BY
 const opciones = serviceNestsuite(
   restDomainBase,
   accountId,
@@ -59,7 +58,7 @@ function getFilterData() {
     });
     return result;
   }
-  const filter = obtData()
+  const filter = obtData();
 
   const opciones = serviceNestsuite(
     restDomainBase,
@@ -73,16 +72,12 @@ function getFilterData() {
     )}`
   );
 
-  console.log('2', opciones);
   client.request(opciones).then((results) => {
     objectResp = JSON.parse(results);
-    objectResp = objectResp.results
-    console.log('esto es lo q me responde', objectResp);
+    objectResp = objectResp.results;
     renderlook(objectResp);
   });
 }
-
-
 
 function obtData() {
   value = document.getElementById('inp-name').value;
@@ -108,7 +103,7 @@ function renderlook(res) {
   let resultList = document.querySelector('.resultList');
   resultList.innerHTML = '';
   for (let i = 0; i < res.length; i++) {
-     console.log(res[i])
+    console.log(res[i]);
     if (res[i] !== '') {
       const tr = document.createElement('tr');
       tr.className = 'look-tr';
@@ -207,6 +202,7 @@ function serviceNestsuite(
   }
   var restUrl = domainBase + path;
 
+  //OPTIONS CREATION
   var headerWithRealm = generateTbaHeader(
     restUrl,
     account_id,
