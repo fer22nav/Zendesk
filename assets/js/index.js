@@ -12,7 +12,8 @@ let resultado;
 
 var client = ZAFClient.init();
 client.invoke('resize', {width: '100%', height: '900px'});
-//FORMATO DE FECHA
+
+//Date format
 function formatDate(date) {
   var cdate = new Date(date);
   var options = {
@@ -23,6 +24,7 @@ function formatDate(date) {
   date = cdate.toLocaleDateString('es-ar', options);
   return date;
 }
+
 /*SHOW INFO */
 function showInfo(data, user) {
   let requester_data = {
