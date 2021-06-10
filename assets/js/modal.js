@@ -123,7 +123,6 @@ function getFilterData() {
   const scriptDeploy = 'flo_customization_api';
   const action = 'search';
   const callback = (results) => {
-    console.log(results);
     objectResp = JSON.parse(results);
     objectResp = objectResp.results;
     renderlook(objectResp);
@@ -198,13 +197,13 @@ function renderlook(res) {
   let resultList = document.querySelector('.resultList');
   resultList.innerHTML = '';
   for (let i = 0; i < res.length; i++) {
-    console.log(res[i]);
+    //console.log(res[i].id);
     if (res[i] !== '') {
       const tr = document.createElement('tr');
       tr.className = 'look-tr';
       tr.innerHTML = `
                         <td headers="name" class="d-flex w-60">
-                            <input type="checkbox" class="lookupSelectedCusts my-auto check" name="lookupSelectedCusts" value="${res[i].values.name}">
+                            <input type="checkbox" class="lookupSelectedCusts my-auto check" name="lookupSelectedCusts" value="${res[i].values.name}" data-id="${res[i].id}">
                             <span class="my-auto os-12">${res[i].values.name}</span>                            
                         </td>
                         <td class="look-th d-flex w-40">
@@ -219,13 +218,14 @@ function addCustom() {
   let inputs = $('.check');
   $('.check').each((i) => {
     if (inputs[i].checked) {
-      selectedCustomization.push(inputs[i].value);
+      selectedCustomization.push(inputs[i].dataset.id);
     }
   });
   localStorage.setItem(
     'selectedCustomizationValues',
     JSON.stringify(selectedCustomization)
   );
+  console.log(selectedCustomization)
   client.invoke('destroy');
 }
 function checkAll(source) {
