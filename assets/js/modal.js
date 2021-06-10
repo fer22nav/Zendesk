@@ -49,6 +49,11 @@ function transmitToNetsuite(
     });
     return result;
   }
+  console.log(
+    `/app/site/hosting/restlet.nl?script=customscript_${scriptDeploy}&deploy=customdeploy_${scriptDeploy}&action=${action}&${setPath(
+      formValues
+    )}`
+  );
   const params = serviceNestsuite(
     url,
     accId,
@@ -168,28 +173,29 @@ function renderlook(res) {
     }
   }
 }
+// /app/site/hosting/restlet.nl?script=customscript_flo_cr_api&deploy=customdeploy_flo_cr_api&action=addCustomizations&existing=207519,205513,205514
 function addCustom() {
-  let selectedCustomization = [];
+  let existingId = '';
   let inputs = $('.check');
   $('.check').each((i) => {
     if (inputs[i].checked) {
-      selectedCustomization.push(inputs[i].dataset.id);
+      // selectedCustomization.push(inputs[i].dataset.id);
+      existingId += `${existingId.length > 0 ? ',' : ''}${
+        inputs[i].dataset.id
+      }`;
     }
   });
-  localStorage.setItem(
-    'selectedCustomizationValues',
-    JSON.stringify(selectedCustomization)
-  );
   //addCostumizationNS
-
-  const scriptDeploy = 'flo_customization_api';
-  const action = 'allEmployees';
+  const selectedCustom = {existing: existingId, ticketID: '5'};
+  const scriptDeploy = 'flo_cr_api';
+  const action = 'addCustomizations';
   const callback = (results) => {
-    objectResp = JSON.parse(results);
-    const impmodif = document.querySelector('#inp-modif');
-    impmodif.innerHTML = objectResp.results;
+    localStorage.setItem(
+      'selectedCustomizationValues',
+      JSON.stringify(results.custNames)
+    );
+    client.invoke('destroy');
   };
-
   transmitToNetsuite(
     restDomainBase,
     accountId,
@@ -199,10 +205,9 @@ function addCustom() {
     tokenSecret,
     scriptDeploy,
     action,
-    selectOptions,
+    selectedCustom,
     callback
   );
-  client.invoke('destroy');
 }
 function checkAll(source) {
   let checkboxes = document.querySelectorAll('input[type="checkbox"]');
