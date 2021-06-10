@@ -66,44 +66,30 @@ function transmitToNetsuite(
     .catch((e) => console.log('Error Handling', e));
 }
 //SELECT MODIFY BY
-// function getFilterData() {
-//   const filter = obtData();
-//   const scriptDeploy = 'flo_customization_api';
-//   const action = 'search';
-//   const callback = (results) => {
-//     console.log(results);
-//     objectResp = JSON.parse(results);
-//     objectResp = objectResp.results;
-//     renderlook(objectResp);
-//   };
+function getModifyBy() {
+  const selectOptions = {value: 'customer'};
+  const scriptDeploy = 'flo_customization_api';
+  const action = 'allEmployees';
+  const callback = (results) => {
+    objectResp = JSON.parse(results);
+    const impmodif = document.querySelector('#inp-modif');
+    impmodif.innerHTML = objectResp.results;
+  };
 
-//   transmitToNetsuite(
-//     restDomainBase,
-//     accountId,
-//     consumerKey,
-//     consumerSecret,
-//     tokenId,
-//     tokenSecret,
-//     scriptDeploy,
-//     action,
-//     filter,
-//     callback
-//   );
-// }
-const opciones = serviceNestsuite(
-  restDomainBase,
-  accountId,
-  consumerKey,
-  consumerSecret,
-  tokenId,
-  tokenSecret,
-  '/app/site/hosting/restlet.nl?script=customscript_flo_customization_api&deploy=customdeploy_flo_customization_api&action=allEmployees&value=customer'
-);
-client.request(opciones).then((results) => {
-  objectResp = JSON.parse(results);
-  const impmodif = document.querySelector('#inp-modif');
-  impmodif.innerHTML = objectResp.results;
-});
+  transmitToNetsuite(
+    restDomainBase,
+    accountId,
+    consumerKey,
+    consumerSecret,
+    tokenId,
+    tokenSecret,
+    scriptDeploy,
+    action,
+    selectOptions,
+    callback
+  );
+}
+getModifyBy();
 
 //SUBMIT
 function onModalSubmit() {
@@ -123,7 +109,6 @@ function getFilterData() {
   const scriptDeploy = 'flo_customization_api';
   const action = 'search';
   const callback = (results) => {
-    console.log(results);
     objectResp = JSON.parse(results);
     objectResp = objectResp.results;
     renderlook(objectResp);
@@ -142,37 +127,6 @@ function getFilterData() {
     callback
   );
 }
-
-// function getFilterData() {
-//   function setPath(baseObject) {
-//     var result = '';
-//     Object.entries(baseObject).forEach(([item, prop]) => {
-//       if (prop.trim() !== '')
-//         result += `${result.length > 0 ? '&' : ''}${item}=${prop.trim()}`;
-//     });
-//     return result;
-//   }
-//   const filter = obtData();
-
-//   const opciones = serviceNestsuite(
-//     restDomainBase,
-//     accountId,
-//     consumerKey,
-//     consumerSecret,
-//     tokenId,
-//     tokenSecret,
-//     `/app/site/hosting/restlet.nl?script=customscript_flo_customization_api&deploy=customdeploy_flo_customization_api&action=search&${setPath(
-//       filter
-//     )}`
-//   );
-
-// client.request(opciones).then((results) => {
-//   console.log(results);
-//   objectResp = JSON.parse(results);
-//   objectResp = objectResp.results;
-//   renderlook(objectResp);
-// });
-//}
 
 function obtData() {
   value = document.getElementById('inp-name').value;
@@ -225,6 +179,28 @@ function addCustom() {
   localStorage.setItem(
     'selectedCustomizationValues',
     JSON.stringify(selectedCustomization)
+  );
+  //addCostumizationNS
+
+  const scriptDeploy = 'flo_customization_api';
+  const action = 'allEmployees';
+  const callback = (results) => {
+    objectResp = JSON.parse(results);
+    const impmodif = document.querySelector('#inp-modif');
+    impmodif.innerHTML = objectResp.results;
+  };
+
+  transmitToNetsuite(
+    restDomainBase,
+    accountId,
+    consumerKey,
+    consumerSecret,
+    tokenId,
+    tokenSecret,
+    scriptDeploy,
+    action,
+    selectOptions,
+    callback
   );
   client.invoke('destroy');
 }
