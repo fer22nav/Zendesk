@@ -1,7 +1,6 @@
 //client init
 var client = ZAFClient.init();
 localStorage.setItem('filter1', '[]');
-//console.log('filtro', filter);
 
 document
   .querySelector('#modal')
@@ -20,7 +19,77 @@ var tokenSecret =
 var restDomainBase = `https://${accountId.toLowerCase()}.restlets.api.netsuite.com`;
 var httpMethod = 'GET';
 
+/// EDITANDO EMI FER
+function transmitToNetsuite(
+  url,
+  accId,
+  key,
+  secret,
+  tokId,
+  tokSecret,
+  scriptDeploy,
+  action,
+  formValues,
+  callback
+) {
+  // Function to unify transmitions of differents actions with netsuit
+  // url is the current Rest Domain Base
+  // accId is the currect account Id
+  // key and secret is the current consumer Key and Secret
+  // tokId and tokSecret is the current Id and Secret of token
+  // scriptDeploy is the current script using into netsuit
+  // action is the action to be executed
+  // formValues is the object with the data to be transmited to NetSuite into path
+  // callback is the callback to be used when all work as expected
+  function setPath(baseObject) {
+    var result = '';
+    Object.entries(baseObject).forEach(([item, prop]) => {
+      if (prop.trim() !== '')
+        result += `${result.length > 0 ? '&' : ''}${item}=${prop.trim()}`;
+    });
+    return result;
+  }
+  const params = serviceNestsuite(
+    url,
+    accId,
+    key,
+    secret,
+    tokId,
+    tokSecret,
+    `/app/site/hosting/restlet.nl?script=customscript_${scriptDeploy}&deploy=customdeploy_${scriptDeploy}&action=${action}&${setPath(
+      formValues
+    )}`
+  );
+  client
+    .request(params)
+    .then((results) => callback(results))
+    .catch((e) => console.log('Error Handling', e));
+}
 //SELECT MODIFY BY
+// function getFilterData() {
+//   const filter = obtData();
+//   const scriptDeploy = 'flo_customization_api';
+//   const action = 'search';
+//   const callback = (results) => {
+//     console.log(results);
+//     objectResp = JSON.parse(results);
+//     objectResp = objectResp.results;
+//     renderlook(objectResp);
+//   };
+
+//   transmitToNetsuite(
+//     restDomainBase,
+//     accountId,
+//     consumerKey,
+//     consumerSecret,
+//     tokenId,
+//     tokenSecret,
+//     scriptDeploy,
+//     action,
+//     filter,
+//     callback
+//   );
+// }
 const opciones = serviceNestsuite(
   restDomainBase,
   accountId,
@@ -50,34 +119,60 @@ function onModalSubmit() {
 }
 
 function getFilterData() {
-  function setPath(baseObject) {
-    var result = '';
-    Object.entries(baseObject).forEach(([item, prop]) => {
-      if (prop.trim() !== '')
-        result += `${result.length > 0 ? '&' : ''}${item}=${prop.trim()}`;
-    });
-    return result;
-  }
   const filter = obtData();
+  const scriptDeploy = 'flo_customization_api';
+  const action = 'search';
+  const callback = (results) => {
+    console.log(results);
+    objectResp = JSON.parse(results);
+    objectResp = objectResp.results;
+    renderlook(objectResp);
+  };
 
-  const opciones = serviceNestsuite(
+  transmitToNetsuite(
     restDomainBase,
     accountId,
     consumerKey,
     consumerSecret,
     tokenId,
     tokenSecret,
-    `/app/site/hosting/restlet.nl?script=customscript_flo_customization_api&deploy=customdeploy_flo_customization_api&action=search&${setPath(
-      filter
-    )}`
+    scriptDeploy,
+    action,
+    filter,
+    callback
   );
-
-  client.request(opciones).then((results) => {
-    objectResp = JSON.parse(results);
-    objectResp = objectResp.results;
-    renderlook(objectResp);
-  });
 }
+
+// function getFilterData() {
+//   function setPath(baseObject) {
+//     var result = '';
+//     Object.entries(baseObject).forEach(([item, prop]) => {
+//       if (prop.trim() !== '')
+//         result += `${result.length > 0 ? '&' : ''}${item}=${prop.trim()}`;
+//     });
+//     return result;
+//   }
+//   const filter = obtData();
+
+//   const opciones = serviceNestsuite(
+//     restDomainBase,
+//     accountId,
+//     consumerKey,
+//     consumerSecret,
+//     tokenId,
+//     tokenSecret,
+//     `/app/site/hosting/restlet.nl?script=customscript_flo_customization_api&deploy=customdeploy_flo_customization_api&action=search&${setPath(
+//       filter
+//     )}`
+//   );
+
+// client.request(opciones).then((results) => {
+//   console.log(results);
+//   objectResp = JSON.parse(results);
+//   objectResp = objectResp.results;
+//   renderlook(objectResp);
+// });
+//}
 
 function obtData() {
   value = document.getElementById('inp-name').value;
