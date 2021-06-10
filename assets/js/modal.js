@@ -49,11 +49,7 @@ function transmitToNetsuite(
     });
     return result;
   }
-  console.log(
-    `/app/site/hosting/restlet.nl?script=customscript_${scriptDeploy}&deploy=customdeploy_${scriptDeploy}&action=${action}&${setPath(
-      formValues
-    )}`
-  );
+
   const params = serviceNestsuite(
     url,
     accId,
@@ -185,7 +181,7 @@ function addCustom() {
       }`;
     }
   });
-  //addCostumizationNS
+  //addCostumization existing NS
   const selectedCustom = {existing: existingId, ticketID: '5'};
   const scriptDeploy = 'flo_cr_api';
   const action = 'addCustomizations';
