@@ -1,12 +1,7 @@
-// Initialise Apps framework client. See also:
-// https://developer.zendesk.com/apps/docs/developer-guide/getting_started
-
-console.log('Comienza el script');
 //VARIABLES
 let bundles = [];
 let existingCustom = {};
 let existingProp = {};
-
 let name, scriptid, bundleid, type, from, to;
 let resultado;
 
@@ -195,13 +190,12 @@ function requestTicketInfo(client, data) {
     dataType: 'json',
   };
   let user = data.ticket.requester.name;
-
+  console.log( data.ticket)
   client.request(settings).then(
     function (data) {
       showInfo(data, user);
       showHome(data);
       addBundle();
-
       //crearModal(client)
     },
     function (response) {
