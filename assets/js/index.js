@@ -44,11 +44,11 @@ function showHome(data) {
   let html = template(requester_data);
   $('#home').html(html);
 
-  let btn2 = document.getElementById('ventana2');
+  let btn2 = document.getElementById('proposed');
   btn2.addEventListener('click', () => {
     popModal('assets/modal.html', '410');
   });
-  let btn3 = document.getElementById('ventana1');
+  let btn3 = document.getElementById('lookup');
   btn3.addEventListener('click', () => {
     popModal('assets/modalList.html', '240');
   });
