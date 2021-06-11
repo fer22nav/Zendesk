@@ -440,6 +440,13 @@ try {
     localStorage.setItem('zendesk-tiquet-name', data.ticket.subject);
     localStorage.setItem('zendesk-tiquet-description', data.ticket.description);
     localStorage.setItem('zendesk-tiquet-status', data.ticket.status);
+    const status = data.ticket.status
+
+    
+
+
+
+
     showInfo(data, data.ticket.requester.name);
     showHome(data);
     addBundle();
