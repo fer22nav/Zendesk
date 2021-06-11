@@ -189,9 +189,13 @@ function addCustom() {
   const scriptDeploy = 'flo_cr_api';
   const action = 'addCustomizations';
   const callback = (results) => {
+    let existingList = [];
+    results.custIds.forEach((id, idx) => {
+      existingList.push({name: results.custNames[idx], id: id});
+    });
     localStorage.setItem(
       'selectedCustomizationValues',
-      JSON.stringify(results.custNames)
+      JSON.stringify(existingList)
     );
     client.invoke('destroy');
   };
