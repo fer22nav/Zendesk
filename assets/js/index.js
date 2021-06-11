@@ -190,6 +190,7 @@ function requestTicketInfo(client, data) {
     dataType: 'json',
   };
   let user = data.ticket.requester.name;
+  localStorage.setItem('zendesk-tiquet-id',data.ticket.id) 
   console.log( data.ticket)
   client.request(settings).then(
     function (data) {

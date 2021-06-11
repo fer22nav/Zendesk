@@ -99,7 +99,24 @@ body {
   color: #679dcf;
 }
 /*MAIN*/
-
+.btn-aprove {
+  background: #318E6A;
+  border-radius: 8px;
+  border: none;
+  color: #fff;
+  width: 50%;
+  margin-right: 5%;
+}
+.btn-remove {
+  background: #D54352;
+  border-radius: 8px;
+  border: none;
+  color: #fff;
+  width: 40%;
+}
+.btn-remove img,.btn-aprove img {
+  width: 10%;
+}
 input, select{
   color: #000000;
   width: 100%;
