@@ -634,3 +634,32 @@ function getCustomizations() {
   );
 }
 getCustomizations();
+
+function updateTicketStatus(newState) {
+  const scriptDeploy = 'flo_cr_api';
+  const action = 'createCR';
+  const params = {
+    ticketID: localStorage.getItem('zendesk-tiquet-id'),
+    changeNum: localStorage.getItem('zendesk-tiquet-name'),
+    description: localStorage.getItem('zendesk-tiquet-description'),
+    state: newState,
+    // bundleId: bundleId,
+  };
+
+  const callback = (results) => {
+    console.log('Update Ticket Results', results);
+  };
+
+  transmitToNetsuite(
+    restDomainBase,
+    accountId,
+    consumerKey,
+    consumerSecret,
+    tokenId,
+    tokenSecret,
+    scriptDeploy,
+    action,
+    params,
+    callback
+  );
+}
