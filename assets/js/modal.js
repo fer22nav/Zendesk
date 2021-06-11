@@ -172,6 +172,7 @@ function renderlook(res) {
 // /app/site/hosting/restlet.nl?script=customscript_flo_cr_api&deploy=customdeploy_flo_cr_api&action=addCustomizations&existing=207519,205513,205514
 function addCustom() {
   let existingId = '';
+  let newValues = [];
   let inputs = $('.check');
   $('.check').each((i) => {
     if (inputs[i].checked) {
@@ -179,6 +180,7 @@ function addCustom() {
       existingId += `${existingId.length > 0 ? ',' : ''}${
         inputs[i].dataset.id
       }`;
+      newValues.push({id: inputs[i].dataset.id, name: inputs[i].dataset.value});
     }
   });
   //addCostumization existing NS
@@ -189,13 +191,19 @@ function addCustom() {
   const scriptDeploy = 'flo_cr_api';
   const action = 'addCustomizations';
   const callback = (results) => {
-    let existingList = [];
-    results.custIds.forEach((id, idx) => {
-      existingList.push({name: results.custNames[idx], id: id});
-    });
+    // let existingList = [];
+    // results.custIds.forEach((id, idx) => {
+    //   existingList.push({name: results.custNames[idx], id: id});
+    // });
+    // localStorage.setItem(
+    //   'selectedCustomizationValues',
+    //   JSON.stringify(existingList)
+    // );
     localStorage.setItem(
       'selectedCustomizationValues',
-      JSON.stringify(existingList)
+      JSON.stringify(
+        localStorage.getItem('selectedCustomizationValues').concat(newValues)
+      )
     );
     client.invoke('destroy');
   };
