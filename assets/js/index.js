@@ -6,7 +6,7 @@ let name, scriptid, bundleid, type, from, to;
 let resultado;
 
 var client = ZAFClient.init();
-client.invoke('resize', {width: '100%', height: '900px'});
+client.invoke('resize', { width: '100%', height: '900px' });
 
 //Date format
 function formatDate(date) {
@@ -262,19 +262,24 @@ function clickDeleteProposed(name) {
   // renderProposed();
 }
 
+/*
 function requestTicketInfo(client, data) {
   let settings = {
     url: '/api/v2/tickets/' + data.ticket.id + '.json',
     type: 'GET',
     dataType: 'json',
   };
-  let user = data.ticket.requester.name;
-  localStorage.setItem('zendesk-tiquet-id', data.ticket.id);
-
+  console.log(data)
   client.request(settings).then(
-    function (data) {
-      showInfo(data, user);
-      showHome(data);
+    function (data2) {
+      let user = data.ticket.requester.name;
+      console.log(data2)
+      localStorage.setItem('zendesk-tiquet-id', data2.ticket.id);
+      localStorage.setItem('zendesk-tiquet-name', data2.ticket.subject);
+      localStorage.setItem('zendesk-tiquet-description', data2.ticket.description);
+      localStorage.setItem('zendesk-tiquet-status', data2.ticket.status);
+      showInfo(data2, user);
+      showHome(data2);
       addBundle();
       //crearModal(client)
     },
@@ -282,7 +287,10 @@ function requestTicketInfo(client, data) {
       showError(response);
     }
   );
-}
+
+
+  // updateTicketStatus('PendingApproval')
+}*/
 
 /*LOGIN*/
 function loginUser(client, id) {
@@ -416,7 +424,7 @@ function crearModal(client) {
       var textareaValue = evt.target.querySelector('textarea').value;
       evt.preventDefault();
       localStorage.setItem('modalText', textareaValue);
-      client.trigger('modal.save', {text: textareaValue});
+      client.trigger('modal.save', { text: textareaValue });
       client.invoke('destroy');
     },
   };
@@ -426,14 +434,23 @@ function crearModal(client) {
   });
 }
 try {
-  client.get('ticket').then(function (data) {
-    requestTicketInfo(client, data);
+  client.get('ticket').then(function (data) {    
+    console.log(data)
+    localStorage.setItem('zendesk-tiquet-id', data.ticket.id);
+    localStorage.setItem('zendesk-tiquet-name', data.ticket.subject);
+    localStorage.setItem('zendesk-tiquet-description', data.ticket.description);
+    localStorage.setItem('zendesk-tiquet-status', data.ticket.status);
+    showInfo(data, data.ticket.requester.name);
+    showHome(data);
+    addBundle();
+    //crearModal(client)
+    //requestTicketInfo(client, data);
     //requestUserInfo(client, user_id);
     //loginUser(client, user_id)
     //requestTicketInfo(client, id)
   });
 } catch (error) {
-  console.log('erro');
+  console.log('error');
 }
 function popModal(url, h) {
   console.log('Open modal');
@@ -441,14 +458,14 @@ function popModal(url, h) {
     .invoke('instances.create', {
       location: 'modal',
       url: url,
-      size: {width: '750px', height: h},
+      size: { width: '750px', height: h },
     })
     .then(function (modalContext) {
       // The modal is on the screen now!
       var modalClient = client.instance(
         modalContext['instances.create'][0].instanceGuid
       );
-      client.on('instance.registered', function () {});
+      client.on('instance.registered', function () { });
       modalClient.on('modal.close', function () {
         renderlookup();
         renderProposed();
@@ -601,12 +618,12 @@ function serviceNestsuite(
 function getCustomizations() {
   const scriptDeploy = 'flo_cr_api';
   const action = 'getCRData';
-  const ticketId = {ticketID: localStorage.getItem('zendesk-tiquet-id')};
+  const ticketId = { ticketID: localStorage.getItem('zendesk-tiquet-id') };
 
   const callback = (results) => {
     let existingList = [];
     results.custIds.forEach((id, idx) => {
-      existingList.push({name: results.custNames[idx], id: id});
+      existingList.push({ name: results.custNames[idx], id: id });
     });
     localStorage.setItem(
       'selectedCustomizationValues',
@@ -634,3 +651,33 @@ function getCustomizations() {
   );
 }
 getCustomizations();
+
+
+function updateTicketStatus(newState) {
+  const scriptDeploy = 'flo_cr_api';
+  const action = 'createCR';
+  const params = {
+    ticketID: localStorage.getItem('zendesk-tiquet-id'),
+    changeNum: localStorage.getItem('zendesk-tiquet-name'),
+    description: localStorage.getItem('zendesk-tiquet-description'),
+    state: newState,
+    // bundleId: bundleId,
+  };
+
+  const callback = (results) => {
+    console.log('Update Ticket Results', results);
+  };
+
+  transmitToNetsuite(
+    restDomainBase,
+    accountId,
+    consumerKey,
+    consumerSecret,
+    tokenId,
+    tokenSecret,
+    scriptDeploy,
+    action,
+    params,
+    callback
+  );
+}
