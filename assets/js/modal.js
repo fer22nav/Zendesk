@@ -182,7 +182,10 @@ function addCustom() {
     }
   });
   //addCostumization existing NS
-  const selectedCustom = {existing: existingId, ticketID: '5'};
+  const selectedCustom = {
+    existing: existingId,
+    ticketID: localStorage.getItem('zendesk-tiquet-id'),
+  };
   const scriptDeploy = 'flo_cr_api';
   const action = 'addCustomizations';
   const callback = (results) => {
