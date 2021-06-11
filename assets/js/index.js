@@ -6,7 +6,7 @@ let name, scriptid, bundleid, type, from, to;
 let resultado;
 
 var client = ZAFClient.init();
-client.invoke('resize', { width: '100%', height: '900px' });
+client.invoke('resize', {width: '100%', height: '900px'});
 
 //Date format
 function formatDate(date) {
@@ -424,7 +424,7 @@ function crearModal(client) {
       var textareaValue = evt.target.querySelector('textarea').value;
       evt.preventDefault();
       localStorage.setItem('modalText', textareaValue);
-      client.trigger('modal.save', { text: textareaValue });
+      client.trigger('modal.save', {text: textareaValue});
       client.invoke('destroy');
     },
   };
@@ -434,8 +434,8 @@ function crearModal(client) {
   });
 }
 try {
-  client.get('ticket').then(function (data) {    
-    console.log(data)
+  client.get('ticket').then(function (data) {
+    console.log(data);
     localStorage.setItem('zendesk-tiquet-id', data.ticket.id);
     localStorage.setItem('zendesk-tiquet-name', data.ticket.subject);
     localStorage.setItem('zendesk-tiquet-description', data.ticket.description);
@@ -465,14 +465,14 @@ function popModal(url, h) {
     .invoke('instances.create', {
       location: 'modal',
       url: url,
-      size: { width: '750px', height: h },
+      size: {width: '750px', height: h},
     })
     .then(function (modalContext) {
       // The modal is on the screen now!
       var modalClient = client.instance(
         modalContext['instances.create'][0].instanceGuid
       );
-      client.on('instance.registered', function () { });
+      client.on('instance.registered', function () {});
       modalClient.on('modal.close', function () {
         renderlookup();
         renderProposed();
@@ -625,12 +625,12 @@ function serviceNestsuite(
 function getCustomizations() {
   const scriptDeploy = 'flo_cr_api';
   const action = 'getCRData';
-  const ticketId = { ticketID: localStorage.getItem('zendesk-tiquet-id') };
+  const ticketId = {ticketID: localStorage.getItem('zendesk-tiquet-id')};
 
   const callback = (results) => {
     let existingList = [];
     results.custIds.forEach((id, idx) => {
-      existingList.push({ name: results.custNames[idx], id: id });
+      existingList.push({name: results.custNames[idx], id: id});
     });
     localStorage.setItem(
       'selectedCustomizationValues',
@@ -667,7 +667,7 @@ function updateTicketStatus(newState) {
     changeNum: localStorage.getItem('zendesk-tiquet-name'),
     description: localStorage.getItem('zendesk-tiquet-description'),
     state: newState,
-    // bundleId: bundleId,
+    bundleId: 'false',
   };
 
   const callback = (results) => {
