@@ -44,11 +44,14 @@ function showHome(data) {
   let html = template(requester_data);
   $('#home').html(html);
 
-  let btn2 = document.getElementById('ventana2');
+  let btn2 = document.getElementById('lookup');
+  console.log(btn2)
+
   btn2.addEventListener('click', () => {
+    console.log('object')
     popModal('assets/modal.html', '410');
   });
-  let btn3 = document.getElementById('ventana1');
+  let btn3 = document.getElementById('proposed');
   btn3.addEventListener('click', () => {
     popModal('assets/modalList.html', '240');
   });
@@ -222,6 +225,68 @@ function loginUser(client, id) {
     }
   );
 }
+
+try {
+  client.get('ticket').then(function (data) {
+    requestTicketInfo(client, data);
+    //requestUserInfo(client, user_id);
+    //loginUser(client, user_id)
+    //requestTicketInfo(client, id)
+  });
+} catch (error) {
+  console.log('erro');
+}
+function popModal(url, h) {
+  console.log('crear modal');
+  client
+    .invoke('instances.create', {
+      location: 'modal',
+      url: url,
+      size: {width: '750px', height: h},
+    })
+    .then(function (modalContext) {
+      // The modal is on the screen now!
+      var modalClient = client.instance(
+        modalContext['instances.create'][0].instanceGuid
+      );
+      client.on('instance.registered', function () {});
+      modalClient.on('modal.close', function () {
+        renderlookup();
+        renderProposed();
+        // The modal has been closed.
+      });
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 function crearModal(client) {
   function init(location) {
     location === 'modal' ? new ModalApp() : new TicketApp();
@@ -345,35 +410,4 @@ function crearModal(client) {
   client.on('app.registered', function (data) {
     init(data.context.location);
   });
-}
-try {
-  client.get('ticket').then(function (data) {
-    requestTicketInfo(client, data);
-    //requestUserInfo(client, user_id);
-    //loginUser(client, user_id)
-    //requestTicketInfo(client, id)
-  });
-} catch (error) {
-  console.log('erro');
-}
-function popModal(url, h) {
-  console.log('crear modal');
-  client
-    .invoke('instances.create', {
-      location: 'modal',
-      url: url,
-      size: {width: '750px', height: h},
-    })
-    .then(function (modalContext) {
-      // The modal is on the screen now!
-      var modalClient = client.instance(
-        modalContext['instances.create'][0].instanceGuid
-      );
-      client.on('instance.registered', function () {});
-      modalClient.on('modal.close', function () {
-        renderlookup();
-        renderProposed();
-        // The modal has been closed.
-      });
-    });
-}
+}*/
