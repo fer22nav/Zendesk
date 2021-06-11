@@ -652,7 +652,6 @@ function getCustomizations() {
 }
 getCustomizations();
 
-
 function updateTicketStatus(newState) {
   const scriptDeploy = 'flo_cr_api';
   const action = 'createCR';
