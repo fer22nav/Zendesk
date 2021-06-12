@@ -111,7 +111,6 @@ function renderlookup() {
   let selectedCustomizationValues = JSON.parse(
     localStorage.getItem('selectedCustomizationValues')
   );
-  console.log(selectedCustomizationValues)
   selectedCustomizationValues.forEach((item) => {
     const li = document.createElement('li');
     li.className = 'bundle-li';
@@ -333,7 +332,6 @@ try {
   console.log('error');
 }
 function popModal(url, h) {
-  console.log('Open modal');
   client
     .invoke('instances.create', {
       location: 'modal',
@@ -391,7 +389,6 @@ function transmitToNetsuite(
   function setPath(baseObject) {
     var result = '';
     Object.entries(baseObject).forEach(([item, prop]) => {
-      console.log(item, prop)
       if (prop.trim() !== '')
         result += `${result.length > 0 ? '&' : ''}${item}=${prop.trim()}`;
     });

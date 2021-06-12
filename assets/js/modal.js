@@ -172,15 +172,15 @@ function renderlook(res) {
 // /app/site/hosting/restlet.nl?script=customscript_flo_cr_api&deploy=customdeploy_flo_cr_api&action=addCustomizations&existing=207519,205513,205514
 function addCustom() {
   let existingId = '';
-  let newValues = [];
   let inputs = $('.check');
+  const newList = JSON.parse(localStorage.getItem('selectedCustomizationValues'))
   $('.check').each((i) => {
     if (inputs[i].checked) {
       // selectedCustomization.push(inputs[i].dataset.id);
       existingId += `${existingId.length > 0 ? ',' : ''}${
         inputs[i].dataset.id
       }`;
-      newValues.push({id: inputs[i].dataset.id, name: inputs[i].dataset.value});
+      newList.push({id: inputs[i].dataset.id, name: inputs[i].value});
     }
   });
   //addCostumization existing NS
@@ -190,6 +190,7 @@ function addCustom() {
   };
   const scriptDeploy = 'flo_cr_api';
   const action = 'addCustomizations';
+  
   const callback = (results) => {
     // let existingList = [];
     // results.custIds.forEach((id, idx) => {
@@ -201,9 +202,7 @@ function addCustom() {
     // );
     localStorage.setItem(
       'selectedCustomizationValues',
-      JSON.stringify(
-        JSON.parse(localStorage.getItem('selectedCustomizationValues')).concat(newValues)
-      )
+      JSON.stringify(newList)
     );
     
     client.invoke('destroy');
