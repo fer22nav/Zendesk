@@ -318,6 +318,7 @@ try {
       await localStorage.setItem('zendesk-tiquet-status', data.ticket.status);
       const status = data.ticket.status
       await getCustomizations();
+      console.log(data)
 
       showInfo(data, data.ticket.requester.name);
       showHome(data);
@@ -375,7 +376,8 @@ function transmitToNetsuite(
   scriptDeploy,
   action,
   formValues,
-  callback
+  callback,
+  callbackError
 ) {
   // Function to unify transmitions of differents actions with netsuit
   // url is the current Rest Domain Base
@@ -409,7 +411,15 @@ function transmitToNetsuite(
   client
     .request(params)
     .then((results) => callback(results))
-    .catch((e) => console.log('Error Handling', e));
+    .catch((e) => {
+      console.log('Error Handling', e)
+      if (callbackError) {
+        callbackError(e)
+      } else {
+        console.log('Error Handling', e)
+      }
+
+    });
 }
 function serviceNestsuite(
   domainBase,
@@ -498,6 +508,7 @@ function getCustomizations() {
   const action = 'getCRData';
   const ticketId = { ticketID: localStorage.getItem('zendesk-tiquet-id') };
   const callback = (results) => {
+    console.log(object)
     let existingList = [];
     results.custIds.forEach((id, idx) => {
       existingList.push({ name: results.custNames[idx], id: id });
@@ -512,7 +523,14 @@ function getCustomizations() {
     );
     renderlookup();
     renderProposed();
+    //localStorage.setItem('itemNew', inactive ? '' : 'true');
+    
   };
+
+  const callbackError = () => {
+    localStorage.setItem('itemNew', '');
+
+  }
 
   transmitToNetsuite(
     restDomainBase,
@@ -524,7 +542,8 @@ function getCustomizations() {
     scriptDeploy,
     action,
     ticketId,
-    callback
+    callback,
+    callbackError
   );
 }
 
