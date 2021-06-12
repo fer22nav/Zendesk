@@ -441,7 +441,10 @@ try {
     localStorage.setItem('zendesk-tiquet-description', data.ticket.description);
     localStorage.setItem('zendesk-tiquet-status', data.ticket.status);
     const status = data.ticket.status
-
+    if ( status === open){
+      updateTicketStatus('In progres')
+    }
+    
     
 
 
