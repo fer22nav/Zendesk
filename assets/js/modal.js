@@ -202,9 +202,10 @@ function addCustom() {
     localStorage.setItem(
       'selectedCustomizationValues',
       JSON.stringify(
-        localStorage.getItem('selectedCustomizationValues').concat(newValues)
+        JSON.parse(localStorage.getItem('selectedCustomizationValues')).concat(newValues)
       )
     );
+    
     client.invoke('destroy');
   };
   transmitToNetsuite(

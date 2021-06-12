@@ -6,7 +6,7 @@ let name, scriptid, bundleid, type, from, to;
 let resultado;
 
 var client = ZAFClient.init();
-client.invoke('resize', {width: '100%', height: '900px'});
+client.invoke('resize', { width: '100%', height: '900px' });
 
 //Date format
 function formatDate(date) {
@@ -111,7 +111,7 @@ function renderlookup() {
   let selectedCustomizationValues = JSON.parse(
     localStorage.getItem('selectedCustomizationValues')
   );
-
+  console.log(selectedCustomizationValues)
   selectedCustomizationValues.forEach((item) => {
     const li = document.createElement('li');
     li.className = 'bundle-li';
@@ -309,155 +309,26 @@ function loginUser(client, id) {
     }
   );
 }
-function crearModal(client) {
-  function init(location) {
-    location === 'modal' ? new ModalApp() : new TicketApp();
-  }
 
-  function mainEl() {
-    return document.querySelector('.ventana');
-  }
-
-  function replaceLineBreaks(str) {
-    return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
-  }
-
-  var TicketApp = function () {
-    var text = localStorage.getItem('modalText') || '';
-    this.render(replaceLineBreaks(text));
-  };
-  TicketApp.prototype = {
-    render: function (text) {
-      if (!this.inDOM) {
-        mainEl().innerHTML =
-          '<button class="edit c-btn btn-op" id="ventana">Edit</button>';
-        document
-          .querySelector('.edit')
-          .addEventListener('click', this.openModal.bind(this));
-        this.inDOM = true;
-      } else {
-        //document.querySelector('#text').innerText = text;
-      }
-    },
-
-    openModal: function () {
-      var self = this;
-      return client
-        .invoke('instances.create', {
-          location: 'modal',
-          url: 'assets/iframe.html',
-        })
-        .then(function (data) {
-          var instanceGuid = data['instances.create'][0].instanceGuid;
-          var modalClient = client.instance(instanceGuid);
-          modalClient.on('modal.save', function (data) {
-            self.render(data.text);
-          });
-        });
-    },
-  };
-
-  var ModalApp = function () {
-    this.render(localStorage.getItem('modalText') || '');
-  };
-
-  ModalApp.prototype = {
-    render: function (text) {
-      var text = localStorage.getItem('modalText') || '';
-      mainEl().innerHTML = `
-
-      <div class="mod-body mx-auto">
-      <div class="mod-head">
-          <h2 class="os-20 fw-bold px-0 py-2">Lookup Customization</h2>
-      </div>
-      <div class="mod-inner">
-          <form class="form-modal" id="modal">
-              <div class="form-group has-success mb-2 ">
-                  <label class="os-14 pb-2" for="">Name</label>
-                  <input class="m-16" type="text" name="name" placeholder="" id="inp-name" />
-                  <span id="error" class="help-block"></span>
-              </div>
-              <div class="form-group has-success mb-2 ">
-                  <label class="os-14 pb-2" for="">Script ID</label>
-                  <input class="m-16" type="text" name="scriptid" placeholder="" id="inp-scriptid" />
-                  <span id="error" class="help-block"></span>
-              </div>
-              <div class="form-group has-success mb-2 ">
-                  <label class="os-14 pb-2" for="">Bundle ID</label>
-                  <input class="m-16" type="text" name="bundleid" placeholder="" id="inp-bundleid" />
-                  <span id="error" class="help-block"></span>
-              </div>
-              <div class="form-group has-success mb-2 ">
-                  <label class="os-14 pb-2" for="">Type</label>
-                  <select class="m-16" name="type" id="inp-type">
-                      <option>Select Type</option>
-                      <option>Bill of Materials</option>
-                  </select>
-                  <span id="error" class="help-block"></span>
-              </div>
-              <div class="form-group has-success mb-2 ">
-                  <label class="os-14 pb-2" for="">From</label>
-                  <input type="date">
-                  <span id="error" class="help-block"></span>
-              </div>
-              <div class="form-group has-success mb-2 ">
-                  <label class="os-14 pb-2" for="">To</label>
-                  <input type="date">
-                  <span id="error" class="help-block"></span>
-              </div>
-
-              <button class="c-btn btn-form-close os-14" type="submit">Lookupo</button>
-             <!-- <textarea class="c-txt__input c-txt__input--area"></textarea><br>-->
-          </form>
-      </div>
-  </div>
-
-
-      `;
-      document
-        .querySelector('#modal')
-        .addEventListener('submit', this.onModalSubmit.bind(this));
-    },
-
-    onModalSubmit: function (evt) {
-      let name = evt.target.querySelector('#inp-name').value;
-      var textareaValue = evt.target.querySelector('textarea').value;
-      evt.preventDefault();
-      localStorage.setItem('modalText', textareaValue);
-      client.trigger('modal.save', {text: textareaValue});
-      client.invoke('destroy');
-    },
-  };
-
-  client.on('app.registered', function (data) {
-    init(data.context.location);
-  });
-}
 try {
-  client.get('ticket').then(function (data) {
-    localStorage.setItem('zendesk-tiquet-id', data.ticket.id);
-    localStorage.setItem('zendesk-tiquet-name', data.ticket.subject);
-    localStorage.setItem('zendesk-tiquet-description', data.ticket.description);
-    localStorage.setItem('zendesk-tiquet-status', data.ticket.status);
-    const status = data.ticket.status
-    if ( status === open){
-      updateTicketStatus('In progres')
-    }
-    
-    
+  client.get('ticket').then(
+    async function (data) {
+      await localStorage.setItem('zendesk-tiquet-id', data.ticket.id);
+      await localStorage.setItem('zendesk-tiquet-name', data.ticket.subject);
+      await localStorage.setItem('zendesk-tiquet-description', data.ticket.description);
+      await localStorage.setItem('zendesk-tiquet-status', data.ticket.status);
+      const status = data.ticket.status
+      await getCustomizations();
 
-
-
-
-    showInfo(data, data.ticket.requester.name);
-    showHome(data);
-    addBundle();
-    //crearModal(client)
-    //requestTicketInfo(client, data);
-    //requestUserInfo(client, user_id);
-    //loginUser(client, user_id)
-    //requestTicketInfo(client, id)
-  });
+      showInfo(data, data.ticket.requester.name);
+      showHome(data);
+      addBundle();
+      //crearModal(client)
+      //requestTicketInfo(client, data);
+      //requestUserInfo(client, user_id);
+      //loginUser(client, user_id)
+      //requestTicketInfo(client, id)
+    });
 } catch (error) {
   console.log('error');
 }
@@ -467,14 +338,14 @@ function popModal(url, h) {
     .invoke('instances.create', {
       location: 'modal',
       url: url,
-      size: {width: '750px', height: h},
+      size: { width: '750px', height: h },
     })
     .then(function (modalContext) {
       // The modal is on the screen now!
       var modalClient = client.instance(
         modalContext['instances.create'][0].instanceGuid
       );
-      client.on('instance.registered', function () {});
+      client.on('instance.registered', function () { });
       modalClient.on('modal.close', function () {
         renderlookup();
         renderProposed();
@@ -520,6 +391,7 @@ function transmitToNetsuite(
   function setPath(baseObject) {
     var result = '';
     Object.entries(baseObject).forEach(([item, prop]) => {
+      console.log(item, prop)
       if (prop.trim() !== '')
         result += `${result.length > 0 ? '&' : ''}${item}=${prop.trim()}`;
     });
@@ -627,12 +499,11 @@ function serviceNestsuite(
 function getCustomizations() {
   const scriptDeploy = 'flo_cr_api';
   const action = 'getCRData';
-  const ticketId = {ticketID: localStorage.getItem('zendesk-tiquet-id')};
-
+  const ticketId = { ticketID: localStorage.getItem('zendesk-tiquet-id') };
   const callback = (results) => {
     let existingList = [];
     results.custIds.forEach((id, idx) => {
-      existingList.push({name: results.custNames[idx], id: id});
+      existingList.push({ name: results.custNames[idx], id: id });
     });
     localStorage.setItem(
       'selectedCustomizationValues',
@@ -659,7 +530,7 @@ function getCustomizations() {
     callback
   );
 }
-getCustomizations();
+
 
 function updateTicketStatus(newState) {
   const scriptDeploy = 'flo_cr_api';
