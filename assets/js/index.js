@@ -435,7 +435,6 @@ function crearModal(client) {
 }
 try {
   client.get('ticket').then(function (data) {
-    console.log(data);
     localStorage.setItem('zendesk-tiquet-id', data.ticket.id);
     localStorage.setItem('zendesk-tiquet-name', data.ticket.subject);
     localStorage.setItem('zendesk-tiquet-description', data.ticket.description);
