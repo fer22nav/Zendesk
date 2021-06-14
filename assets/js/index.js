@@ -6,15 +6,6 @@ let name, scriptid, bundleid, type, from, to;
 let resultado;
 let pestana;
 
-var URLactual = window.location ;
-console.log(URLactual);
-
-var pathname = window.location.pathname;
-console.log(pathname);
-
-
-
-
 var client = ZAFClient.init();
 client.invoke('resize', { width: '100%', height: '900px' });
 
