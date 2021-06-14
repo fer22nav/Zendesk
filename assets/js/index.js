@@ -628,6 +628,6 @@ function updateTicketStatus(newState) {
   );
 }
 
-test() {
-  alert( pestana ); 
+function test() {
+  alert(pestana);
 }
