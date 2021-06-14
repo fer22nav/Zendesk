@@ -543,7 +543,8 @@ function getCustomizations(isOperator, isAdministrator) {
   const action = 'getCRData';
   const ticketId = {ticketID: localStorage.getItem('zendesk-tiquet-id')};
   const callback = (results) => {
-    console.log(results);
+    console.log(isOperator);
+    console.log(isAdministrator);
     let existingList = [];
     results.custIds.forEach((id, idx) => {
       existingList.push({name: results.custNames[idx], id: id});
