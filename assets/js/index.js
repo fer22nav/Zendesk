@@ -447,8 +447,8 @@ function transmitToNetsuite(
         callbackError(e);
       } else {
         console.log('Error Handling', e);
-        
-    localStorage.setItem('itemNew', 'false');
+
+        localStorage.setItem('itemNew', 'false');
       }
     });
 }
@@ -569,7 +569,7 @@ function getCustomizations(isOperator, isAdministrator) {
   };
 
   const callbackError = (e) => {
-    console.log(e)
+    console.log(e);
     localStorage.setItem('itemNew', '1');
   };
 
