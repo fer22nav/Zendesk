@@ -311,6 +311,7 @@ function loginUser(client, id) {
 
 try {
   client.get('ticket').then(async function (data) {
+    console.log(data)
     await localStorage.setItem('zendesk-tiquet-id', data.ticket.id);
     await localStorage.setItem('zendesk-tiquet-name', data.ticket.subject);
     await localStorage.setItem(
@@ -319,6 +320,11 @@ try {
     );
     await localStorage.setItem('zendesk-tiquet-status', data.ticket.status);
     const status = data.ticket.status;
+
+    showInfo(data, data.ticket.requester.name);
+    showHome(data);
+    addBundle();
+
     await getCustomizations();
     console.log(data.ticket.assignee.user.groups);
     const isOperator =
@@ -329,22 +335,21 @@ try {
       data.ticket.assignee.user.groups.filter(
         (element) => element.name === 'Administrators'
       ).length > 0;
-    if (isOperator) {
+     if (isOperator) {
       console.log('operator si');
       //mostramos el request to aproved
       //mostramos el aproveed y falta statusbar
-      //document.getElementById('btn-request').style.display = 'block';
+    document.getElementById('btn-request').style.display = 'flex';
     }
     if (isAdministrator) {
+      console.log('admin si');
       //mostramos el aproveed y falta statusbar
-      // document.getElementById('btn-approved').style.display =('block');
+    document.getElementById('btn-approved').style.display ='flex';
     }
     console.log('operator', isOperator);
     console.log('administrator', isAdministrator);
 
-    showInfo(data, data.ticket.requester.name);
-    showHome(data);
-    addBundle();
+ 
     //crearModal(client)
     //requestTicketInfo(client, data);
     //requestUserInfo(client, user_id);
