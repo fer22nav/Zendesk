@@ -311,7 +311,7 @@ function loginUser(client, id) {
 
 try {
   client.get('ticket').then(async function (data) {
-    console.log(data)
+    console.log(data);
     await localStorage.setItem('zendesk-tiquet-id', data.ticket.id);
     await localStorage.setItem('zendesk-tiquet-name', data.ticket.subject);
     await localStorage.setItem(
@@ -335,21 +335,28 @@ try {
       data.ticket.assignee.user.groups.filter(
         (element) => element.name === 'Administrators'
       ).length > 0;
-     if (isOperator) {
+
+    const noGroup =
+      data.ticket.assignee.user.groups.filter((element) =>
+        ['Operators', 'Administrators'].includes(element.name)
+      ).length > 0;
+
+    if (isOperator) {
       console.log('operator si');
-      //mostramos el request to aproved
-      //mostramos el aproveed y falta statusbar
-    document.getElementById('btn-request').style.display = 'flex';
+      document.getElementById('btn-request').style.display = 'flex';
     }
     if (isAdministrator) {
       console.log('admin si');
-      //mostramos el aproveed y falta statusbar
-    document.getElementById('btn-approved').style.display ='flex';
+
+      document.getElementById('btn-approved').style.display = 'flex';
     }
+    if (noGroup) {
+      document.getElementById('btn-reject').style.display = 'flex';
+    }
+
     console.log('operator', isOperator);
     console.log('administrator', isAdministrator);
 
- 
     //crearModal(client)
     //requestTicketInfo(client, data);
     //requestUserInfo(client, user_id);
@@ -551,6 +558,7 @@ function getCustomizations() {
   const action = 'getCRData';
   const ticketId = {ticketID: localStorage.getItem('zendesk-tiquet-id')};
   const callback = (results) => {
+    console.log(results);
     let existingList = [];
     results.custIds.forEach((id, idx) => {
       existingList.push({name: results.custNames[idx], id: id});
