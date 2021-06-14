@@ -330,11 +330,11 @@ try {
     addBundle();
 
     const isOperator =
-      data.ticket.assignee.user.groups.filter(
+      data.ticket.assignee.user?.groups.filter(
         (element) => element.name === 'Operators'
       ).length > 0;
     const isAdministrator =
-      data.ticket.assignee.user.groups.filter(
+      data.ticket.assignee.user?.groups.filter(
         (element) => element.name === 'Administrators'
       ).length > 0;
 
@@ -451,8 +451,8 @@ function transmitToNetsuite(
         callbackError(e);
       } else {
         console.log('Error Handling', e);
-        
-    localStorage.setItem('itemNew', 'false');
+
+        localStorage.setItem('itemNew', 'false');
       }
     });
 }
@@ -573,7 +573,7 @@ function getCustomizations(isOperator, isAdministrator) {
   };
 
   const callbackError = (e) => {
-    console.log(e)
+    console.log(e);
     localStorage.setItem('itemNew', '1');
   };
 

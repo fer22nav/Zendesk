@@ -173,14 +173,14 @@ function renderlook(res) {
 function addCustom() {
   let existingId = '';
   let inputs = $('.check');
-  const newList = JSON.parse(localStorage.getItem('selectedCustomizationValues'))
+  // const newList = JSON.parse(localStorage.getItem('selectedCustomizationValues'))
   $('.check').each((i) => {
     if (inputs[i].checked) {
       // selectedCustomization.push(inputs[i].dataset.id);
       existingId += `${existingId.length > 0 ? ',' : ''}${
         inputs[i].dataset.id
       }`;
-      newList.push({id: inputs[i].dataset.id, name: inputs[i].value});
+      // newList.push({id: inputs[i].dataset.id, name: inputs[i].value});
     }
   });
   //addCostumization existing NS
@@ -190,21 +190,21 @@ function addCustom() {
   };
   const scriptDeploy = 'flo_cr_api';
   const action = 'addCustomizations';
-  
+
   const callback = (results) => {
-    // let existingList = [];
-    // results.custIds.forEach((id, idx) => {
-    //   existingList.push({name: results.custNames[idx], id: id});
-    // });
-    // localStorage.setItem(
-    //   'selectedCustomizationValues',
-    //   JSON.stringify(existingList)
-    // );
+    let existingList = [];
+    results.custIds.forEach((id, idx) => {
+      existingList.push({name: results.custNames[idx], id: id});
+    });
     localStorage.setItem(
       'selectedCustomizationValues',
-      JSON.stringify(newList)
+      JSON.stringify(existingList)
     );
-    
+    // localStorage.setItem(
+    //   'selectedCustomizationValues',
+    //   JSON.stringify(newList)
+    // );
+
     client.invoke('destroy');
   };
   transmitToNetsuite(
