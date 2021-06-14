@@ -55,6 +55,12 @@ body {
   width: 60%;
 }
 
+.hid {
+  display: none;
+}
+.vis{
+  display:flex;
+}
 /*FUENTES*/
 
 .os-20 {

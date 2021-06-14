@@ -9,6 +9,12 @@ let ticketSubject;
 let ticketDescription;
 let ticketStatus;
 
+var URLactual = window.location;
+console.log(URLactual);
+
+var pathname = window.location.pathname;
+console.log(pathname);
+
 var client = ZAFClient.init();
 client.invoke('resize', {width: '100%', height: '900px'});
 
@@ -447,13 +453,20 @@ function transmitToNetsuite(
   );
   client
     .request(params)
-    .then((results) => callback(results))
+    .then((results) => {
+      callback(results);
+      let elementos = document.querySelectorAll('#infoNs');
+      for (i = 0; i < elementos.length; i++) {
+        elementos[i].classList.remove('hid');
+        elementos[i].classList.add('vis');
+      }
+    })
     .catch((e) => {
       console.log('Error Handling', e);
-      if (callbackError) {
-        callbackError(e);
-      } else {
-        console.log('Error Handling', e);
+      let elementos = document.querySelectorAll('#infoNs');
+      for (i = 0; i < elementos.length; i++) {
+        // elementos[i].classList.remove('vis')
+        //  elementos[i].classList.add('hid')
       }
     });
 }
@@ -545,8 +558,6 @@ function getCustomizations(isOperator, isAdministrator) {
   console.log('ticketNumber', ticketNumber);
   const ticketId = {ticketID: ticketNumber};
   const callback = (results) => {
-    console.log(isOperator);
-    console.log(isAdministrator);
     let existingList = [];
     results.custIds.forEach((id, idx) => {
       existingList.push({name: results.custNames[idx], id: id});
@@ -580,7 +591,6 @@ function getCustomizations(isOperator, isAdministrator) {
   };
 
   const callbackError = (e) => {
-    console.log(e);
     if (isOperator) {
       document.getElementById('btn-request').style.display = 'flex';
       document.getElementById('btn-reject').style.display = 'flex';
