@@ -5,8 +5,17 @@ let existingProp = {};
 let name, scriptid, bundleid, type, from, to;
 let resultado;
 
+var URLactual = window.location ;
+console.log(URLactual);
+
+var pathname = window.location.pathname;
+console.log(pathname);
+
+
+
+
 var client = ZAFClient.init();
-client.invoke('resize', {width: '100%', height: '900px'});
+client.invoke('resize', { width: '100%', height: '900px' });
 
 client.on('pane.activated', function () {
   console.log('hover');
@@ -354,14 +363,14 @@ function popModal(url, h) {
     .invoke('instances.create', {
       location: 'modal',
       url: url,
-      size: {width: '750px', height: h},
+      size: { width: '750px', height: h },
     })
     .then(function (modalContext) {
       // The modal is on the screen now!
       var modalClient = client.instance(
         modalContext['instances.create'][0].instanceGuid
       );
-      client.on('instance.registered', function () {});
+      client.on('instance.registered', function () { });
       modalClient.on('modal.close', function () {
         renderlookup();
         renderProposed();
@@ -444,15 +453,20 @@ function transmitToNetsuite(
   );
   client
     .request(params)
-    .then((results) => callback(results))
+    .then((results) => {
+      callback(results)
+     let elementos = document.querySelectorAll('#infoNs')
+      for(i=0 ; i<elementos.length ; i++) {
+        elementos[i].classList.remove('hid')
+        elementos[i].classList.add('vis')
+      }
+    })
     .catch((e) => {
       console.log('Error Handling', e);
-      if (callbackError) {
-        callbackError(e);
-      } else {
-        console.log('Error Handling', e);
-
-        localStorage.setItem('itemNew', 'false');
+      let elementos = document.querySelectorAll('#infoNs')
+      for(i=0 ; i<elementos.length ; i++) {
+       // elementos[i].classList.remove('vis')
+      //  elementos[i].classList.add('hid')
       }
     });
 }
@@ -541,13 +555,11 @@ function serviceNestsuite(
 function getCustomizations(isOperator, isAdministrator) {
   const scriptDeploy = 'flo_cr_api';
   const action = 'getCRData';
-  const ticketId = {ticketID: localStorage.getItem('zendesk-tiquet-id')};
+  const ticketId = { ticketID: localStorage.getItem('zendesk-tiquet-id') };
   const callback = (results) => {
-    console.log(isOperator);
-    console.log(isAdministrator);
     let existingList = [];
     results.custIds.forEach((id, idx) => {
-      existingList.push({name: results.custNames[idx], id: id});
+      existingList.push({ name: results.custNames[idx], id: id });
     });
     console.log(results);
     if (
@@ -571,10 +583,11 @@ function getCustomizations(isOperator, isAdministrator) {
     );
     renderlookup();
     renderProposed();
+
   };
 
   const callbackError = (e) => {
-    console.log(e);
+    console.log(isOperator);
     localStorage.setItem('itemNew', '1');
     if (isOperator) {
       document.getElementById('btn-request').style.display = 'flex';
