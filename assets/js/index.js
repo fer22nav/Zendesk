@@ -552,8 +552,7 @@ function getCustomizations(isOperator, isAdministrator) {
     console.log(results);
     if (
       isOperator &&
-      (['Not Started', 'In Progress'].includes(results.statusBarState) ||
-        results.statusBarState === '')
+      ['', 'Not Started', 'In Progress'].includes(results.statusBarState)
     ) {
       document.getElementById('btn-request').style.display = 'flex';
       document.getElementById('btn-reject').style.display = 'flex';
@@ -577,6 +576,14 @@ function getCustomizations(isOperator, isAdministrator) {
   const callbackError = (e) => {
     console.log(e);
     localStorage.setItem('itemNew', '1');
+    if (isOperator) {
+      document.getElementById('btn-request').style.display = 'flex';
+      document.getElementById('btn-reject').style.display = 'flex';
+    }
+    localStorage.setItem('selectedCustomizationValues', JSON.stringify([]));
+    localStorage.setItem('ProposedCustomization', JSON.stringify([]));
+    renderlookup();
+    renderProposed();
   };
 
   transmitToNetsuite(
