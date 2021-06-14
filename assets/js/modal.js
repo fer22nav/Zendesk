@@ -200,12 +200,11 @@ function addCustom() {
       'selectedCustomizationValues',
       JSON.stringify(existingList)
     );
+    client.invoke('destroy');
     // localStorage.setItem(
     //   'selectedCustomizationValues',
     //   JSON.stringify(newList)
     // );
-
-    client.invoke('destroy');
   };
   transmitToNetsuite(
     restDomainBase,

@@ -4,6 +4,7 @@ let existingCustom = {};
 let existingProp = {};
 let name, scriptid, bundleid, type, from, to;
 let resultado;
+let pestana;
 
 var client = ZAFClient.init();
 client.invoke('resize', {width: '100%', height: '900px'});
@@ -123,11 +124,12 @@ function renderlookup() {
       <div class="btn-group dropdown w-25">
         <button type="button" class="btn-up dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
         <ul class="dropdown-menu">
-          <li><button class="dropdown-item" onclick="clickDeleteLookup('${item.id}')" id="bundle-delete">Remove</button></li>
+          <li><button class="dropdown-item" onclick="clickDeleteLookup('${item.id}', '${item.name}')" id="bundle-delete">Remove</button></li>
           <li><button class="dropdown-item" id="ver-erd" disabled >ERD</button></li>
       </div>`;
     existingList.appendChild(li);
   });
+  localStorage.removeItem('selectedCustomizationValues');
 }
 
 function removeExistingCustomization(existingName, existingId) {
@@ -139,24 +141,15 @@ function removeExistingCustomization(existingName, existingId) {
     existing: existingName,
     custoInternalId: existingId,
   };
-  const callback = (results) => {
-    // let existingList = [];
-    // results.custIds.forEach((id, idx) => {
-    //   existingList.push({name: results.custNames[idx], id: id});
-    // });
-    // localStorage.setItem(
-    //   'selectedCustomizationValues',
-    //   JSON.stringify(existingList)
-    // );
-    localStorage.setItem(
+  const callback = async (results) => {
+    let existingList = [];
+    results.custIds.forEach((id, idx) => {
+      existingList.push({name: results.custNames[idx], id: id});
+    });
+    await localStorage.setItem(
       'selectedCustomizationValues',
-      JSON.stringify(
-        JSON.parse(localStorage.getItem('selectedCustomizationValues')).filter(
-          (element) => element.id !== existingId
-        )
-      )
+      JSON.stringify(existingList)
     );
-
     renderlookup();
   };
 
@@ -173,12 +166,10 @@ function removeExistingCustomization(existingName, existingId) {
     callback
   );
 }
-function clickDeleteLookup(id) {
+function clickDeleteLookup(id, name) {
   const selectedCustomizationValues = JSON.parse(
     localStorage.getItem('selectedCustomizationValues')
   );
-  const name = selectedCustomizationValues.filter((item) => item.id === id)[0]
-    .name;
 
   removeExistingCustomization(name, id);
   // let selectedCustomizationValues = JSON.parse(
@@ -217,6 +208,7 @@ function renderProposed() {
     bundleLista.appendChild(li);
     i++;
   });
+  localStorage.removeItem('ProposedCustomization');
 }
 function removeProposed(proposedName) {
   const scriptDeploy = 'flo_cr_api';
@@ -316,6 +308,7 @@ function loginUser(client, id) {
 try {
   client.get('ticket').then(async function (data) {
     console.log(data);
+    pestana = data.ticket.id;
     await localStorage.setItem('zendesk-tiquet-id', data.ticket.id);
     await localStorage.setItem('zendesk-tiquet-name', data.ticket.subject);
     await localStorage.setItem(
@@ -363,8 +356,13 @@ function popModal(url, h) {
       );
       client.on('instance.registered', function () {});
       modalClient.on('modal.close', function () {
-        renderlookup();
-        renderProposed();
+        if (localStorage.getItem('selectedCustomizationValues')) {
+          renderlookup();
+        }
+        if (localStorage.getItem('ProposedCustomization')) {
+          renderProposed();
+        }
+
         // The modal has been closed.
       });
     });
@@ -580,10 +578,10 @@ function getCustomizations(isOperator, isAdministrator) {
       document.getElementById('btn-request').style.display = 'flex';
       document.getElementById('btn-reject').style.display = 'flex';
     }
-    localStorage.setItem('selectedCustomizationValues', JSON.stringify([]));
-    localStorage.setItem('ProposedCustomization', JSON.stringify([]));
-    renderlookup();
-    renderProposed();
+    // localStorage.setItem('selectedCustomizationValues', JSON.stringify([]));
+    // localStorage.setItem('ProposedCustomization', JSON.stringify([]));
+    // renderlookup();
+    // renderProposed();
   };
 
   transmitToNetsuite(
@@ -628,4 +626,8 @@ function updateTicketStatus(newState) {
     params,
     callback
   );
+}
+
+test() {
+  alert( pestana ); 
 }
