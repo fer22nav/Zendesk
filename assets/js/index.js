@@ -4,10 +4,19 @@ let existingCustom = {};
 let existingProp = {};
 let name, scriptid, bundleid, type, from, to;
 let resultado;
-let pestana;
+let ticketNumber;
+let ticketSubject;
+let ticketDescription;
+let ticketStatus;
+
+var URLactual = window.location;
+console.log(URLactual);
+
+var pathname = window.location.pathname;
+console.log(pathname);
 
 var client = ZAFClient.init();
-client.invoke('resize', { width: '100%', height: '900px' });
+client.invoke('resize', {width: '100%', height: '900px'});
 
 client.on('pane.activated', function () {
   console.log('hover');
@@ -77,33 +86,33 @@ function clickDelete(name) {
       return;
     }
   });
-  localStorage.setItem('bundle-id', JSON.stringify(bundles));
+  // localStorage.setItem('bundle-id', JSON.stringify(bundles));
   renderBundle(bundles);
 }
 function renderBundle() {
   let bundleLista = document.querySelector('.bundle-lista');
   bundleLista.innerHTML = '';
-  let i = 0;
-  let bundles = JSON.parse(localStorage.getItem('bundle-id'));
-  bundles.forEach((bundle) => {
-    const li = document.createElement('li');
-    li.className = 'bundle-li';
-    li.innerHTML = `      
-      <span class="w-75 ps-2">${bundle}</span>
-      <div class="btn-group dropdown w-25">
-        <button type="button" class="btn-up dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
-        <ul class="dropdown-menu">
-          <li><button class="dropdown-item" onclick="clickDelete('${bundle}')" data-value="${i}" id="bundle-delete">Remove</button></li>
-      </div>`;
-    bundleLista.appendChild(li);
-    i++;
-  });
+  // let i = 0;
+  // let bundles = JSON.parse(localStorage.getItem('bundle-id'));
+  // bundles.forEach((bundle) => {
+  //   const li = document.createElement('li');
+  //   li.className = 'bundle-li';
+  //   li.innerHTML = `
+  //     <span class="w-75 ps-2">${bundle}</span>
+  //     <div class="btn-group dropdown w-25">
+  //       <button type="button" class="btn-up dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
+  //       <ul class="dropdown-menu">
+  //         <li><button class="dropdown-item" onclick="clickDelete('${bundle}')" data-value="${i}" id="bundle-delete">Remove</button></li>
+  //     </div>`;
+  //   bundleLista.appendChild(li);
+  //   i++;
+  // });
 }
 function addBundle() {
   $('.btn-plus').click(() => {
     if ($('#inp-bundle')[0].value !== '') {
       bundles.push($('#inp-bundle')[0].value);
-      localStorage.setItem('bundle-id', JSON.stringify(bundles));
+      // localStorage.setItem('bundle-id', JSON.stringify(bundles));
       $('#inp-bundle')[0].value = '';
       renderBundle();
     }
@@ -136,7 +145,7 @@ function removeExistingCustomization(existingName, existingId) {
   const scriptDeploy = 'flo_cr_api';
   const action = 'removeCustomization';
   const params = {
-    ticketID: localStorage.getItem('zendesk-tiquet-id'),
+    ticketID: ticketNumber,
     isExisting: 'true',
     existing: existingName,
     custoInternalId: existingId,
@@ -214,15 +223,19 @@ function removeProposed(proposedName) {
   const scriptDeploy = 'flo_cr_api';
   const action = 'removeCustomization';
   const params = {
-    ticketID: localStorage.getItem('zendesk-tiquet-id'),
+    ticketID: ticketNumber,
     isExisting: '',
     existing: proposedName,
   };
   const callback = (results) => {
-    localStorage.setItem(
-      'ProposedCustomization',
-      JSON.stringify(results.proposedCusts.split(','))
-    );
+    if (results.proposedCusts != '') {
+      localStorage.setItem(
+        'ProposedCustomization',
+        JSON.stringify(results.proposedCusts.split(','))
+      );
+    } else {
+      localStorage.setItem('ProposedCustomization', JSON.stringify([]));
+    }
     renderProposed();
   };
 
@@ -308,15 +321,10 @@ function loginUser(client, id) {
 try {
   client.get('ticket').then(async function (data) {
     console.log(data);
-    pestana = data.ticket.id;
-    await localStorage.setItem('zendesk-tiquet-id', data.ticket.id);
-    await localStorage.setItem('zendesk-tiquet-name', data.ticket.subject);
-    await localStorage.setItem(
-      'zendesk-tiquet-description',
-      data.ticket.description
-    );
-    await localStorage.setItem('zendesk-tiquet-status', data.ticket.status);
-    const status = data.ticket.status;
+    ticketNumber = data.ticket.id.toString();
+    ticketSubject = data.ticket.subject;
+    ticketDescription = data.ticket.description;
+    ticketStatus = data.ticket.status;
 
     showInfo(data, data.ticket.requester.name);
     showHome(data);
@@ -343,18 +351,20 @@ try {
   console.log('error');
 }
 function popModal(url, h) {
+  localStorage.removeItem('zendesk-tiquet-id');
+  localStorage.setItem('zendesk-tiquet-id', ticketNumber);
   client
     .invoke('instances.create', {
       location: 'modal',
       url: url,
-      size: { width: '750px', height: h },
+      size: {width: '750px', height: h},
     })
     .then(function (modalContext) {
       // The modal is on the screen now!
       var modalClient = client.instance(
         modalContext['instances.create'][0].instanceGuid
       );
-      client.on('instance.registered', function () { });
+      client.on('instance.registered', function () {});
       modalClient.on('modal.close', function () {
         if (localStorage.getItem('selectedCustomizationValues')) {
           renderlookup();
@@ -362,7 +372,6 @@ function popModal(url, h) {
         if (localStorage.getItem('ProposedCustomization')) {
           renderProposed();
         }
-
         // The modal has been closed.
       });
     });
@@ -422,8 +431,10 @@ function transmitToNetsuite(
   // callback is the callback to be used when all work as expected
   function setPath(baseObject) {
     var result = '';
+    console.log('baseObject: ', baseObject);
     Object.entries(baseObject).forEach(([item, prop]) => {
-      if (prop.trim() !== '')
+      console.log('prop: ', prop);
+      if (prop && prop.trim() !== '')
         result += `${result.length > 0 ? '&' : ''}${item}=${prop.trim()}`;
     });
     return result;
@@ -443,19 +454,19 @@ function transmitToNetsuite(
   client
     .request(params)
     .then((results) => {
-      callback(results)
-     let elementos = document.querySelectorAll('#infoNs')
-      for(i=0 ; i<elementos.length ; i++) {
-        elementos[i].classList.remove('hid')
-        elementos[i].classList.add('vis')
+      callback(results);
+      let elementos = document.querySelectorAll('#infoNs');
+      for (i = 0; i < elementos.length; i++) {
+        elementos[i].classList.remove('hid');
+        elementos[i].classList.add('vis');
       }
     })
     .catch((e) => {
       console.log('Error Handling', e);
-      let elementos = document.querySelectorAll('#infoNs')
-      for(i=0 ; i<elementos.length ; i++) {
-       // elementos[i].classList.remove('vis')
-      //  elementos[i].classList.add('hid')
+      let elementos = document.querySelectorAll('#infoNs');
+      for (i = 0; i < elementos.length; i++) {
+        // elementos[i].classList.remove('vis')
+        //  elementos[i].classList.add('hid')
       }
     });
 }
@@ -544,11 +555,12 @@ function serviceNestsuite(
 function getCustomizations(isOperator, isAdministrator) {
   const scriptDeploy = 'flo_cr_api';
   const action = 'getCRData';
-  const ticketId = { ticketID: localStorage.getItem('zendesk-tiquet-id') };
+  console.log('ticketNumber', ticketNumber);
+  const ticketId = {ticketID: ticketNumber};
   const callback = (results) => {
     let existingList = [];
     results.custIds.forEach((id, idx) => {
-      existingList.push({ name: results.custNames[idx], id: id });
+      existingList.push({name: results.custNames[idx], id: id});
     });
     console.log(results);
     if (
@@ -566,18 +578,19 @@ function getCustomizations(isOperator, isAdministrator) {
       'selectedCustomizationValues',
       JSON.stringify(existingList)
     );
-    localStorage.setItem(
-      'ProposedCustomization',
-      JSON.stringify(results.proposedCusts.split(','))
-    );
+    if (results.proposedCusts != '') {
+      localStorage.setItem(
+        'ProposedCustomization',
+        JSON.stringify(results.proposedCusts.split(','))
+      );
+    } else {
+      localStorage.setItem('ProposedCustomization', JSON.stringify([]));
+    }
     renderlookup();
     renderProposed();
-
   };
 
   const callbackError = (e) => {
-    console.log(isOperator);
-    localStorage.setItem('itemNew', '1');
     if (isOperator) {
       document.getElementById('btn-request').style.display = 'flex';
       document.getElementById('btn-reject').style.display = 'flex';
@@ -607,9 +620,9 @@ function updateTicketStatus(newState) {
   const scriptDeploy = 'flo_cr_api';
   const action = 'createCR';
   const params = {
-    ticketID: localStorage.getItem('zendesk-tiquet-id'),
-    changeNum: localStorage.getItem('zendesk-tiquet-name'),
-    description: localStorage.getItem('zendesk-tiquet-description'),
+    ticketID: ticketNumber,
+    changeNum: ticketSubject,
+    description: ticketDescription,
     state: newState,
     bundleId: 'false',
   };
@@ -630,8 +643,4 @@ function updateTicketStatus(newState) {
     params,
     callback
   );
-}
-
-function test() {
-  alert(pestana);
 }
