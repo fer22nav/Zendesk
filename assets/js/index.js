@@ -325,8 +325,6 @@ try {
     showHome(data);
     addBundle();
 
-    await getCustomizations();
-    console.log(data.ticket.assignee.user.groups);
     const isOperator =
       data.ticket.assignee.user.groups.filter(
         (element) => element.name === 'Operators'
@@ -336,26 +334,7 @@ try {
         (element) => element.name === 'Administrators'
       ).length > 0;
 
-    const noGroup =
-      data.ticket.assignee.user.groups.filter((element) =>
-        ['Operators', 'Administrators'].includes(element.name)
-      ).length > 0;
-
-    if (isOperator) {
-      console.log('operator si');
-      document.getElementById('btn-request').style.display = 'flex';
-    }
-    if (isAdministrator) {
-      console.log('admin si');
-
-      document.getElementById('btn-approved').style.display = 'flex';
-    }
-    if (noGroup) {
-      document.getElementById('btn-reject').style.display = 'flex';
-    }
-
-    console.log('operator', isOperator);
-    console.log('administrator', isAdministrator);
+    await getCustomizations(isOperator, isAdministrator);
 
     //crearModal(client)
     //requestTicketInfo(client, data);
@@ -553,7 +532,7 @@ function serviceNestsuite(
   return options;
 }
 
-function getCustomizations() {
+function getCustomizations(isOperator, isAdministrator) {
   const scriptDeploy = 'flo_cr_api';
   const action = 'getCRData';
   const ticketId = {ticketID: localStorage.getItem('zendesk-tiquet-id')};
@@ -563,6 +542,18 @@ function getCustomizations() {
     results.custIds.forEach((id, idx) => {
       existingList.push({name: results.custNames[idx], id: id});
     });
+
+    if (
+      isOperator &&
+      ['', 'Not Started', 'In Progress'].includes(results.statusBarState)
+    ) {
+      document.getElementById('btn-request').style.display = 'flex';
+      document.getElementById('btn-reject').style.display = 'flex';
+    }
+    if (isAdministrator && results.statusBarState === 'Pending Approval') {
+      document.getElementById('btn-approved').style.display = 'flex';
+      document.getElementById('btn-reject').style.display = 'flex';
+    }
     localStorage.setItem(
       'selectedCustomizationValues',
       JSON.stringify(existingList)
