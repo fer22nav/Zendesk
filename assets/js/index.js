@@ -8,6 +8,10 @@ let resultado;
 var client = ZAFClient.init();
 client.invoke('resize', {width: '100%', height: '900px'});
 
+client.on('pane.activated', function() {
+  console.log('hover')
+});
+
 //Date format
 function formatDate(date) {
   var cdate = new Date(date);
@@ -616,3 +620,7 @@ function updateTicketStatus(newState) {
     callback
   );
 }
+
+
+
+
