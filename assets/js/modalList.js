@@ -79,10 +79,14 @@ async function submitData() {
   const scriptDeploy = 'flo_cr_api';
   const action = 'addCustomizations';
   const callback = (results) => {
-    localStorage.setItem(
-      'ProposedCustomization',
-      JSON.stringify(results.proposedCusts.split(','))
-    );
+    if (results.proposedCusts != '') {
+      localStorage.setItem(
+        'ProposedCustomization',
+        JSON.stringify(results.proposedCusts.split(','))
+      );
+    } else {
+      localStorage.setItem('ProposedCustomization', JSON.stringify([]));
+    }
     client.invoke('destroy');
   };
   transmitToNetsuite(
