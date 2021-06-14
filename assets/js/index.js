@@ -8,8 +8,8 @@ let resultado;
 var client = ZAFClient.init();
 client.invoke('resize', {width: '100%', height: '900px'});
 
-client.on('pane.activated', function() {
-  console.log('hover')
+client.on('pane.activated', function () {
+  console.log('hover');
 });
 
 //Date format
@@ -549,12 +549,13 @@ function getCustomizations(isOperator, isAdministrator) {
     results.custIds.forEach((id, idx) => {
       existingList.push({name: results.custNames[idx], id: id});
     });
-    console.log(results)
+    console.log(results);
     if (
       isOperator &&
-      (['Not Started', 'In Progress'].includes(results.statusBarState) || !results.statusBarState )
+      ['', 'Not Started', 'In Progress'].includes(
+        results.statusBarState
+      ) /* || results.statusBarState === '' */
     ) {
-     
       document.getElementById('btn-request').style.display = 'flex';
       document.getElementById('btn-reject').style.display = 'flex';
     }
@@ -622,7 +623,3 @@ function updateTicketStatus(newState) {
     callback
   );
 }
-
-
-
-
