@@ -461,6 +461,8 @@ function transmitToNetsuite(
         callbackError(e);
       } else {
         console.log('Error Handling', e);
+        
+    localStorage.setItem('itemNew', 'false');
       }
     });
 }
@@ -565,11 +567,11 @@ function getCustomizations() {
     );
     renderlookup();
     renderProposed();
-    //localStorage.setItem('itemNew', inactive ? '' : 'true');
   };
 
-  const callbackError = () => {
-    localStorage.setItem('itemNew', '');
+  const callbackError = (e) => {
+    console.log(e)
+    localStorage.setItem('itemNew', '1');
   };
 
   transmitToNetsuite(
