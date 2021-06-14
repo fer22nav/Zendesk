@@ -552,7 +552,7 @@ function getCustomizations(isOperator, isAdministrator) {
     console.log(results);
     if (
       isOperator &&
-      (['', 'Not Started', 'In Progress'].includes(results.statusBarState) ||
+      (['Not Started', 'In Progress'].includes(results.statusBarState) ||
         results.statusBarState === '')
     ) {
       document.getElementById('btn-request').style.display = 'flex';
