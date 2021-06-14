@@ -548,11 +548,12 @@ function getCustomizations(isOperator, isAdministrator) {
     results.custIds.forEach((id, idx) => {
       existingList.push({name: results.custNames[idx], id: id});
     });
-
+    console.log(results)
     if (
       isOperator &&
-      ['', 'Not Started', 'In Progress'].includes(results.statusBarState)
+      (['Not Started', 'In Progress'].includes(results.statusBarState) || !results.statusBarState )
     ) {
+     
       document.getElementById('btn-request').style.display = 'flex';
       document.getElementById('btn-reject').style.display = 'flex';
     }
