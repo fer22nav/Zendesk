@@ -106,8 +106,8 @@ function addBundle() {
 }
 //Existing Customizations
 function renderlookup() {
-  let existingLista = document.querySelector('.lookup-lista');
-  existingLista.innerHTML = '';
+  let existingList = document.querySelector('.lookup-lista');
+  existingList.innerHTML = '';
   let selectedCustomizationValues = JSON.parse(
     localStorage.getItem('selectedCustomizationValues')
   );
@@ -122,7 +122,7 @@ function renderlookup() {
           <li><button class="dropdown-item" onclick="clickDeleteLookup('${item.id}')" id="bundle-delete">Remove</button></li>
           <li><button class="dropdown-item" id="ver-erd" disabled >ERD</button></li>
       </div>`;
-    existingLista.appendChild(li);
+    existingList.appendChild(li);
   });
 }
 
@@ -219,7 +219,7 @@ function removeProposed(proposedName) {
   const action = 'removeCustomization';
   const params = {
     ticketID: localStorage.getItem('zendesk-tiquet-id'),
-    isExisting: 'false',
+    isExisting: '',
     existing: proposedName,
   };
   const callback = (results) => {
@@ -321,22 +321,23 @@ try {
     const status = data.ticket.status;
     await getCustomizations();
     console.log(data.ticket.assignee.user.groups);
-    console.log('Data from ticket', data);
     const isOperator =
       data.ticket.assignee.user.groups.filter(
-        (element) => element.name === 'Approvers'
+        (element) => element.name === 'Operators'
       ).length > 0;
     const isAdministrator =
       data.ticket.assignee.user.groups.filter(
         (element) => element.name === 'Administrators'
       ).length > 0;
     if (isOperator) {
-      //mostramos el request to aproved falta statusbar
-      // document.getElementById('btn-request').style.display = 'block';
+      console.log('operator si');
+      //mostramos el request to aproved
+      //mostramos el aproveed y falta statusbar
+      //document.getElementById('btn-request').style.display = 'block';
     }
     if (isAdministrator) {
       //mostramos el aproveed y falta statusbar
-      // document.getElementById('btn-approved').style.display = 'block';
+      // document.getElementById('btn-approved').style.display =('block');
     }
     console.log('operator', isOperator);
     console.log('administrator', isAdministrator);
@@ -374,13 +375,12 @@ function popModal(url, h) {
     });
 }
 function changeStatus(action) {
-  console.log('status', action);
   switch (action) {
     case 'request':
       updateTicketStatus('PendingApproval');
       break;
     case 'approved':
-      updateTicketStatus();
+      updateTicketStatus('Approve');
       break;
     case 'reject':
       updateTicketStatus('Canceled');
@@ -404,7 +404,7 @@ var tokenSecret =
 var restDomainBase = `https://${accountId.toLowerCase()}.restlets.api.netsuite.com`;
 var httpMethod = 'GET';
 
-/// EDITANDO EMI FER
+///Connection with netsuite
 function transmitToNetsuite(
   url,
   accId,
