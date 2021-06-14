@@ -326,11 +326,11 @@ try {
     addBundle();
 
     const isOperator =
-      data.ticket.assignee.user.groups.filter(
+      data.ticket.assignee.user?.groups.filter(
         (element) => element.name === 'Operators'
       ).length > 0;
     const isAdministrator =
-      data.ticket.assignee.user.groups.filter(
+      data.ticket.assignee.user?.groups.filter(
         (element) => element.name === 'Administrators'
       ).length > 0;
 
