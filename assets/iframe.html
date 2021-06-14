@@ -64,13 +64,19 @@
               <span class='fw-bold os-16 me-2'>Link: </span><span class="link">Go to Record</span>
             </h3>
             <div class="d-flex my-3">
-              <button class='btn-aprove os-12 v-align justify-content-center py-1' id="ventana2">
+              <button class='btn-aprove os-12 v-align justify-content-center py-1' id="btn-request"  style="display:none" name="request-to-approve"   onclick="changeStatus('request')" >
                 <img src="./img/check.svg" alt="">
                 <p class='mb-0 mx-2 w-75'>
                   Request to approve
                 </p>                  
               </button>
-              <button class='btn-remove os-12 v-align justify-content-center py-1' id="ventana2">
+              <button class='btn-aprove os-12 v-align justify-content-center py-1' id="btn-approved" style="display:none" name="approved" onclick="changeStatus('approved')">
+                <img src="./img/check.svg" alt="">
+                <p class='mb-0 mx-2 w-75'>
+                  Approved
+                </p>                  
+              </button>
+              <button class='btn-remove os-12 v-align justify-content-center py-1' id="btn-reject" name="reject" onclick="changeStatus('reject')" >
                 <img src="./img/remove.svg" alt="">
                 <p class='mb-0 mx-2 w-50'>
                   Reject
