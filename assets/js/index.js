@@ -9,12 +9,6 @@ let ticketSubject;
 let ticketDescription;
 let ticketStatus;
 
-var URLactual = window.location;
-console.log(URLactual);
-
-var pathname = window.location.pathname;
-console.log(pathname);
-
 var client = ZAFClient.init();
 client.invoke('resize', {width: '100%', height: '900px'});
 
@@ -320,7 +314,7 @@ function loginUser(client, id) {
 
 try {
   client.get('ticket').then(async function (data) {
-    console.log(data);
+    
     ticketNumber = data.ticket.id.toString();
     ticketSubject = data.ticket.subject;
     ticketDescription = data.ticket.description;
@@ -431,9 +425,7 @@ function transmitToNetsuite(
   // callback is the callback to be used when all work as expected
   function setPath(baseObject) {
     var result = '';
-    console.log('baseObject: ', baseObject);
     Object.entries(baseObject).forEach(([item, prop]) => {
-      console.log('prop: ', prop);
       if (prop && prop.trim() !== '')
         result += `${result.length > 0 ? '&' : ''}${item}=${prop.trim()}`;
     });
@@ -462,7 +454,7 @@ function transmitToNetsuite(
       }
     })
     .catch((e) => {
-      console.log('Error Handling', e);
+      console.log('The ticket does not exist');
       let elementos = document.querySelectorAll('#infoNs');
       for (i = 0; i < elementos.length; i++) {
         // elementos[i].classList.remove('vis')
@@ -555,14 +547,12 @@ function serviceNestsuite(
 function getCustomizations(isOperator, isAdministrator) {
   const scriptDeploy = 'flo_cr_api';
   const action = 'getCRData';
-  console.log('ticketNumber', ticketNumber);
   const ticketId = {ticketID: ticketNumber};
   const callback = (results) => {
     let existingList = [];
     results.custIds.forEach((id, idx) => {
       existingList.push({name: results.custNames[idx], id: id});
     });
-    console.log(results);
     if (
       isOperator &&
       ['', 'Not Started', 'In Progress'].includes(results.statusBarState)
