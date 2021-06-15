@@ -44,7 +44,7 @@
         <div class='row'>
           <div class='col-7 px-0 v-align-col'>
             <h3 class='os-12 m-0 w-100'>
-              <span class='fw-bold os-16'>User: </span>{{user}}
+              <span class='fw-bold os-16'>User: </span>{{userName}}
             </h3>
           </div>
           <div class='col-5 px-0 v-align-col'>
@@ -61,7 +61,7 @@
               <span class='fw-bold os-16 me-2'>Status: </span><span class="status" id="statusNS"></span>
             </h3>
             <h3 class='os-12 m-0 w-100 mt-3'>
-              <span class='fw-bold os-16 me-2'>Link: </span><span class="link">Go to Record</span>
+              <span class='fw-bold os-16 me-2'>Link: </span><a class="link" id="linkCR"  target="_blank">Go to Record</a>
             </h3>
             <div class="d-flex my-3 w-100">
               <button class='btn-aprove os-12 v-align justify-content-center py-1' id="btn-request"  style="display:none" name="request-to-approve"   onclick="changeStatus('request')" >
@@ -116,11 +116,11 @@
         <div class='accordion' id='accordionExample'>
           <div class="accordion-item">
             <h2 class="accordion-header p-0 pt-2" id="headingOne">
-              <button class="accordion-button os-12 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              <button class="accordion-button os-12 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-controls="collapseOne">
                 Bundle ID
               </button>
             </h2>
-            <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" >
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" >
               <div class="accordion-body p-0 pt-2">
                 <div class='container'>
                   <div class='row mb-2'>

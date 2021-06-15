@@ -8,6 +8,7 @@ let ticketSubject;
 let ticketDescription;
 let ticketStatus;
 let statusNS;
+let linkCR;
 
 var URLactual = window.location;
 console.log(URLactual);
@@ -35,14 +36,14 @@ function formatDate(date) {
 }
 
 /*SHOW INFO */
-function showInfo(data, user) {
+function showInfo(data, userName) {
   let requester_data = {
-    titulo: data.ticket.raw_subject,
+    title: data.ticket.raw_subject,
     id: data.ticket.id,
-    prioridad: data.ticket.priority,
-    estado: data.ticket.status,
-    tipo: data.ticket.type,
-    user: user,
+    priority: data.ticket.priority,
+    state: data.ticket.status,
+    type: data.ticket.type,
+    userName: userName,
   };
   //'created_at': formatDate(data.user.created_at),
   let source = $('#info-template').html();
@@ -299,6 +300,13 @@ function requestTicketInfo(client, data) {
 
   // updateTicketStatus('PendingApproval')
 }*/
+var userData = '';
+var userName = '';
+function getCurrentUser() {
+  return client.get('currentUser').then(async function (data) {
+    return data['currentUser'];
+  });
+}
 
 /*LOGIN*/
 function loginUser(client, id) {
@@ -320,27 +328,24 @@ function loginUser(client, id) {
 
 try {
   client.get('ticket').then(async function (data) {
-    console.log(data);
+    userData = await getCurrentUser();
+    userName = userData?.name;
     ticketNumber = data.ticket.id.toString();
     ticketSubject = data.ticket.subject;
     ticketDescription = data.ticket.description;
     ticketStatus = data.ticket.status;
 
-    showInfo(data, data.ticket.requester.name);
+    showInfo(data, userName);
     showHome(data);
     addBundle();
 
     const isOperator =
-      data.ticket.assignee.user?.groups.filter(
-        (element) => element.name === 'Operators'
-      ).length > 0;
+      userData?.groups.filter((element) => element.name === 'Operators')
+        .length > 0;
     const isAdministrator =
-      data.ticket.assignee.user?.groups.filter(
-        (element) => element.name === 'Administrators'
-      ).length > 0;
-
+      userData?.groups.filter((element) => element.name === 'Administrators')
+        .length > 0;
     await getCustomizations(isOperator, isAdministrator);
-
     //crearModal(client)
     //requestTicketInfo(client, data);
     //requestUserInfo(client, user_id);
@@ -431,9 +436,7 @@ function transmitToNetsuite(
   // callback is the callback to be used when all work as expected
   function setPath(baseObject) {
     var result = '';
-    console.log('baseObject: ', baseObject);
     Object.entries(baseObject).forEach(([item, prop]) => {
-      console.log('prop: ', prop);
       if (prop && prop.trim() !== '')
         result += `${result.length > 0 ? '&' : ''}${item}=${prop.trim()}`;
     });
@@ -555,20 +558,22 @@ function serviceNestsuite(
 function getCustomizations(isOperator, isAdministrator) {
   const scriptDeploy = 'flo_cr_api';
   const action = 'getCRData';
-  console.log('ticketNumber', ticketNumber);
   const ticketId = {ticketID: ticketNumber};
   const callback = (results) => {
+    linkCR = results.link;
     statusNS = results.statusBarState;
     if (statusNS == '') {
       document.querySelector('#statusNS').textContent = 'N/S';
     } else {
       document.querySelector('#statusNS').textContent = statusNS;
     }
+    var element = document.getElementById('linkCR');
+    element.href = linkCR;
     let existingList = [];
     results.custIds.forEach((id, idx) => {
       existingList.push({name: results.custNames[idx], id: id});
     });
-    console.log(results);
+
     if (
       isOperator &&
       ['', 'Not Started', 'In Progress'].includes(results.statusBarState)
