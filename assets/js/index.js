@@ -10,12 +10,6 @@ let ticketStatus;
 let statusNS;
 let linkCR;
 
-var URLactual = window.location;
-console.log(URLactual);
-
-var pathname = window.location.pathname;
-console.log(pathname);
-
 var client = ZAFClient.init();
 client.invoke('resize', {width: '100%', height: '900px'});
 
@@ -465,7 +459,7 @@ function transmitToNetsuite(
       }
     })
     .catch((e) => {
-      console.log('Error Handling', e);
+      console.log('The ticket does not exist');
       let elementos = document.querySelectorAll('#infoNs');
       for (i = 0; i < elementos.length; i++) {
         // elementos[i].classList.remove('vis')
@@ -573,7 +567,6 @@ function getCustomizations(isOperator, isAdministrator) {
     results.custIds.forEach((id, idx) => {
       existingList.push({name: results.custNames[idx], id: id});
     });
-
     if (
       isOperator &&
       ['', 'Not Started', 'In Progress'].includes(results.statusBarState)
