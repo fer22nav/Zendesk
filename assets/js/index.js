@@ -3,11 +3,11 @@ let bundles = [];
 let existingCustom = {};
 let existingProp = {};
 let name, scriptid, bundleid, type, from, to;
-let resultado;
 let ticketNumber;
 let ticketSubject;
 let ticketDescription;
 let ticketStatus;
+let statusNS;
 
 var client = ZAFClient.init();
 client.invoke('resize', {width: '100%', height: '900px'});
@@ -549,6 +549,12 @@ function getCustomizations(isOperator, isAdministrator) {
   const action = 'getCRData';
   const ticketId = {ticketID: ticketNumber};
   const callback = (results) => {
+    statusNS = results.statusBarState;
+    if (statusNS == '') {
+      document.querySelector('#statusNS').textContent = 'N/S';
+    } else {
+      document.querySelector('#statusNS').textContent = statusNS;
+    }
     let existingList = [];
     results.custIds.forEach((id, idx) => {
       existingList.push({name: results.custNames[idx], id: id});
