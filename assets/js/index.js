@@ -134,20 +134,6 @@ function clickDeleteLookup(id, name) {
     localStorage.getItem('selectedCustomizationValues')
   );
   removeExistingCustomization(name, id);
-  // let selectedCustomizationValues = JSON.parse(
-  //   localStorage.getItem('selectedCustomizationValues')
-  // );
-  // selectedCustomizationValues.forEach((bundle, i) => {
-  //   if (bundle === `${name}`) {
-  //     selectedCustomizationValues.splice(i, 1);
-  //     return;
-  //   }
-  // });
-  // localStorage.setItem(
-  //   'selectedCustomizationValues',
-  //   JSON.stringify(selectedCustomizationValues)
-  // );
-  // renderlookup();
 }
 //Proposed Customization
 function renderProposed() {
@@ -638,11 +624,11 @@ function updateTicketStatus(newState) {
     changeNum: ticketSubject,
     description: ticketDescription,
     state: newState,
-    bundleId: 'false',
   };
 
   const callback = (results) => {
-    console.log('Update Ticket Results', results);
+    statusNS = results.statusBarState;
+    console.log('Update Ticket Results to:', statusNS);
   };
 
   transmitToNetsuite(
