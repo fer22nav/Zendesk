@@ -207,51 +207,7 @@ function removeProposed(proposedName) {
 }
 function clickDeleteProposed(name) {
   removeProposed(name);
-  // let ProposedCustomization = JSON.parse(
-  //   localStorage.getItem('ProposedCustomization')
-  // );
-  // ProposedCustomization.forEach((bundle, i) => {
-  //   if (bundle === `${name}`) {
-  //     ProposedCustomization.splice(i, 1);
-  //     return;
-  //   }
-  // });
-  // localStorage.setItem(
-  //   'ProposedCustomization',
-  //   JSON.stringify(ProposedCustomization)
-  // );
-  // renderProposed();
 }
-
-/*
-function requestTicketInfo(client, data) {
-  let settings = {
-    url: '/api/v2/tickets/' + data.ticket.id + '.json',
-    type: 'GET',
-    dataType: 'json',
-  };
-  console.log(data)
-  client.request(settings).then(
-    function (data2) {
-      let user = data.ticket.requester.name;
-      console.log(data2)
-      localStorage.setItem('zendesk-tiquet-id', data2.ticket.id);
-      localStorage.setItem('zendesk-tiquet-name', data2.ticket.subject);
-      localStorage.setItem('zendesk-tiquet-description', data2.ticket.description);
-      localStorage.setItem('zendesk-tiquet-status', data2.ticket.status);
-      showInfo(data2, user);
-      showHome(data2);
-      addBundle();
-      //crearModal(client)
-    },
-    function (response) {
-      showError(response);
-    }
-    );
-    
-    
-    // updateTicketStatus('PendingApproval')
-  }*/
 
 /*BUNDLE*/
 
@@ -286,7 +242,10 @@ function addBundle() {
   const action = 'addBundleId';
 
   const callback = async (results) => {
-    bundlesList = results.affectedBundleID.split(',');
+    bundlesList =
+      results.affectedBundleID === ''
+        ? []
+        : results.affectedBundleID.split(',');
     renderBundle();
   };
   transmitToNetsuite(
@@ -311,7 +270,10 @@ function removeBundle(bundleID) {
   };
   const callback = (results) => {
     if (results.affectedBundleID != '') {
-      bundlesList = results.affectedBundleID.split(',');
+      bundlesList =
+        results.affectedBundleID === ''
+          ? []
+          : results.affectedBundleID.split(',');
       renderBundle();
       console.log('the bundle was deleted');
     } else {
@@ -592,7 +554,10 @@ function getCustomizations(isOperator, isAdministrator) {
   const action = 'getCRData';
   const ticketId = {ticketID: ticketNumber};
   const callback = (results) => {
-    bundlesList = results.affectedBundleID.split(',');
+    bundlesList =
+      results.affectedBundleID === ''
+        ? []
+        : results.affectedBundleID.split(',');
     linkCR = results.link;
     statusNS = results.statusBarState;
     if (statusNS == '') {
