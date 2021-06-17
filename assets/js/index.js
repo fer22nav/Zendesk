@@ -633,11 +633,11 @@ function updateTicketStatus(newState) {
     changeNum: ticketSubject,
     description: ticketDescription,
     state: newState,
-    bundleId: 'false',
   };
 
   const callback = (results) => {
-    console.log('Update Ticket Results', results);
+    statusNS = results.statusBarState;
+    console.log('Update Ticket Results to:', statusNS);
   };
 
   transmitToNetsuite(
