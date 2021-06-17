@@ -12,7 +12,7 @@ let linkCR;
 let bundleID = 0;
 
 var client = ZAFClient.init();
-client.invoke('resize', {width: '100%', height: '900px'});
+client.invoke('resize', { width: '100%', height: '900px' });
 
 client.on('pane.activated', function () {
   console.log('hover');
@@ -107,7 +107,7 @@ function removeExistingCustomization(existingName, existingId) {
   const callback = async (results) => {
     let existingList = [];
     results.custIds.forEach((id, idx) => {
-      existingList.push({name: results.custNames[idx], id: id});
+      existingList.push({ name: results.custNames[idx], id: id });
     });
     await localStorage.setItem(
       'selectedCustomizationValues',
@@ -356,14 +356,14 @@ function popModal(url, h) {
     .invoke('instances.create', {
       location: 'modal',
       url: url,
-      size: {width: '750px', height: h},
+      size: { width: '750px', height: h },
     })
     .then(function (modalContext) {
       // The modal is on the screen now!
       var modalClient = client.instance(
         modalContext['instances.create'][0].instanceGuid
       );
-      client.on('instance.registered', function () {});
+      client.on('instance.registered', function () { });
       modalClient.on('modal.close', function () {
         if (localStorage.getItem('selectedCustomizationValues')) {
           renderlookup();
@@ -451,20 +451,11 @@ function transmitToNetsuite(
   client
     .request(params)
     .then((results) => {
-      callback(results);
-      let elementos = document.querySelectorAll('#infoNs');
-      for (i = 0; i < elementos.length; i++) {
-        elementos[i].classList.remove('hid');
-        elementos[i].classList.add('vis');
-      }
+      callback(results);     
     })
     .catch((e) => {
-      console.log(e);
-      let elementos = document.querySelectorAll('#infoNs');
-      for (i = 0; i < elementos.length; i++) {
-        // elementos[i].classList.remove('vis')
-        //  elementos[i].classList.add('hid')
-      }
+      console.log(e.responseJSON.error);
+      
     });
 }
 function serviceNestsuite(
@@ -550,9 +541,10 @@ function serviceNestsuite(
 }
 
 function getCustomizations(isOperator, isAdministrator) {
+  const elementos = document.querySelectorAll('#infoNs');
   const scriptDeploy = 'flo_cr_api';
   const action = 'getCRData';
-  const ticketId = {ticketID: ticketNumber};
+  const ticketId = { ticketID: ticketNumber };
   const callback = (results) => {
     bundlesList =
       results.affectedBundleID === ''
@@ -560,16 +552,29 @@ function getCustomizations(isOperator, isAdministrator) {
         : results.affectedBundleID.split(',');
     linkCR = results.link;
     statusNS = results.statusBarState;
+    console.log(results)
+    if (results.inactive) {
+      for (i = 0; i < elementos.length; i++) {
+        elementos[i].classList.remove('vis')
+        elementos[i].classList.add('hid')
+      }
+    } else {
+      for (i = 0; i < elementos.length; i++) {
+        elementos[i].classList.remove('hid');
+        elementos[i].classList.add('vis');
+      }
+    }
     if (statusNS == '') {
       document.querySelector('#statusNS').textContent = 'N/S';
     } else {
+
       document.querySelector('#statusNS').textContent = statusNS;
     }
     var element = document.getElementById('linkCR');
     element.href = linkCR;
     let existingList = [];
     results.custIds.forEach((id, idx) => {
-      existingList.push({name: results.custNames[idx], id: id});
+      existingList.push({ name: results.custNames[idx], id: id });
     });
     if (
       isOperator &&
