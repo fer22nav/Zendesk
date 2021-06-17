@@ -23,9 +23,31 @@
 </head>
 
 <body class="body">
+   <!-- 
+  <button type="button" class="btn btn-primary" id="open" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+  </button>
+  <button type="button" class="btn btn-secondary" id="close" data-bs-dismiss="modal">Close</button> 
+ 
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div id="loader" class=" loader mx-auto my-2"></div>
+      </div>
+    </div>
+  </div>
+  -->
+ 
+ 
+  
+  
+  
+  
+  
+  
+  
   <div id="info"></div>
-  <div id="home"><div class="loader"></div></div>
-
+  <div id="home"></div>
   <footer>
     <div id="content"></div>
     <div class="footer-inner v-align bg-white">
@@ -54,7 +76,7 @@
           </div>
         </div>
       </div>
-      <div id="infoNs" class='user container py-3 hid'>
+      <div id="infoNs" class='user container py-3 '>
         
         <div class='row'>
           <div class='col px-0 v-align-col'>
@@ -88,7 +110,7 @@
           </div>          
         </div>
       </div>
-      <div id="infoNs" class='info container py-3 px-0 hid'>
+      <div id="infoNs" class='info container py-3 px-0'>
         <div class='row'>
           <div  class='col'>
             <h3 class='os-12 w-100'>
@@ -117,7 +139,7 @@
         <div class='accordion' id='accordionExample'>
           <div class="accordion-item">
             <h2 class="accordion-header p-0 pt-2" id="headingOne">
-              <button class="accordion-button os-12 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-controls="collapseOne">
+              <button class="accordion-button collapsed os-12 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-controls="collapseOne">
                 Bundle ID
               </button>
             </h2>
@@ -137,7 +159,9 @@
                         <button type="button" class="btn-plus" onclick="addBundle()" >+</button>
                       </div>      
                       <div class='bundle-id-lista'>
+                        
                         <ul class='bundle-list listas my-0 py-2'>
+                          
                         </ul>
                       </div>
                     </div>

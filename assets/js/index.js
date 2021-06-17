@@ -216,6 +216,7 @@ function renderBundle() {
   });
 }
 function addBundle() {
+  showLoader()
   if ($('#inp-bundle')[0].value !== 0) {
     bundleID = document.getElementById('inp-bundle').value;
     $('#inp-bundle')[0].value = '';
@@ -226,7 +227,7 @@ function addBundle() {
   };
   const scriptDeploy = 'flo_cr_api';
   const action = 'addBundleId';
-
+  
   const callback = async (results) => {
     bundlesList =
       results.affectedBundleID === ''
@@ -234,6 +235,7 @@ function addBundle() {
         : results.affectedBundleID.split(',');
     renderBundle();
   };
+
   transmitToNetsuite(
     restDomainBase,
     accountId,
@@ -246,6 +248,8 @@ function addBundle() {
     params,
     callback
   );
+  
+  
 }
 function removeBundle(bundleID) {
   const scriptDeploy = 'flo_cr_api';
@@ -326,11 +330,6 @@ try {
       userData?.groups.filter((element) => element.name === 'Administrators')
         .length > 0;
     await getCustomizations(isOperator, isAdministrator);
-    //crearModal(client)
-    //requestTicketInfo(client, data);
-    //requestUserInfo(client, user_id);
-    //loginUser(client, user_id)
-    //requestTicketInfo(client, id)
   });
 } catch (error) {
   console.log('error');
@@ -434,14 +433,31 @@ function transmitToNetsuite(
       formValues
     )}`
   );
+  const elementos = document.querySelectorAll('#infoNs');
   client
     .request(params)
     .then((results) => {
-      callback(results);     
+      if (results.status === 'success'){
+        removeLoader()
+      }
+      for (i = 0; i < elementos.length; i++) {
+        elementos[i].classList.remove('hid');
+        elementos[i].classList.add('vis');
+      }
+      callback(results);
     })
     .catch((e) => {
-      console.log(e.responseJSON.error);
+      for (i = 0; i < elementos.length; i++) {
+        elementos[i].classList.remove('vis')
+        elementos[i].classList.add('hid')
+      }
+      console.log(e);
+      if (e.statusText === 'error'){
+        removeLoader()
+        
+      }
       
+
     });
 }
 function serviceNestsuite(
@@ -527,7 +543,7 @@ function serviceNestsuite(
 }
 
 function getCustomizations(isOperator, isAdministrator) {
-  const elementos = document.querySelectorAll('#infoNs');
+
   const scriptDeploy = 'flo_cr_api';
   const action = 'getCRData';
   const ticketId = { ticketID: ticketNumber };
@@ -539,17 +555,7 @@ function getCustomizations(isOperator, isAdministrator) {
     linkCR = results.link;
     statusNS = results.statusBarState;
     console.log(results)
-    if (results.inactive) {
-      for (i = 0; i < elementos.length; i++) {
-        elementos[i].classList.remove('vis')
-        elementos[i].classList.add('hid')
-      }
-    } else {
-      for (i = 0; i < elementos.length; i++) {
-        elementos[i].classList.remove('hid');
-        elementos[i].classList.add('vis');
-      }
-    }
+
     if (statusNS == '') {
       document.querySelector('#statusNS').textContent = 'N/S';
     } else {
@@ -643,4 +649,18 @@ function updateTicketStatus(newState) {
     params,
     callback
   );
+}
+
+/*
+var myModalEl = document.getElementById('exampleModal')
+console.log(myModalEl)
+var modal = bootstrap.Modal.getInstance(myModalEl) 
+console.log(myModalEl.shown())
+*/
+function showLoader() {
+  
+//modal.show()
+}
+function removeLoader() {
+  //document.querySelector('#close').click()
 }

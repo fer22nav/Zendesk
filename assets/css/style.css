@@ -382,12 +382,16 @@ footer {
 
 /* LOADER */
 .loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 5s linear infinite;
+  border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 5s linear infinite;
+    z-index: 1000;
+}
+.loader::before {
+  background-color: lawngreen;
 }
 
 @keyframes spin {
@@ -397,4 +401,10 @@ footer {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.modal-content {
+  background-color: transparent !important;
+  border: none !important;
+ 
 }
