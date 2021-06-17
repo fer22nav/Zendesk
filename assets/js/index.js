@@ -134,20 +134,6 @@ function clickDeleteLookup(id, name) {
     localStorage.getItem('selectedCustomizationValues')
   );
   removeExistingCustomization(name, id);
-  // let selectedCustomizationValues = JSON.parse(
-  //   localStorage.getItem('selectedCustomizationValues')
-  // );
-  // selectedCustomizationValues.forEach((bundle, i) => {
-  //   if (bundle === `${name}`) {
-  //     selectedCustomizationValues.splice(i, 1);
-  //     return;
-  //   }
-  // });
-  // localStorage.setItem(
-  //   'selectedCustomizationValues',
-  //   JSON.stringify(selectedCustomizationValues)
-  // );
-  // renderlookup();
 }
 //Proposed Customization
 function renderProposed() {

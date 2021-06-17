@@ -1,4 +1,3 @@
-
 /*HERRAMIENTAS*/
 html,
 body {
@@ -58,13 +57,13 @@ body {
 .hid {
   display: none;
 }
-.vis{
-  display:flex;
+.vis {
+  display: flex;
 }
 /*FUENTES*/
 
 .os-20 {
- font-family: 'Open Sans', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: min(4vw, 20px);
 }
 .os-16 {
@@ -84,29 +83,30 @@ body {
   font-size: min(4vw, 10px);
 }
 /*NAVBAR*/
-.user, .info {
+.user,
+.info {
   border-bottom: rgb(233, 235, 237) solid 1px;
 }
 .btn-acount {
-   background-color: #053561;
-   color: #fff;
-   padding: 5px 10px 5px 10px;
-   border: none;
-   border-radius: 6px;
+  background-color: #053561;
+  color: #fff;
+  padding: 5px 10px 5px 10px;
+  border: none;
+  border-radius: 6px;
 }
 
 .status {
-  background-color: #FED550;
+  background-color: #fed550;
   padding: 2px;
 }
 .link {
-  background-color: #F4F3F3;
+  background-color: #f4f3f3;
   padding: 3px;
   color: #679dcf;
 }
 /*MAIN*/
 .btn-aprove {
-  background: #318E6A;
+  background: #318e6a;
   border-radius: 8px;
   border: none;
   color: #fff;
@@ -114,16 +114,18 @@ body {
   margin-right: 5%;
 }
 .btn-remove {
-  background: #D54352;
+  background: #d54352;
   border-radius: 8px;
   border: none;
   color: #fff;
   width: 40%;
 }
-.btn-remove img,.btn-aprove img {
+.btn-remove img,
+.btn-aprove img {
   width: 10%;
 }
-input, select{
+input,
+select {
   color: #000000;
   width: 100%;
   height: 35px;
@@ -131,12 +133,11 @@ input, select{
   border-radius: 6px;
   border: solid 1px #0000001a;
   /*box-shadow: 2px 5px 5px #0000001a;*/
-  
 }
 .btn-op {
   visibility: hidden;
 }
-.btn-plus{
+.btn-plus {
   color: #fff;
   height: 35px;
   width: 35px;
@@ -144,10 +145,9 @@ input, select{
   border-radius: 6px;
   background-color: #053561;
   padding-bottom: 5px;
-  
 }
 
-.bundle-id-lista{
+.bundle-id-lista {
   width: 100%;
   margin-top: 3px;
   background-color: #fff;
@@ -179,12 +179,13 @@ input, select{
 .btn-up {
   padding: 6px;
   margin-left: auto;
-  margin-right: 0;  
+  margin-right: 0;
   border: none;
   background: #053561;
   border-radius: 3px;
 }
-.btn-group, .btn-group-vertical {
+.btn-group,
+.btn-group-vertical {
   height: 30%;
   margin-top: auto;
   margin-bottom: auto;
@@ -200,22 +201,20 @@ input, select{
   font-size: 10px;
 }
 
-
-
 /*acordeones*/
 
 .accordion-item {
   margin-bottom: -1px;
   background-color: #fff !important;
   border: none !important;
-  border-bottom: 2px solid rgba(0,0,0,.125) !important;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.125) !important;
   margin-bottom: 20px !important;
 }
-.accordion-button{
+.accordion-button {
   width: 100% !important;
   background-color: #fff !important;
   padding: 10px !important;
-  border:none;
+  border: none;
   color: #053561 !important;
 }
 
@@ -223,7 +222,6 @@ input, select{
   background-color: #fff;
   border: solid 1px #0000001a;
   border-radius: 6px;
-
 }
 .icon-load {
   text-align: center;
@@ -245,7 +243,6 @@ input, select{
   margin: 0 auto 20px auto;
 }
 
-
 .btn-send {
   width: 90%;
   margin-right: 5px;
@@ -262,19 +259,19 @@ input, select{
   width: 100%;
   height: 100%;
 }
-.mod-head h2 {  
+.mod-head h2 {
   border-bottom: #b5b5b5 solid 1px;
 }
 
 .modal-header {
-    margin-bottom: 0 !important;
-    border-bottom: 1px solid #E9EBED !important;
+  margin-bottom: 0 !important;
+  border-bottom: 1px solid #e9ebed !important;
 }
 
-
 /*PILLS*/
-.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
-  color: #FFF !important;
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+  color: #fff !important;
   background-color: #053561 !important;
   border-color: transparent !important;
 }
@@ -314,7 +311,7 @@ input, select{
   border-radius: 6px;
 }
 
-.result {  
+.result {
   width: 100%;
   margin-top: 3px;
   border: #b5b5b5 solid 1px;
@@ -324,12 +321,10 @@ input, select{
   border-radius: 6px;
 }
 
-
 .colapse {
   visibility: collapse;
   height: 0;
   padding-top: 0;
-
 }
 .visible {
   visibility: visible;
@@ -348,7 +343,7 @@ input, select{
   width: 40%;
 }
 
-.lookupSelectedCusts{
+.lookupSelectedCusts {
   height: 15px;
   width: 15px;
   margin-right: 10px;
@@ -367,26 +362,39 @@ table.ui {
 /*FOOTER*/
 
 .data {
-    color: #363;
-    padding-left: 6px;
+  color: #363;
+  padding-left: 6px;
+}
+footer {
+  height: 50px;
+  text-align: center;
+  margin-top: 20px;
+  background-color: #fff;
+  font-size: 10px;
+}
+.footer-inner {
+  justify-content: space-around;
+}
+
+.img-footer {
+  width: 30%;
+}
+
+/* LOADER */
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 5s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-
-
-
-
-
-
-  footer {    
-    height: 50px;
-    text-align: center;
-    margin-top: 20px;
-    background-color: #fff;
-    font-size: 10px;
+  100% {
+    transform: rotate(360deg);
   }
-  .footer-inner {
-    justify-content: space-around;
-  }
-  
-  .img-footer {
-    width: 30%;
-  }
+}
