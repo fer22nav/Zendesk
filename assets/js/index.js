@@ -1,5 +1,5 @@
 //VARIABLES
-let bundles = [];
+let bundlesList = [];
 let existingCustom = {};
 let existingProp = {};
 let name, scriptid, bundleid, type, from, to;
@@ -9,6 +9,7 @@ let ticketDescription;
 let ticketStatus;
 let statusNS;
 let linkCR;
+let bundleID = 0;
 
 var client = ZAFClient.init();
 client.invoke('resize', {width: '100%', height: '900px'});
@@ -16,7 +17,6 @@ client.invoke('resize', {width: '100%', height: '900px'});
 client.on('pane.activated', function () {
   console.log('hover');
 });
-
 //Date format
 function formatDate(date) {
   var cdate = new Date(date);
@@ -73,49 +73,8 @@ function showError(response) {
   let html = template(error_data);
   $('#content').html(html);
 }
-/*BUNDLE*/
-function clickDelete(name) {
-  bundles.forEach((bundle, i) => {
-    if (bundle === `${name}`) {
-      bundles.splice(i, 1);
-      return;
-    }
-  });
-  // localStorage.setItem('bundle-id', JSON.stringify(bundles));
-  renderBundle(bundles);
-}
-function renderBundle() {
-  let bundleLista = document.querySelector('.bundle-lista');
-  bundleLista.innerHTML = '';
-  // let i = 0;
-  // let bundles = JSON.parse(localStorage.getItem('bundle-id'));
-  // bundles.forEach((bundle) => {
-  //   const li = document.createElement('li');
-  //   li.className = 'bundle-li';
-  //   li.innerHTML = `
-  //     <span class="w-75 ps-2">${bundle}</span>
-  //     <div class="btn-group dropdown w-25">
-  //       <button type="button" class="btn-up dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
-  //       <ul class="dropdown-menu">
-  //         <li><button class="dropdown-item" onclick="clickDelete('${bundle}')" data-value="${i}" id="bundle-delete">Remove</button></li>
-  //     </div>`;
-  //   bundleLista.appendChild(li);
-  //   i++;
-  // });
-}
-function addBundle() {
-  $('.btn-plus').click(() => {
-    if ($('#inp-bundle')[0].value !== '') {
-      bundles.push($('#inp-bundle')[0].value);
-      // localStorage.setItem('bundle-id', JSON.stringify(bundles));
-      $('#inp-bundle')[0].value = '';
-      renderBundle();
-    }
-  });
-}
-//Existing Customizations
 function renderlookup() {
-  let existingList = document.querySelector('.lookup-lista');
+  let existingList = document.querySelector('.lookup-list');
   existingList.innerHTML = '';
   let selectedCustomizationValues = JSON.parse(
     localStorage.getItem('selectedCustomizationValues')
@@ -124,18 +83,18 @@ function renderlookup() {
     const li = document.createElement('li');
     li.className = 'bundle-li';
     li.innerHTML = `      
-      <span class="w-75 ps-2">${item.name}</span>
+    <span class="w-75 ps-2">${item.name}</span>
       <div class="btn-group dropdown w-25">
         <button type="button" class="btn-up dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
         <ul class="dropdown-menu">
           <li><button class="dropdown-item" onclick="clickDeleteLookup('${item.id}', '${item.name}')" id="bundle-delete">Remove</button></li>
           <li><button class="dropdown-item" id="ver-erd" disabled >ERD</button></li>
-      </div>`;
+          </div>`;
     existingList.appendChild(li);
   });
   localStorage.removeItem('selectedCustomizationValues');
 }
-
+//Existing Customizations
 function removeExistingCustomization(existingName, existingId) {
   const scriptDeploy = 'flo_cr_api';
   const action = 'removeCustomization';
@@ -174,7 +133,6 @@ function clickDeleteLookup(id, name) {
   const selectedCustomizationValues = JSON.parse(
     localStorage.getItem('selectedCustomizationValues')
   );
-
   removeExistingCustomization(name, id);
   // let selectedCustomizationValues = JSON.parse(
   //   localStorage.getItem('selectedCustomizationValues')
@@ -203,12 +161,12 @@ function renderProposed() {
     const li = document.createElement('li');
     li.className = 'bundle-li';
     li.innerHTML = `      
-      <span class="w-75 ps-2">${item}</span>
-      <div class="btn-group dropdown w-25">
-        <button type="button" class="btn-up dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
-        <ul class="dropdown-menu">
+    <span class="w-75 ps-2">${item}</span>
+    <div class="btn-group dropdown w-25">
+    <button type="button" class="btn-up dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
+    <ul class="dropdown-menu">
           <li><button class="dropdown-item" onclick="clickDeleteProposed('${item}')" data-value="${i}" id="bundle-delete">Remove</button></li>
-      </div>`;
+          </div>`;
     bundleLista.appendChild(li);
     i++;
   });
@@ -248,6 +206,7 @@ function removeProposed(proposedName) {
   );
 }
 function clickDeleteProposed(name) {
+  removeProposed(name);
   // let ProposedCustomization = JSON.parse(
   //   localStorage.getItem('ProposedCustomization')
   // );
@@ -257,7 +216,6 @@ function clickDeleteProposed(name) {
   //     return;
   //   }
   // });
-  removeProposed(name);
   // localStorage.setItem(
   //   'ProposedCustomization',
   //   JSON.stringify(ProposedCustomization)
@@ -289,11 +247,93 @@ function requestTicketInfo(client, data) {
     function (response) {
       showError(response);
     }
+    );
+    
+    
+    // updateTicketStatus('PendingApproval')
+  }*/
+
+/*BUNDLE*/
+
+function renderBundle() {
+  const bundlesRender = document.querySelector('.bundle-list');
+  bundlesRender.innerHTML = '';
+  let i = 0;
+  bundlesList.forEach((bundle) => {
+    const li = document.createElement('li');
+    li.className = 'bundle-li';
+    li.innerHTML = `
+      <span class="w-75 ps-2">${bundle}</span>
+      <div class="btn-group dropdown w-25">
+        <button type="button" class="btn-up dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
+        <ul class="dropdown-menu">
+          <li><button class="dropdown-item" onclick="removeBundle('${bundle}')" data-value="${i}" id="bundle-delete">Remove</button></li>
+      </div>`;
+    bundlesRender.appendChild(li);
+    i++;
+  });
+}
+function addBundle() {
+  if ($('#inp-bundle')[0].value !== 0) {
+    bundleID = document.getElementById('inp-bundle').value;
+    $('#inp-bundle')[0].value = '';
+  }
+  const params = {
+    bundleId: bundleID,
+    ticketID: ticketNumber,
+  };
+  const scriptDeploy = 'flo_cr_api';
+  const action = 'addBundleId';
+
+  const callback = async (results) => {
+    bundlesList = results.affectedBundleID.split(',');
+    renderBundle();
+  };
+  transmitToNetsuite(
+    restDomainBase,
+    accountId,
+    consumerKey,
+    consumerSecret,
+    tokenId,
+    tokenSecret,
+    scriptDeploy,
+    action,
+    params,
+    callback
   );
+}
+function removeBundle(bundleID) {
+  const scriptDeploy = 'flo_cr_api';
+  const action = 'removeBundleId';
+  const params = {
+    ticketID: ticketNumber,
+    bundleId: bundleID,
+  };
+  const callback = (results) => {
+    if (results.affectedBundleID != '') {
+      bundlesList = results.affectedBundleID.split(',');
+      renderBundle();
+      console.log('the bundle was deleted');
+    } else {
+      console.log("don't have a bundleID");
+    }
+    renderBundle();
+  };
+  transmitToNetsuite(
+    restDomainBase,
+    accountId,
+    consumerKey,
+    consumerSecret,
+    tokenId,
+    tokenSecret,
+    scriptDeploy,
+    action,
+    params,
+    callback
+  );
+}
 
-
-  // updateTicketStatus('PendingApproval')
-}*/
+//zendesk user data
 var userData = '';
 var userName = '';
 function getCurrentUser() {
@@ -331,8 +371,6 @@ try {
 
     showInfo(data, userName);
     showHome(data);
-    addBundle();
-
     const isOperator =
       userData?.groups.filter((element) => element.name === 'Operators')
         .length > 0;
@@ -459,7 +497,7 @@ function transmitToNetsuite(
       }
     })
     .catch((e) => {
-      console.log('The ticket does not exist');
+      console.log(e);
       let elementos = document.querySelectorAll('#infoNs');
       for (i = 0; i < elementos.length; i++) {
         // elementos[i].classList.remove('vis')
@@ -554,6 +592,7 @@ function getCustomizations(isOperator, isAdministrator) {
   const action = 'getCRData';
   const ticketId = {ticketID: ticketNumber};
   const callback = (results) => {
+    bundlesList = results.affectedBundleID.split(',');
     linkCR = results.link;
     statusNS = results.statusBarState;
     if (statusNS == '') {
@@ -592,6 +631,7 @@ function getCustomizations(isOperator, isAdministrator) {
     }
     renderlookup();
     renderProposed();
+    renderBundle();
   };
 
   const callbackError = (e) => {
