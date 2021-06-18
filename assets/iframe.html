@@ -23,29 +23,6 @@
 </head>
 
 <body class="body">
-   <!-- 
-  <button type="button" class="btn btn-primary" id="open" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Launch demo modal
-  </button>
-  <button type="button" class="btn btn-secondary" id="close" data-bs-dismiss="modal">Close</button> 
- 
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div id="loader" class=" loader mx-auto my-2"></div>
-      </div>
-    </div>
-  </div>
-  -->
- 
- 
-  
-  
-  
-  
-  
-  
-  
   <div id="info"></div>
   <div id="home"></div>
   <footer>
@@ -58,7 +35,6 @@
       </p>
     </div>
   </footer>
-
   <!--HOME-->
   <!--INFO TICKET-->
   <script id="info-template" type="text/x-handlebars-template">
@@ -76,8 +52,7 @@
           </div>
         </div>
       </div>
-      <div id="infoNs" class='user container py-3 '>
-        
+      <div id="infoNs" class='user container py-3 '>        
         <div class='row'>
           <div class='col px-0 v-align-col'>
             <h3 class='os-12 m-0 w-100'>
@@ -151,17 +126,21 @@
                       <div class="v-align">
                         <input
                           class='os-10 me-1'
-                          type='text'
+                          type="text"
                           name='addbundle'
                           placeholder=''
                           id='inp-bundle'
+                          required
                         />
-                        <button type="button" class="btn-plus" onclick="addBundle()" >+</button>
-                      </div>      
+                        <button type="button"  class="btn-plus" onclick="addBundle()" >+</button>
+                      </div> 
+                      <span id="errorBundle" class="help-block error"></span>     
                       <div class='bundle-id-lista'>
+                        <div id="loader-pane" class="">
+                          <div id="loader" class="mx-auto my-2"></div>
+                        </div>
                         
-                        <ul class='bundle-list listas my-0 py-2'>
-                          
+                        <ul class='bundle-list listas my-0 py-2'>                          
                         </ul>
                       </div>
                     </div>

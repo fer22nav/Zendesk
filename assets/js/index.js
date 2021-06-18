@@ -216,42 +216,61 @@ function renderBundle() {
   });
 }
 function addBundle() {
-  showLoader()
-  if ($('#inp-bundle')[0].value !== 0) {
-    bundleID = document.getElementById('inp-bundle').value;
-    $('#inp-bundle')[0].value = '';
+  //valida los dats del input 
+  //compara si esta vacio
+  if ($('#inp-bundle')[0].value !== '') {
+    //compara si es un numero
+    if (!isNaN($('#inp-bundle')[0].value)) {
+      //compara si tiene mas de 6 digitos
+      if ($('#inp-bundle')[0].value.length < 7) {
+        //activa y desactiva el boton
+        $('.bundle-id-lista #loader').addClass('loader')
+        $('.bundle-id-lista #loader-pane').addClass('loader-pane')
+        $('.btn-plus').prop('disabled', true)
+        $('.bundle-id-lista #loader').on('enable', function () { $('.btn-plus').prop('disabled', false) });
+        //obtiene el valor
+        bundleID = document.getElementById('inp-bundle').value;
+        $('#inp-bundle')[0].value = '';
+        //scryt de NS
+        const params = {
+          bundleId: bundleID,
+          ticketID: ticketNumber,
+        };
+        const scriptDeploy = 'flo_cr_api';
+        const action = 'addBundleId';
+        const callback = async (results) => {
+          bundlesList =
+            results.affectedBundleID === ''
+              ? []
+              : results.affectedBundleID.split(',');
+          renderBundle();
+        };
+        transmitToNetsuite(
+          restDomainBase,
+          accountId,
+          consumerKey,
+          consumerSecret,
+          tokenId,
+          tokenSecret,
+          scriptDeploy,
+          action,
+          params,
+          callback,
+        );
+        $('#errorBundle')[0].innerHTML = ''
+      } else {
+        $('#errorBundle')[0].innerHTML = '<p>You can enter a maximum of six numbers</p>'
+      }
+    } else {
+      $('#errorBundle')[0].innerHTML = '<p>You must enter a number</p>'
+    }
+  } else {
+    $('#errorBundle')[0].innerHTML = '<p>You must enter a bundle ID</p>'
   }
-  const params = {
-    bundleId: bundleID,
-    ticketID: ticketNumber,
-  };
-  const scriptDeploy = 'flo_cr_api';
-  const action = 'addBundleId';
-  
-  const callback = async (results) => {
-    bundlesList =
-      results.affectedBundleID === ''
-        ? []
-        : results.affectedBundleID.split(',');
-    renderBundle();
-  };
-
-  transmitToNetsuite(
-    restDomainBase,
-    accountId,
-    consumerKey,
-    consumerSecret,
-    tokenId,
-    tokenSecret,
-    scriptDeploy,
-    action,
-    params,
-    callback
-  );
-  
-  
 }
 function removeBundle(bundleID) {
+  $('.bundle-id-lista #loader').addClass('loader')
+  $('.bundle-id-lista #loader-pane').addClass('loader-pane')
   const scriptDeploy = 'flo_cr_api';
   const action = 'removeBundleId';
   const params = {
@@ -437,7 +456,7 @@ function transmitToNetsuite(
   client
     .request(params)
     .then((results) => {
-      if (results.status === 'success'){
+      if (results.status === 'success') {
         removeLoader()
       }
       for (i = 0; i < elementos.length; i++) {
@@ -452,11 +471,11 @@ function transmitToNetsuite(
         elementos[i].classList.add('hid')
       }
       console.log(e);
-      if (e.statusText === 'error'){
+      if (e.statusText === 'error') {
         removeLoader()
-        
+
       }
-      
+
 
     });
 }
@@ -651,16 +670,10 @@ function updateTicketStatus(newState) {
   );
 }
 
-/*
-var myModalEl = document.getElementById('exampleModal')
-console.log(myModalEl)
-var modal = bootstrap.Modal.getInstance(myModalEl) 
-console.log(myModalEl.shown())
-*/
-function showLoader() {
-  
-//modal.show()
-}
 function removeLoader() {
-  //document.querySelector('#close').click()
+  if ($(`#loader`)) {
+    $(`#loader`).removeClass('loader').trigger("enable");
+    $('#loader-pane').removeClass('loader-pane')
+  }
+
 }
