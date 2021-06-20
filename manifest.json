@@ -14,6 +14,31 @@
       "modal": "assets/modal.html"
     }
   },
+  "parameters": [
+    {
+      "name": "accountId",
+      "type": "password",
+      "required": false
+    },
+    {
+      "name": "consumerKey",
+      "type": "password",
+      "required": false
+    },
+    {
+      "name": "consumerSecret",
+      "type": "password",
+      "required": false
+    },{
+      "name": "tokenId",
+      "type": "password",
+      "required": false
+    },{
+      "name": "tokenSecret",
+      "type": "password",
+      "required": false
+    }
+  ],
   "version": "1.0",
   "frameworkVersion": "2.0",
   "domainWhitelist": [

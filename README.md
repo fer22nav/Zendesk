@@ -51,3 +51,5 @@ https://develop.zendesk.com/hc/en-us/articles/360001074168
 
 
 
+## manejo de errores
+https://developer.zendesk.com/documentation/apps/app-developer-guide/using-the-apps-framework/
