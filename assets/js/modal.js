@@ -1,7 +1,8 @@
 //client init
 var client = ZAFClient.init();
 localStorage.setItem('filter1', '[]');
-
+$('#mod-inner #loader').addClass('loader')
+$('#mod-inner #loader-pane').addClass('loader-pane')
 document
   .querySelector('#modal')
   .addEventListener('submit', this.onModalSubmit.bind());
@@ -49,7 +50,6 @@ function transmitToNetsuite(
     });
     return result;
   }
-
   const params = serviceNestsuite(
     url,
     accId,
@@ -63,12 +63,18 @@ function transmitToNetsuite(
   );
   client
     .request(params)
-    .then((results) => callback(results))
-    .catch((e) => console.log('Error Handling', e));
+    .then((results) => {
+      callback(results)
+      removeLoader()
+    })
+    .catch((e) => {
+      console.log('Error Handling', e)
+      removeLoader()
+    });
 }
 //SELECT MODIFY BY
 function getModifyBy() {
-  const selectOptions = {value: 'customer'};
+  const selectOptions = { value: 'customer' };
   const scriptDeploy = 'flo_customization_api';
   const action = 'allEmployees';
   const callback = (results) => {
@@ -104,9 +110,13 @@ function onModalSubmit() {
   event.preventDefault();
   getFilterData();
 }
-
 function getFilterData() {
+  //agrega el loader
+  $('#mod-inner #loader').addClass('loader')
+  $('#mod-inner #loader-pane').addClass('loader-pane')
+  //obtiene los datos del formulario
   const filter = obtData();
+  //arama la llamada de modified by
   const scriptDeploy = 'flo_customization_api';
   const action = 'search';
   const callback = (results) => {
@@ -114,7 +124,6 @@ function getFilterData() {
     objectResp = objectResp.results;
     renderlook(objectResp);
   };
-
   transmitToNetsuite(
     restDomainBase,
     accountId,
@@ -129,6 +138,19 @@ function getFilterData() {
   );
 }
 
+
+function formatDate(date1) {
+  let fechaFrom = ''
+  date1 = date1.split('-')
+  date2 = Array.from(date1[0])
+  date2.splice(0, 2)
+  fechaFrom = `${date1[1]}/${date1[2]}/${date2[0]}${date2[1]}`
+  return fechaFrom
+}
+
+
+
+
 function obtData() {
   value = document.getElementById('inp-name').value;
   modifiedby = document.getElementById('inp-modif').value;
@@ -137,6 +159,10 @@ function obtData() {
   bundleid = document.getElementById('inp-bundleid').value;
   from = document.getElementById('inp-date-from').value;
   to = document.getElementById('inp-date-to').value;
+
+  from = formatDate(from)
+
+
 
   var r = {
     value: value,
@@ -147,13 +173,14 @@ function obtData() {
     from: from,
     to: to,
   };
+
   return r;
 }
 function renderlook(res) {
   let resultList = document.querySelector('.resultList');
   resultList.innerHTML = '';
   for (let i = 0; i < res.length; i++) {
-    //console.log(res[i].id);
+    
     if (res[i] !== '') {
       const tr = document.createElement('tr');
       tr.className = 'look-tr';
@@ -171,15 +198,16 @@ function renderlook(res) {
 }
 // /app/site/hosting/restlet.nl?script=customscript_flo_cr_api&deploy=customdeploy_flo_cr_api&action=addCustomizations&existing=207519,205513,205514
 function addCustom() {
+  $('#mod-inner #loader').addClass('loader')
+  $('#mod-inner #loader-pane').addClass('loader-pane')
   let existingId = '';
   let inputs = $('.check');
   // const newList = JSON.parse(localStorage.getItem('selectedCustomizationValues'))
   $('.check').each((i) => {
     if (inputs[i].checked) {
       // selectedCustomization.push(inputs[i].dataset.id);
-      existingId += `${existingId.length > 0 ? ',' : ''}${
-        inputs[i].dataset.id
-      }`;
+      existingId += `${existingId.length > 0 ? ',' : ''}${inputs[i].dataset.id
+        }`;
       // newList.push({id: inputs[i].dataset.id, name: inputs[i].value});
     }
   });
@@ -194,7 +222,7 @@ function addCustom() {
   const callback = (results) => {
     let existingList = [];
     results.custIds.forEach((id, idx) => {
-      existingList.push({name: results.custNames[idx], id: id});
+      existingList.push({ name: results.custNames[idx], id: id });
     });
     localStorage.setItem(
       'selectedCustomizationValues',
@@ -241,18 +269,13 @@ function serviceNestsuite(
   ) {
     httpMethod =
       httpMethod == undefined || httpMethod == null ? 'GET' : httpMethod;
-    //console.log("token based authentication generateTbaHeader " + restDomainBase)
     var base_url = restDomainBase.split('?')[0];
-    //console.log("token based authentication generateTbaHeader base_url " + base_url)
     var query_params = restDomainBase.split('?')[1];
-    //console.log(query_params);
     var params = query_params.split('&');
-    //console.log(params)
     var parameters = {};
     for (var i = 0; i < params.length; i++) {
       parameters[params[i].split('=')[0]] = params[i].split('=')[1];
     }
-    //console.log("token based authentication generateTbaHeader parameters " + JSON.stringify(parameters) );
     var token = {
       key: tokenId,
       secret: tokenSecret,
@@ -264,7 +287,6 @@ function serviceNestsuite(
       },
       signature_method: 'HMAC-SHA256',
       hash_function: function (base_string, key) {
-        //console.log("generateTbaHeader base_string " + base_string);
         return CryptoJS.HmacSHA256(base_string, key).toString(
           CryptoJS.enc.Base64
         );
@@ -301,4 +323,11 @@ function serviceNestsuite(
     contentType: 'application/json',
   };
   return options;
+}
+function removeLoader() {
+  if ($(`#mod-inner #loader`)) {
+    $('#mod-inner #loader').removeClass('loader').trigger("enable");
+    $('#mod-inner #loader-pane').removeClass('loader-pane')
+  }
+
 }

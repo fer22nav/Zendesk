@@ -17,42 +17,45 @@
         crossorigin="anonymous" />
 </head>
 
-<body class="mx-auto body">
+<body class="mx-auto body" style="overflow-y: hidden;">
     <div class="mod-body mx-auto">
         <div class="mod-head">
             <h2 class="os-20 fw-bold px-0 pb-4 m-0 header">Lookup Customization</h2>
             <h2 class="os-20 fw-bold px-0 pb-4 m-0 header2 colapse">Select Customizations to attach
             </h2>
         </div>
-        <div class="mod-inner">
+        <div id="mod-inner" class="mod-inner">
+            <div id="loader-pane" class="">
+                <div id="loader" class="mx-auto my-2"></div>
+            </div>  
             <form class="form-modal" id="modal">
                 <div class="container" style="max-width: 100%;">
                     <div class="row">
                         <div class="col-5">
-                            <div class="form-group has-success mb-2 ">
+                            <div class="form-group has-success mb-4 ">
                                 <label class="os-14 pb-2 fw-bold" for="">Name</label>
                                 <input class="m-16" type="text" name="name" required placeholder="" id="inp-name" />
                                 <span id="error" class="help-block"></span>
                             </div>
-                            <div class="form-group has-success mb-2 ">
+                            <div class="form-group has-success mb-4 ">
                                 <label class="os-14 pb-2 fw-bold" for="">Script ID</label>
                                 <input class="m-16" type="text" name="scriptid" placeholder="" id="inp-scriptid" />
                                 <span id="error" class="help-block"></span>
                             </div>
-                            <div class="form-group has-success mb-2 ">
+                            <div class="form-group has-success mb-4 ">
                                 <label class="os-14 pb-2 fw-bold" for="">Bundle ID</label>
                                 <input class="m-16" type="text" name="bundleid" placeholder="" id="inp-bundleid" />
                                 <span id="error" class="help-block"></span>
                             </div>
                         </div>
                         <div class="col-7">
-                            <div class="form-group has-success mb-2 ">
+                            <div class="form-group has-success mb-4 ">
                                 <label class="os-14 pb-2 fw-bold" for="">Modified By</label>
                                 <select class="m-16" name="modif" id="inp-modif">
                                 </select>
                                 <span id="error" class="help-block"></span>
                             </div>
-                            <div class="form-group has-success mb-2 ">
+                            <div class="form-group has-success mb-4 ">
                                 <label class="os-14 pb-2 fw-bold" for="">Type</label>
                                 <select class="m-16" name="type" id="inp-type">
                                     <option value="" selected>-Select Type-</option>
@@ -128,12 +131,12 @@
                                 <span id="error" class="help-block"></span>
                             </div>
                             <div class="d-flex">
-                                <div class="form-group has-success mb-2 w-50">
+                                <div class="form-group has-success mb-4 w-50">
                                     <label class="os-14 pb-2 fw-bold" for="">From</label>
-                                    <input type="date" id="inp-date-from">
+                                    <input type="date" id="inp-date-from" min="1990-01-01" max="2090-01-01">
                                     <span id="error" class="help-block"></span>
                                 </div>
-                                <div class="form-group has-success mb-2 w-50">
+                                <div class="form-group has-success mb-4 w-50">
                                     <label class="os-14 pb-2 fw-bold" for="">To</label>
                                     <input type="date" id="inp-date-to">
                                     <span id="error" class="help-block"></span>
@@ -144,8 +147,9 @@
                     </div>
                 </div>
                 <button class="c-btn btn-form-close os-14" type="submit">Lookup</button>
-            </form>
-            <div class="look-list colapse">
+            </form>            
+            <div id="look-list" class="look-list colapse">         
+                    
                 <table class="ui">
                     <thead>
                         <tr class="look-tr">
@@ -156,9 +160,14 @@
                             </th>
                             <th id="type" class="look-th d-flex w-40">Details</th>
                         </tr>
-                    </thead>
-                    <tbody class="resultList">
-
+                    </thead>                   
+                    <tbody class="resultList" style=" 
+                    display: block;
+                    list-style: none;
+                    padding-left: 0;
+                    overflow-y: scroll;
+                    max-height: 250px;
+                    min-height: 250px;">                         
                     </tbody>
                 </table>
                 <button class="btn-form-close" id="addCustom" onclick="addCustom()">Add selected Customizations.</button>

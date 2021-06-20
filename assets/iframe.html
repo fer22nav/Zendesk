@@ -135,7 +135,7 @@
                         <button type="button"  class="btn-plus" onclick="addBundle()" >+</button>
                       </div> 
                       <span id="errorBundle" class="help-block error"></span>     
-                      <div class='bundle-id-lista'>
+                      <div id="bundle-id" class='bundle-id-lista '>
                         <div id="loader-pane" class="">
                           <div id="loader" class="mx-auto my-2"></div>
                         </div>
@@ -177,7 +177,10 @@
                 <h3 class='os-16 fw-bold'>
                   Existing Customizations
                 </h3>
-                <div class='bundle-id-lista'>
+                <div id="existing-customizations" class='bundle-id-lista'>
+                  <div id="loader-pane" class="">
+                    <div id="loader" class="mx-auto my-2"></div>
+                  </div>
                   <ul class='lookup-list listas my-0 py-2'>
                   </ul>
                 </div>                
@@ -212,7 +215,10 @@
                 <h3 class='os-16 fw-bold'>
                   Proposed Customizations
                 </h3>
-                <div class='bundle-id-lista'>
+                <div id="proposed-customizations" class='bundle-id-lista'>
+                  <div id="loader-pane" class="">
+                    <div id="loader" class="mx-auto my-2"></div>
+                  </div>
                   <ul class='proposed-lista listas my-0 py-2'>
                   </ul>
                 </div>   

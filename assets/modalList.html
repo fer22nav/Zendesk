@@ -27,11 +27,14 @@
         <div class="mod-head">
             <h2 class="os-20 fw-bold px-0 pb-4 header">Add Proposed Customization</h2>           
         </div>
-        <div class="mod-inner">
+        <div id="proposed-customizations" class="mod-inner">
+            <div id="loader-pane" class="">
+                <div id="loader" class="mx-auto my-2"></div>
+              </div>
             <form class="form-modal" id="modal">
                 <div class="container" style="max-width: 100%;">
                     <div class="row">
-                        <div class="col">
+                        <div class="col">                            
                             <div class="form-group has-success mb-2 ">
                                 <label class="os-14 pb-2 fw-bold" for="">Type</label>
                                 <select class="m-16" name="type" id="inp-type">

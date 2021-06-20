@@ -114,6 +114,8 @@ function removeExistingCustomization(existingName, existingId) {
       JSON.stringify(existingList)
     );
     renderlookup();
+    $('#existing-customizations.bundle-id-lista #loader').removeClass('loader').trigger("enable");
+    $('#existing-customizations.bundle-id-lista #loader-pane').removeClass('loader-pane')
   };
 
   transmitToNetsuite(
@@ -128,8 +130,11 @@ function removeExistingCustomization(existingName, existingId) {
     params,
     callback
   );
+
 }
 function clickDeleteLookup(id, name) {
+  $('#existing-customizations.bundle-id-lista #loader').addClass('loader')
+  $('#existing-customizations.bundle-id-lista #loader-pane').addClass('loader-pane')
   const selectedCustomizationValues = JSON.parse(
     localStorage.getItem('selectedCustomizationValues')
   );
@@ -159,6 +164,8 @@ function renderProposed() {
   localStorage.removeItem('ProposedCustomization');
 }
 function removeProposed(proposedName) {
+  $('#proposed-customizations.bundle-id-lista #loader').addClass('loader')
+  $('#proposed-customizations.bundle-id-lista #loader-pane').addClass('loader-pane')
   const scriptDeploy = 'flo_cr_api';
   const action = 'removeCustomization';
   const params = {
@@ -175,7 +182,11 @@ function removeProposed(proposedName) {
     } else {
       localStorage.setItem('ProposedCustomization', JSON.stringify([]));
     }
+    
     renderProposed();
+    $(`#proposed-customizations #loader`).removeClass('loader').trigger("enable");
+    $('#proposed-customizations #loader-pane').removeClass('loader-pane')
+    
   };
 
   transmitToNetsuite(
@@ -194,9 +205,7 @@ function removeProposed(proposedName) {
 function clickDeleteProposed(name) {
   removeProposed(name);
 }
-
 /*BUNDLE*/
-
 function renderBundle() {
   const bundlesRender = document.querySelector('.bundle-list');
   bundlesRender.innerHTML = '';
@@ -224,10 +233,10 @@ function addBundle() {
       //compara si tiene mas de 6 digitos
       if ($('#inp-bundle')[0].value.length < 7) {
         //activa y desactiva el boton
-        $('.bundle-id-lista #loader').addClass('loader')
-        $('.bundle-id-lista #loader-pane').addClass('loader-pane')
+        $('#bundle-id.bundle-id-lista #loader').addClass('loader')
+        $('#bundle-id.bundle-id-lista #loader-pane').addClass('loader-pane')
         $('.btn-plus').prop('disabled', true)
-        $('.bundle-id-lista #loader').on('enable', function () { $('.btn-plus').prop('disabled', false) });
+        $('#bundle-id.bundle-id-lista #loader').on('enable', function () { $('.btn-plus').prop('disabled', false) });
         //obtiene el valor
         bundleID = document.getElementById('inp-bundle').value;
         $('#inp-bundle')[0].value = '';
@@ -269,8 +278,8 @@ function addBundle() {
   }
 }
 function removeBundle(bundleID) {
-  $('.bundle-id-lista #loader').addClass('loader')
-  $('.bundle-id-lista #loader-pane').addClass('loader-pane')
+  $('#bundle-id.bundle-id-lista #loader').addClass('loader')
+  $('#bundle-id.bundle-id-lista #loader-pane').addClass('loader-pane')
   const scriptDeploy = 'flo_cr_api';
   const action = 'removeBundleId';
   const params = {
@@ -312,7 +321,6 @@ function getCurrentUser() {
     return data['currentUser'];
   });
 }
-
 /*LOGIN*/
 function loginUser(client, id) {
   let settings = {
@@ -330,7 +338,6 @@ function loginUser(client, id) {
     }
   );
 }
-
 try {
   client.get('ticket').then(async function (data) {
     userData = await getCurrentUser();
@@ -560,7 +567,6 @@ function serviceNestsuite(
   };
   return options;
 }
-
 function getCustomizations(isOperator, isAdministrator) {
 
   const scriptDeploy = 'flo_cr_api';
@@ -573,7 +579,6 @@ function getCustomizations(isOperator, isAdministrator) {
         : results.affectedBundleID.split(',');
     linkCR = results.link;
     statusNS = results.statusBarState;
-    console.log(results)
 
     if (statusNS == '') {
       document.querySelector('#statusNS').textContent = 'N/S';
@@ -640,7 +645,6 @@ function getCustomizations(isOperator, isAdministrator) {
     callbackError
   );
 }
-
 function updateTicketStatus(newState) {
   const scriptDeploy = 'flo_cr_api';
   const action = 'createCR';
@@ -669,7 +673,6 @@ function updateTicketStatus(newState) {
     callback
   );
 }
-
 function removeLoader() {
   if ($(`#loader`)) {
     $(`#loader`).removeClass('loader').trigger("enable");
@@ -677,3 +680,7 @@ function removeLoader() {
   }
 
 }
+
+
+
+

@@ -69,7 +69,9 @@ function onModalSubmit() {
   submitData();
 }
 
-async function submitData() {
+ function submitData() {
+  $('#proposed-customizations #loader').addClass('loader')
+  $('#proposed-customizations #loader-pane').addClass('loader-pane')
   // //addCostumization propose NS
   const result = getFormData();
   const createdProposed = {
