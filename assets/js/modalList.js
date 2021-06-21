@@ -1,17 +1,16 @@
 //client init
 var client = ZAFClient.init();
-client.metadata().then(function (metadata) {
-  console.log(metadata.settings)
-  var accountId = metadata.settings.accountId ? metadata.settings.accountId :
-    'TSTDRV1724328'
-  var consumerKey = metadata.settings.consumerKey ? metadata.settings.consumerKey :
-    '35f13daf104282ea3edfdd67cf3f21f58b8d9b1914305d7ec451aee0888ed112';
-  var consumerSecret = metadata.settings.consumerSecret ? metadata.settings.consumerSecret :
-    '0a410d4fb4c5b9219b4593ef3abe7fd4efb52ad351ed1199e82e9ad92cf1dfff';
-  var tokenId = metadata.settings.tokenId ? metadata.settings.tokenId :
-    '580ba69efedcd8f4bdd7ac7bec6bc0324245a56d24a66d52ab061e1c5cf3ab41';
-  var tokenSecret = metadata.settings.tokenSecret ? metadata.settings.tokenSecret :
-    'ba3426be5d771f1346ef0b66e40c5da6796301ce2413ec0de3a210dfa2d0be5e';
+client.metadata().then(function (metadata) { console.log(metadata.settings)})
+  accountId = /*metadata.settings.accountId ? metadata.settings.accountId :*/
+      'TSTDRV1724328'
+    consumerKey =/* metadata.settings.consumerKey ? metadata.settings.consumerKey :*/
+      '35f13daf104282ea3edfdd67cf3f21f58b8d9b1914305d7ec451aee0888ed112';
+    consumerSecret =/* metadata.settings.consumerSecret ? metadata.settings.consumerSecret :*/
+      '0a410d4fb4c5b9219b4593ef3abe7fd4efb52ad351ed1199e82e9ad92cf1dfff';
+    tokenId =/* metadata.settings.tokenId ? metadata.settings.tokenId :*/
+      '580ba69efedcd8f4bdd7ac7bec6bc0324245a56d24a66d52ab061e1c5cf3ab41';
+    tokenSecret =/* metadata.settings.tokenSecret ? metadata.settings.tokenSecret :*/
+      'ba3426be5d771f1346ef0b66e40c5da6796301ce2413ec0de3a210dfa2d0be5e';
 
 
 
@@ -201,4 +200,3 @@ client.metadata().then(function (metadata) {
     return options;
   }
 
-})
