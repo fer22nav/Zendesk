@@ -34,6 +34,7 @@ function transmitToNetsuite(
   formValues,
   callback
 ) {
+  console.log( formValues)
   // Function to unify transmitions of differents actions with netsuit
   // url is the current Rest Domain Base
   // accId is the currect account Id
@@ -98,7 +99,6 @@ function getModifyBy() {
   );
 }
 getModifyBy();
-
 //SUBMIT
 function onModalSubmit() {
   document.querySelector('#modal').classList.add('colapse');
@@ -138,24 +138,45 @@ function getFilterData() {
     callback
   );
 }
-
-
 function formatDate(date1) {
   let fechaFrom = ''
   if(date1 === ''){
     console.log('no hay fecha')
   }else{
+
+    var cdate = new Date(date1);
+  var options = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  };
+  date = cdate.toLocaleDateString('es-ar', options);
+
+  console.log(date)
+  date1 = date.split('/')
+  
+  //estrae el año
+  let month = date1[1]
+  let day = date1[0]+1
+  let year = Array.from(date1[2])  
+  year.splice(0, 2)
+  console.log(year)
+
+  fechaFrom = `${month}/${day}/ ${year[0]}${year[1]}`
+  console.log(fechaFrom)
+
+
+    /*
     date1 = date1.split('-')
+    console.log(date1)
+
+    //estrae el año
   date2 = Array.from(date1[0])
   date2.splice(0, 2)
-  fechaFrom = `${date1[1]}/${date1[2]}/${date2[0]}${date2[1]}`
-  }
-  
+  fechaFrom = `${date1[1]}/${date1[2]}/${date2[0]}${date2[1]}`*/
+  }  
   return fechaFrom
 }
-
-
-
 
 function obtData() {
   value = document.getElementById('inp-name').value;

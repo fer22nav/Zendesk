@@ -16,26 +16,31 @@ var client = ZAFClient.init();
 let accountId, consumerKey, consumerSecret, tokenId, tokenSecret
 
 //trae los datos de seting
-let metadata = getMetadata(client)
+let metadata =  getMetadata(client).then( value => {
+  return value
+})
 
 
- function getMetadata(client) {
-    client.metadata().then(function (metadata) {
-    return metadata    
-  })
+
+console.log(metadata)
+
+async function getMetadata(client) {
+   const metadatafinal = await client.metadata().then( metadata=> { return metadata})
+  return metadatafinal
 }
 
 
+
 accountId = /*metadata.settings.accountId ? metadata.settings.accountId :*/
-      'TSTDRV1724328'
-    consumerKey =/* metadata.settings.consumerKey ? metadata.settings.consumerKey :*/
-      '35f13daf104282ea3edfdd67cf3f21f58b8d9b1914305d7ec451aee0888ed112';
-    consumerSecret =/* metadata.settings.consumerSecret ? metadata.settings.consumerSecret :*/
-      '0a410d4fb4c5b9219b4593ef3abe7fd4efb52ad351ed1199e82e9ad92cf1dfff';
-    tokenId =/* metadata.settings.tokenId ? metadata.settings.tokenId :*/
-      '580ba69efedcd8f4bdd7ac7bec6bc0324245a56d24a66d52ab061e1c5cf3ab41';
-    tokenSecret =/* metadata.settings.tokenSecret ? metadata.settings.tokenSecret :*/
-      'ba3426be5d771f1346ef0b66e40c5da6796301ce2413ec0de3a210dfa2d0be5e';
+  'TSTDRV1724328'
+consumerKey =/* metadata.settings.consumerKey ? metadata.settings.consumerKey :*/
+  '35f13daf104282ea3edfdd67cf3f21f58b8d9b1914305d7ec451aee0888ed112';
+consumerSecret =/* metadata.settings.consumerSecret ? metadata.settings.consumerSecret :*/
+  '0a410d4fb4c5b9219b4593ef3abe7fd4efb52ad351ed1199e82e9ad92cf1dfff';
+tokenId =/* metadata.settings.tokenId ? metadata.settings.tokenId :*/
+  '580ba69efedcd8f4bdd7ac7bec6bc0324245a56d24a66d52ab061e1c5cf3ab41';
+tokenSecret =/* metadata.settings.tokenSecret ? metadata.settings.tokenSecret :*/
+  'ba3426be5d771f1346ef0b66e40c5da6796301ce2413ec0de3a210dfa2d0be5e';
 
 
 
@@ -272,6 +277,7 @@ function getCustomizations(isOperator, isAdministrator) {
   );
 }
 function updateTicketStatus(newState) {
+  appReload()
   const scriptDeploy = 'flo_cr_api';
   const action = 'createCR';
   const params = {
@@ -590,7 +596,6 @@ function removeBundle(bundleID) {
     callback
   );
 }
-
 //zendesk user data
 var userData = '';
 var userName = '';
@@ -681,9 +686,6 @@ function changeStatus(action) {
       break;
   }
 }
-
-
-
 function removeLoader() {
   if ($(`#loader`)) {
     $(`#loader`).removeClass('loader').trigger("enable");
@@ -691,7 +693,12 @@ function removeLoader() {
   }
 
 }
-
+function appReload() {
+  console.log('realoading')
+  $('.body #loader').addClass('loader')
+  $('.body #loader-pane').addClass('loader-pane')
+  location.reload()
+}
 
 
 /*
