@@ -16,13 +16,12 @@ var client = ZAFClient.init();
 let accountId, consumerKey, consumerSecret, tokenId, tokenSecret
 
 //trae los datos de seting
-let metadata =  getMetadata(client).then( value => {
-  return value
-})
-
+let metadata =  getMetadata(client)
 
 
 console.log(metadata)
+
+
 
 async function getMetadata(client) {
    const metadatafinal = await client.metadata().then( metadata=> { return metadata})
@@ -691,7 +690,6 @@ function removeLoader() {
     $(`#loader`).removeClass('loader').trigger("enable");
     $('#loader-pane').removeClass('loader-pane')
   }
-
 }
 function appReload() {
   console.log('realoading')
@@ -701,6 +699,7 @@ function appReload() {
 }
 
 
+console.log(userData)
 /*
 //Date format
 function formatDate(date) {
