@@ -12,21 +12,11 @@ let linkCR;
 let bundleID = 0;
 
 var client = ZAFClient.init();
-
-let accountId, consumerKey, consumerSecret, tokenId, tokenSecret
-
-//trae los datos de seting
-let metadata =  getMetadata(client)
-
-
-console.log(metadata)
-
-
-
+/*
 async function getMetadata(client) {
    const metadatafinal = await client.metadata().then( metadata=> { return metadata})
   return metadatafinal
-}
+}*/
 
 
 
@@ -47,7 +37,7 @@ var restDomainBase = `https://${accountId.toLowerCase()}.restlets.api.netsuite.c
 var httpMethod = 'GET';
 
 ///Connection with netsuite
-function transmitToNetsuite(
+async function transmitToNetsuite(
   url,
   accId,
   key,
@@ -78,17 +68,46 @@ function transmitToNetsuite(
     return result;
   }
 
-  const params = serviceNestsuite(
-    url,
-    accId,
-    key,
-    secret,
-    tokId,
-    tokSecret,
-    `/app/site/hosting/restlet.nl?script=customscript_${scriptDeploy}&deploy=customdeploy_${scriptDeploy}&action=${action}&${setPath(
-      formValues
-    )}`
-  );
+  const params = await client.metadata().then(metadata => {
+
+
+
+    accountId = metadata.settings.accountId ? metadata.settings.accountId :
+      'TSTDRV1724328'
+    consumerKey = metadata.settings.consumerKey ? metadata.settings.consumerKey :
+      '35f13daf104282ea3edfdd67cf3f21f58b8d9b1914305d7ec451aee0888ed112';
+    consumerSecret = metadata.settings.consumerSecret ? metadata.settings.consumerSecret :
+      '0a410d4fb4c5b9219b4593ef3abe7fd4efb52ad351ed1199e82e9ad92cf1dfff';
+    tokenId = metadata.settings.tokenId ? metadata.settings.tokenId :
+      '580ba69efedcd8f4bdd7ac7bec6bc0324245a56d24a66d52ab061e1c5cf3ab41';
+    tokenSecret = metadata.settings.tokenSecret ? metadata.settings.tokenSecret :
+      'ba3426be5d771f1346ef0b66e40c5da6796301ce2413ec0de3a210dfa2d0be5e';
+
+
+
+
+    return serviceNestsuite(
+      url,
+      accountId,
+      consumerKey,
+      consumerSecret,
+      tokenId,
+      tokenSecret,
+      `/app/site/hosting/restlet.nl?script=customscript_${scriptDeploy}&deploy=customdeploy_${scriptDeploy}&action=${action}&${setPath(
+        formValues
+      )}`
+    )
+  })
+
+
+
+
+
+
+
+
+
+
   const elementos = document.querySelectorAll('#infoNs');
   client
     .request(params)
@@ -125,6 +144,11 @@ function serviceNestsuite(
   token_secret,
   path
 ) {
+  console.log('account_id',account_id)
+  console.log('consumer_key',consumer_key)
+  console.log('consumer_secret',consumer_secret)
+  console.log('token_id',token_id)
+  console.log('token_secret',token_secret)
   function generateTbaHeader(
     restDomainBase,
     accountId,
@@ -698,8 +722,6 @@ function appReload() {
   location.reload()
 }
 
-
-console.log(userData)
 /*
 //Date format
 function formatDate(date) {
