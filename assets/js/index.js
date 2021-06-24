@@ -12,14 +12,11 @@ let linkCR;
 let bundleID = 0;
 
 var client = ZAFClient.init();
-/*
-async function getMetadata(client) {
-   const metadatafinal = await client.metadata().then( metadata=> { return metadata})
-  return metadatafinal
-}*/
-
-
-
+start(client)
+client.invoke('resize', { width: '100%', height: '900px' });
+client.on('pane.activated', function () {
+  console.log('hover');
+});
 accountId = /*metadata.settings.accountId ? metadata.settings.accountId :*/
   'TSTDRV1724328'
 consumerKey =/* metadata.settings.consumerKey ? metadata.settings.consumerKey :*/
@@ -32,9 +29,41 @@ tokenSecret =/* metadata.settings.tokenSecret ? metadata.settings.tokenSecret :*
   'ba3426be5d771f1346ef0b66e40c5da6796301ce2413ec0de3a210dfa2d0be5e';
 
 
-
 var restDomainBase = `https://${accountId.toLowerCase()}.restlets.api.netsuite.com`;
 var httpMethod = 'GET';
+
+
+
+
+
+function start(client) {
+  try {
+    client.get('ticket').then(async function (data) {
+      userData = await getCurrentUser();
+      userName = userData?.name;
+      ticketNumber = data.ticket.id.toString();
+      ticketSubject = data.ticket.subject;
+      ticketDescription = data.ticket.description;
+      ticketStatus = data.ticket.status;
+
+      showInfo(data, userName);
+      showHome(data);
+      const isOperator =
+        userData?.groups.filter((element) => element.name === 'Operators')
+          .length > 0;
+      const isAdministrator =
+        userData?.groups.filter((element) => element.name === 'Administrators')
+          .length > 0;
+      await getCustomizations(isOperator, isAdministrator);
+
+
+
+    });
+  } catch (error) {
+    console.log('error');
+  }
+}
+
 
 ///Connection with netsuite
 async function transmitToNetsuite(
@@ -50,6 +79,10 @@ async function transmitToNetsuite(
   callback,
   callbackError
 ) {
+
+
+  $('#info #loader').addClass('loader')
+  $('#info #loader-pane').addClass('loader-pane')
   // Function to unify transmitions of differents actions with netsuit
   // url is the current Rest Domain Base
   // accId is the currect account Id
@@ -69,9 +102,6 @@ async function transmitToNetsuite(
   }
 
   const params = await client.metadata().then(metadata => {
-
-
-
     accountId = metadata.settings.accountId ? metadata.settings.accountId :
       'TSTDRV1724328'
     consumerKey = metadata.settings.consumerKey ? metadata.settings.consumerKey :
@@ -107,6 +137,7 @@ async function transmitToNetsuite(
         elementos[i].classList.add('vis');
       }
       callback(results);
+
     })
     .catch((e) => {
       for (i = 0; i < elementos.length; i++) {
@@ -121,6 +152,7 @@ async function transmitToNetsuite(
 
 
     });
+
 }
 function serviceNestsuite(
   domainBase,
@@ -131,11 +163,12 @@ function serviceNestsuite(
   token_secret,
   path
 ) {
-  console.log('account_id',account_id)
-  console.log('consumer_key',consumer_key)
-  console.log('consumer_secret',consumer_secret)
-  console.log('token_id',token_id)
-  console.log('token_secret',token_secret)
+  /*
+  console.log('account_id', account_id)
+  console.log('consumer_key', consumer_key)
+  console.log('consumer_secret', consumer_secret)
+  console.log('token_id', token_id)
+  console.log('token_secret', token_secret)*/
   function generateTbaHeader(
     restDomainBase,
     accountId,
@@ -224,7 +257,6 @@ function getCustomizations(isOperator, isAdministrator) {
     if (statusNS == '') {
       document.querySelector('#statusNS').textContent = 'N/S';
     } else {
-
       document.querySelector('#statusNS').textContent = statusNS;
     }
     var element = document.getElementById('linkCR');
@@ -286,8 +318,8 @@ function getCustomizations(isOperator, isAdministrator) {
     callbackError
   );
 }
-function updateTicketStatus(newState) {
-  appReload()
+async function updateTicketStatus(newState) {
+
   const scriptDeploy = 'flo_cr_api';
   const action = 'createCR';
   const params = {
@@ -300,9 +332,11 @@ function updateTicketStatus(newState) {
   const callback = (results) => {
     statusNS = results.statusBarState;
     console.log('Update Ticket Results to:', statusNS);
+    console.log('cambiado el estado')
+    start(client)
   };
 
-  transmitToNetsuite(
+  await transmitToNetsuite(
     restDomainBase,
     accountId,
     consumerKey,
@@ -314,13 +348,11 @@ function updateTicketStatus(newState) {
     params,
     callback
   );
+ 
 }
 
 
-client.invoke('resize', { width: '100%', height: '900px' });
-client.on('pane.activated', function () {
-  console.log('hover');
-});
+
 
 
 /*SHOW INFO */
@@ -456,6 +488,7 @@ function renderProposed() {
     i++;
   });
   localStorage.removeItem('ProposedCustomization');
+
 }
 function removeProposed(proposedName) {
   $('#proposed-customizations.bundle-id-lista #loader').addClass('loader')
@@ -517,6 +550,9 @@ function renderBundle() {
     bundlesRender.appendChild(li);
     i++;
   });
+
+  $(`#bundle-id.bundle-id-lista #loader`).removeClass('loader').trigger("enable");
+  $('#bundle-id.bundle-id-lista #loader-pane').removeClass('loader-pane')
 }
 function addBundle() {
   //valida los dats del input 
@@ -525,7 +561,7 @@ function addBundle() {
     //compara si es un numero
     if (!isNaN($('#inp-bundle')[0].value)) {
       //compara si tiene mas de 6 digitos
-      if ($('#inp-bundle')[0].value.length < 7) {
+      if ($('#inp-bundle')[0].value.length === 6) {
         //activa y desactiva el boton
         $('#bundle-id.bundle-id-lista #loader').addClass('loader')
         $('#bundle-id.bundle-id-lista #loader-pane').addClass('loader-pane')
@@ -547,6 +583,7 @@ function addBundle() {
               ? []
               : results.affectedBundleID.split(',');
           renderBundle();
+          start(client)
         };
         transmitToNetsuite(
           restDomainBase,
@@ -560,9 +597,10 @@ function addBundle() {
           params,
           callback,
         );
+          
         $('#errorBundle')[0].innerHTML = ''
       } else {
-        $('#errorBundle')[0].innerHTML = '<p>You can enter a maximum of six numbers</p>'
+        $('#errorBundle')[0].innerHTML = '<p>You must enter six numbers</p>'
       }
     } else {
       $('#errorBundle')[0].innerHTML = '<p>You must enter a number</p>'
@@ -581,14 +619,19 @@ function removeBundle(bundleID) {
     bundleId: bundleID,
   };
   const callback = (results) => {
-    if (results.affectedBundleID != '') {
+    if (results.affectedBundleID !== '') {
       bundlesList =
         results.affectedBundleID === ''
           ? []
           : results.affectedBundleID.split(',');
-      renderBundle();
+      renderBundle()
       console.log('the bundle was deleted');
     } else {
+      bundlesList =
+        results.affectedBundleID === ''
+          ? []
+          : results.affectedBundleID.split(',');
+      renderBundle()
       console.log("don't have a bundleID");
     }
     renderBundle();
@@ -631,28 +674,9 @@ function loginUser(client, id) {
     }
   );
 }
-try {
-  client.get('ticket').then(async function (data) {
-    userData = await getCurrentUser();
-    userName = userData?.name;
-    ticketNumber = data.ticket.id.toString();
-    ticketSubject = data.ticket.subject;
-    ticketDescription = data.ticket.description;
-    ticketStatus = data.ticket.status;
 
-    showInfo(data, userName);
-    showHome(data);
-    const isOperator =
-      userData?.groups.filter((element) => element.name === 'Operators')
-        .length > 0;
-    const isAdministrator =
-      userData?.groups.filter((element) => element.name === 'Administrators')
-        .length > 0;
-    await getCustomizations(isOperator, isAdministrator);
-  });
-} catch (error) {
-  console.log('error');
-}
+
+
 function popModal(url, h) {
   localStorage.removeItem('zendesk-tiquet-id');
   localStorage.setItem('zendesk-tiquet-id', ticketNumber);
@@ -671,9 +695,11 @@ function popModal(url, h) {
       modalClient.on('modal.close', function () {
         if (localStorage.getItem('selectedCustomizationValues')) {
           renderlookup();
+          start(client)
         }
         if (localStorage.getItem('ProposedCustomization')) {
           renderProposed();
+          start(client)
         }
         // The modal has been closed.
       });
@@ -683,16 +709,20 @@ function changeStatus(action) {
   switch (action) {
     case 'request':
       updateTicketStatus('PendingApproval');
+      //start(client)
       break;
     case 'approved':
       updateTicketStatus('Approve');
+     // start(client)
       break;
     case 'reject':
       updateTicketStatus('Canceled');
+     // start(client)
       break;
 
     default:
       console.log('status', action);
+     // start(client)
       break;
   }
 }
@@ -702,12 +732,7 @@ function removeLoader() {
     $('#loader-pane').removeClass('loader-pane')
   }
 }
-function appReload() {
-  console.log('realoading')
-  $('.body #loader').addClass('loader')
-  $('.body #loader-pane').addClass('loader-pane')
-  location.reload()
-}
+
 
 /*
 //Date format
