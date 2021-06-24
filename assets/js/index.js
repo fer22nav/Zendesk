@@ -331,8 +331,7 @@ async function updateTicketStatus(newState) {
 
   const callback = (results) => {
     statusNS = results.statusBarState;
-    console.log('Update Ticket Results to:', statusNS);
-    console.log('cambiado el estado')
+    console.log('Update Ticket Results to:', statusNS)
     start(client)
   };
 
