@@ -82,10 +82,6 @@ async function transmitToNetsuite(
       '580ba69efedcd8f4bdd7ac7bec6bc0324245a56d24a66d52ab061e1c5cf3ab41';
     tokenSecret = metadata.settings.tokenSecret ? metadata.settings.tokenSecret :
       'ba3426be5d771f1346ef0b66e40c5da6796301ce2413ec0de3a210dfa2d0be5e';
-
-
-
-
     return serviceNestsuite(
       url,
       accountId,
@@ -98,15 +94,6 @@ async function transmitToNetsuite(
       )}`
     )
   })
-
-
-
-
-
-
-
-
-
 
   const elementos = document.querySelectorAll('#infoNs');
   client
