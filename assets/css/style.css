@@ -47,6 +47,9 @@ body {
   width: 100%;
   height: 100%;
 }
+a {
+  text-decoration: none !important;
+}
 
 .error {
   color: #e10717;
@@ -405,7 +408,7 @@ footer {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #00000050;
+  background: #0000002a;
 }
 .loader {  
   border: 3px solid #f3f3f3;

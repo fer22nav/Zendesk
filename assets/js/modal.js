@@ -7,7 +7,7 @@ document.querySelector('#modal').addEventListener('submit', this.onModalSubmit.b
 
 
 
-client.metadata().then(function (metadata) { console.log(metadata.settings) })
+client.metadata().then(function (metadata) { })
 accountId = /*metadata.settings.accountId ? metadata.settings.accountId :*/
   'TSTDRV1724328'
 consumerKey =/* metadata.settings.consumerKey ? metadata.settings.consumerKey :*/
@@ -34,7 +34,6 @@ function transmitToNetsuite(
   formValues,
   callback
 ) {
-  console.log( formValues)
   // Function to unify transmitions of differents actions with netsuit
   // url is the current Rest Domain Base
   // accId is the currect account Id
@@ -207,7 +206,7 @@ function renderlook(res) {
   let resultList = document.querySelector('.resultList');
   resultList.innerHTML = '';
   for (let i = 0; i < res.length; i++) {
-
+    console.log(res[i])
     if (res[i] !== '') {
       const tr = document.createElement('tr');
       tr.className = 'look-tr';
@@ -217,7 +216,7 @@ function renderlook(res) {
                             <span class="my-auto os-12">${res[i].values.name}</span>                            
                         </td>
                         <td class="look-th d-flex w-40">
-                            <p class="os-12"><strong>Record Type</strong>:<i>${res[i].recordType}</i></p>
+                            <p class="os-12"><i>${res[i].values.custrecord_flo_cust_id}</i></p>
                         </td>`;
       resultList.appendChild(tr);
     }

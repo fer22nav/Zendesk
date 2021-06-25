@@ -63,8 +63,6 @@ function start(client) {
     console.log('error');
   }
 }
-
-
 ///Connection with netsuite
 async function transmitToNetsuite(
   url,
@@ -349,11 +347,6 @@ async function updateTicketStatus(newState) {
   );
  
 }
-
-
-
-
-
 /*SHOW INFO */
 function showInfo(data, userName) {
   let requester_data = {
@@ -413,7 +406,7 @@ function renderlookup() {
         <button type="button" class="btn-up dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
         <ul class="dropdown-menu">
           <li><button class="dropdown-item" onclick="clickDeleteLookup('${item.id}', '${item.name}')" id="bundle-delete">Remove</button></li>
-          <li><button class="dropdown-item" id="ver-erd" disabled >ERD</button></li>
+          <li> <a target="_blank"  href="https:${accountId}.app.netsuite.com/c.${accountId}/suitebundle294336/FLODocs%20Enterprise/FLOEntryScreens.html?STAGE=custframe&customizationid=${item.id}"><button class="dropdown-item" id="ver-erd"  >ERD</button></a></li>
           </div>`;
     existingList.appendChild(li);
   });
