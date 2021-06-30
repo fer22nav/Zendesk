@@ -7,28 +7,13 @@ document.querySelector('#modal').addEventListener('submit', this.onModalSubmit.b
 
 
 
-client.metadata().then(function (metadata) { })
-accountId = /*metadata.settings.accountId ? metadata.settings.accountId :*/
-  'TSTDRV1724328'
-consumerKey =/* metadata.settings.consumerKey ? metadata.settings.consumerKey :*/
-  '35f13daf104282ea3edfdd67cf3f21f58b8d9b1914305d7ec451aee0888ed112';
-consumerSecret =/* metadata.settings.consumerSecret ? metadata.settings.consumerSecret :*/
-  '0a410d4fb4c5b9219b4593ef3abe7fd4efb52ad351ed1199e82e9ad92cf1dfff';
-tokenId =/* metadata.settings.tokenId ? metadata.settings.tokenId :*/
-  '580ba69efedcd8f4bdd7ac7bec6bc0324245a56d24a66d52ab061e1c5cf3ab41';
-tokenSecret =/* metadata.settings.tokenSecret ? metadata.settings.tokenSecret :*/
-  'ba3426be5d771f1346ef0b66e40c5da6796301ce2413ec0de3a210dfa2d0be5e';
+accountId = 'TSTDRV1724328'
 var restDomainBase = `https://${accountId.toLowerCase()}.restlets.api.netsuite.com`;
 var httpMethod = 'GET';
 
 /// EDITANDO EMI FER
-function transmitToNetsuite(
-  url,
-  accId,
-  key,
-  secret,
-  tokId,
-  tokSecret,
+async function transmitToNetsuite(
+  url,  
   scriptDeploy,
   action,
   formValues,
@@ -51,17 +36,36 @@ function transmitToNetsuite(
     });
     return result;
   }
-  const params = serviceNestsuite(
-    url,
-    accId,
-    key,
-    secret,
-    tokId,
-    tokSecret,
-    `/app/site/hosting/restlet.nl?script=customscript_${scriptDeploy}&deploy=customdeploy_${scriptDeploy}&action=${action}&${setPath(
-      formValues
-    )}`
-  );
+  const params = await client.metadata().then(metadata => {
+
+    accountId = metadata.settings.accountId ? metadata.settings.accountId :
+      'TSTDRV1724328'
+    consumerKey = metadata.settings.consumerKey ? metadata.settings.consumerKey :
+      '35f13daf104282ea3edfdd67cf3f21f58b8d9b1914305d7ec451aee0888ed112';
+    consumerSecret = metadata.settings.consumerSecret ? metadata.settings.consumerSecret :
+      '0a410d4fb4c5b9219b4593ef3abe7fd4efb52ad351ed1199e82e9ad92cf1dfff';
+    tokenId = metadata.settings.tokenId ? metadata.settings.tokenId :
+      '580ba69efedcd8f4bdd7ac7bec6bc0324245a56d24a66d52ab061e1c5cf3ab41';
+    tokenSecret = metadata.settings.tokenSecret ? metadata.settings.tokenSecret :
+      'ba3426be5d771f1346ef0b66e40c5da6796301ce2413ec0de3a210dfa2d0be5e';
+  
+     return serviceNestsuite(
+        url,
+        accountId,
+        consumerKey,
+        consumerSecret,
+        tokenId,
+        tokenSecret,
+        `/app/site/hosting/restlet.nl?script=customscript_${scriptDeploy}&deploy=customdeploy_${scriptDeploy}&action=${action}&${setPath(
+          formValues
+        )}`
+      );
+  
+  })
+  
+  
+  
+  
   client
     .request(params)
     .then((results) => {
@@ -85,12 +89,7 @@ function getModifyBy() {
   };
 
   transmitToNetsuite(
-    restDomainBase,
-    accountId,
-    consumerKey,
-    consumerSecret,
-    tokenId,
-    tokenSecret,
+    restDomainBase,   
     scriptDeploy,
     action,
     selectOptions,
@@ -126,11 +125,6 @@ function getFilterData() {
   };
   transmitToNetsuite(
     restDomainBase,
-    accountId,
-    consumerKey,
-    consumerSecret,
-    tokenId,
-    tokenSecret,
     scriptDeploy,
     action,
     filter,
@@ -140,7 +134,7 @@ function getFilterData() {
 function formatDate(date1) {
   let fechaFrom = ''
   if(date1 === ''){
-    console.log('no hay fecha')
+    console.log('no se ingreso fecha de busqueda')
   }else{
 
     var cdate = new Date(date1);
@@ -206,7 +200,6 @@ function renderlook(res) {
   let resultList = document.querySelector('.resultList');
   resultList.innerHTML = '';
   for (let i = 0; i < res.length; i++) {
-    console.log(res[i])
     if (res[i] !== '') {
       const tr = document.createElement('tr');
       tr.className = 'look-tr';
@@ -258,11 +251,6 @@ function addCustom() {
   };
   transmitToNetsuite(
     restDomainBase,
-    accountId,
-    consumerKey,
-    consumerSecret,
-    tokenId,
-    tokenSecret,
     scriptDeploy,
     action,
     selectedCustom,

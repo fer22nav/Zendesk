@@ -11,33 +11,47 @@
   "location": {
     "support": {
       "ticket_sidebar": "assets/iframe.html",
-      "modal": "assets/modal.html"
+      "modal": "assets/modal.html",
+      "nav_bar": "assets/configuration.html"
     }
   },
   "parameters": [
     {
-      "name": "accountId",
+      "name": "AccountId",
       "type": "password",
       "required": false
     },
     {
-      "name": "consumerKey",
+      "name": "ConsumerKey",
       "type": "password",
       "required": false
     },
     {
-      "name": "consumerSecret",
+      "name": "ConsumerSecret",
       "type": "password",
       "required": false
     },{
-      "name": "tokenId",
+      "name": "TokenId",
       "type": "password",
       "required": false
     },{
-      "name": "tokenSecret",
+      "name": "TokenSecret",
       "type": "password",
       "required": false
+    },
+    {
+      "name": "requestApproveGroups",
+      "type": "hidden",
+      "required": false,
+      "default": "null"
+    },
+    {
+      "name": "approveGroups",
+      "type": "hidden",
+      "required": false,
+      "default": "null"
     }
+
   ],
   "version": "1.0",
   "frameworkVersion": "2.0",

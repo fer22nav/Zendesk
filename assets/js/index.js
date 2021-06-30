@@ -11,30 +11,22 @@ let statusNS;
 let linkCR;
 let bundleID = 0;
 
-var client = ZAFClient.init();
+let client = ZAFClient.init();
 start(client)
-client.invoke('resize', { width: '100%', height: '900px' });
-client.on('pane.activated', function () {
-  console.log('hover');
-});
-accountId = /*metadata.settings.accountId ? metadata.settings.accountId :*/
-  'TSTDRV1724328'
-consumerKey =/* metadata.settings.consumerKey ? metadata.settings.consumerKey :*/
-  '35f13daf104282ea3edfdd67cf3f21f58b8d9b1914305d7ec451aee0888ed112';
-consumerSecret =/* metadata.settings.consumerSecret ? metadata.settings.consumerSecret :*/
-  '0a410d4fb4c5b9219b4593ef3abe7fd4efb52ad351ed1199e82e9ad92cf1dfff';
-tokenId =/* metadata.settings.tokenId ? metadata.settings.tokenId :*/
-  '580ba69efedcd8f4bdd7ac7bec6bc0324245a56d24a66d52ab061e1c5cf3ab41';
-tokenSecret =/* metadata.settings.tokenSecret ? metadata.settings.tokenSecret :*/
-  'ba3426be5d771f1346ef0b66e40c5da6796301ce2413ec0de3a210dfa2d0be5e';
 
+
+
+
+
+
+
+
+client.invoke('resize', { width: '100%', height: '900px' });
+
+let accountId = 'TSTDRV1724328'
 
 var restDomainBase = `https://${accountId.toLowerCase()}.restlets.api.netsuite.com`;
 var httpMethod = 'GET';
-
-
-
-
 
 function start(client) {
   try {
@@ -55,30 +47,20 @@ function start(client) {
         userData?.groups.filter((element) => element.name === 'Administrators')
           .length > 0;
       await getCustomizations(isOperator, isAdministrator);
-
-
-
     });
   } catch (error) {
     console.log('error');
   }
 }
-///Connection with netsuite
+//Connection with netsuite
 async function transmitToNetsuite(
-  url,
-  accId,
-  key,
-  secret,
-  tokId,
-  tokSecret,
+  url, 
   scriptDeploy,
   action,
   formValues,
   callback,
   callbackError
 ) {
-
-
   $('#info #loader').addClass('loader')
   $('#info #loader-pane').addClass('loader-pane')
   // Function to unify transmitions of differents actions with netsuit
@@ -134,8 +116,7 @@ async function transmitToNetsuite(
         elementos[i].classList.remove('hid');
         elementos[i].classList.add('vis');
       }
-      callback(results);
-
+      callback(results)
     })
     .catch((e) => {
       for (i = 0; i < elementos.length; i++) {
@@ -147,10 +128,7 @@ async function transmitToNetsuite(
         removeLoader()
 
       }
-
-
-    });
-
+    })
 }
 function serviceNestsuite(
   domainBase,
@@ -161,12 +139,6 @@ function serviceNestsuite(
   token_secret,
   path
 ) {
-  /*
-  console.log('account_id', account_id)
-  console.log('consumer_key', consumer_key)
-  console.log('consumer_secret', consumer_secret)
-  console.log('token_id', token_id)
-  console.log('token_secret', token_secret)*/
   function generateTbaHeader(
     restDomainBase,
     accountId,
@@ -178,18 +150,13 @@ function serviceNestsuite(
   ) {
     httpMethod =
       httpMethod == undefined || httpMethod == null ? 'GET' : httpMethod;
-    //console.log("token based authentication generateTbaHeader " + restDomainBase)
     var base_url = restDomainBase.split('?')[0];
-    //console.log("token based authentication generateTbaHeader base_url " + base_url)
     var query_params = restDomainBase.split('?')[1];
-    //console.log(query_params);
     var params = query_params.split('&');
-    //console.log(params)
     var parameters = {};
     for (var i = 0; i < params.length; i++) {
       parameters[params[i].split('=')[0]] = params[i].split('=')[1];
     }
-    //console.log("token based authentication generateTbaHeader parameters " + JSON.stringify(parameters) );
     var token = {
       key: tokenId,
       secret: tokenSecret,
@@ -201,7 +168,6 @@ function serviceNestsuite(
       },
       signature_method: 'HMAC-SHA256',
       hash_function: function (base_string, key) {
-        //console.log("generateTbaHeader base_string " + base_string);
         return CryptoJS.HmacSHA256(base_string, key).toString(
           CryptoJS.enc.Base64
         );
@@ -240,7 +206,6 @@ function serviceNestsuite(
   return options;
 }
 function getCustomizations(isOperator, isAdministrator) {
-
   const scriptDeploy = 'flo_cr_api';
   const action = 'getCRData';
   const ticketId = { ticketID: ticketNumber };
@@ -253,6 +218,11 @@ function getCustomizations(isOperator, isAdministrator) {
     statusNS = results.statusBarState;
 
     if (statusNS == '') {
+      const elementos = document.querySelectorAll('#infoNs');
+      for (i = 0; i < elementos.length; i++) {
+        elementos[i].classList.add('hid');
+        elementos[i].classList.remove('vis');
+      }
       document.querySelector('#statusNS').textContent = 'N/S';
     } else {
       document.querySelector('#statusNS').textContent = statusNS;
@@ -274,10 +244,12 @@ function getCustomizations(isOperator, isAdministrator) {
       document.getElementById('btn-approved').style.display = 'flex';
       document.getElementById('btn-reject').style.display = 'flex';
     }
-    localStorage.setItem(
-      'selectedCustomizationValues',
-      JSON.stringify(existingList)
-    );
+    if (isAdministrator && results.statusBarState === 'Approved') {
+      document.getElementById('btn-close-status').style.display = 'flex';
+    }
+
+
+    localStorage.setItem('selectedCustomizationValues',  JSON.stringify(existingList));
     if (results.proposedCusts != '') {
       localStorage.setItem(
         'ProposedCustomization',
@@ -296,19 +268,10 @@ function getCustomizations(isOperator, isAdministrator) {
       document.getElementById('btn-request').style.display = 'flex';
       document.getElementById('btn-reject').style.display = 'flex';
     }
-    // localStorage.setItem('selectedCustomizationValues', JSON.stringify([]));
-    // localStorage.setItem('ProposedCustomization', JSON.stringify([]));
-    // renderlookup();
-    // renderProposed();
   };
 
   transmitToNetsuite(
-    restDomainBase,
-    accountId,
-    consumerKey,
-    consumerSecret,
-    tokenId,
-    tokenSecret,
+    restDomainBase,    
     scriptDeploy,
     action,
     ticketId,
@@ -317,7 +280,6 @@ function getCustomizations(isOperator, isAdministrator) {
   );
 }
 async function updateTicketStatus(newState) {
-
   const scriptDeploy = 'flo_cr_api';
   const action = 'createCR';
   const params = {
@@ -326,26 +288,19 @@ async function updateTicketStatus(newState) {
     description: ticketDescription,
     state: newState,
   };
-
+console.log(newState)
   const callback = (results) => {
     statusNS = results.statusBarState;
     console.log('Update Ticket Results to:', statusNS)
     start(client)
   };
-
   await transmitToNetsuite(
-    restDomainBase,
-    accountId,
-    consumerKey,
-    consumerSecret,
-    tokenId,
-    tokenSecret,
+    restDomainBase,    
     scriptDeploy,
     action,
     params,
     callback
-  );
- 
+  ); 
 }
 /*SHOW INFO */
 function showInfo(data, userName) {
@@ -357,7 +312,6 @@ function showInfo(data, userName) {
     type: data.ticket.type,
     userName: userName,
   };
-  //'created_at': formatDate(data.user.created_at),
   let source = $('#info-template').html();
   let template = Handlebars.compile(source);
   let html = template(requester_data);
@@ -398,6 +352,8 @@ function renderlookup() {
     localStorage.getItem('selectedCustomizationValues')
   );
   selectedCustomizationValues.forEach((item) => {
+    const url = `https://${accountId}.app.netsuite.com/c.${accountId}/suitebundle294336/FLODocs%20Enterprise/FLOEntryScreens.html?STAGE=custframe&customizationid=${item.id}`
+
     const li = document.createElement('li');
     li.className = 'bundle-li';
     li.innerHTML = `      
@@ -406,11 +362,18 @@ function renderlookup() {
         <button type="button" class="btn-up dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
         <ul class="dropdown-menu">
           <li><button class="dropdown-item" onclick="clickDeleteLookup('${item.id}', '${item.name}')" id="bundle-delete">Remove</button></li>
-          <li> <a target="_blank"  href="https:${accountId}.app.netsuite.com/c.${accountId}/suitebundle294336/FLODocs%20Enterprise/FLOEntryScreens.html?STAGE=custframe&customizationid=${item.id}"><button class="dropdown-item" id="ver-erd"  >ERD</button></a></li>
+          <li> 
+          <a target="_blank" onclick="erd('${url}')">
+          <button class="dropdown-item" id="ver-erd">ERD</button>
+          </a>
+          </li>
           </div>`;
     existingList.appendChild(li);
   });
   localStorage.removeItem('selectedCustomizationValues');
+}
+function erd(url) {
+      window.open(url, '_blank')
 }
 //Existing Customizations
 function removeExistingCustomization(existingName, existingId) {
@@ -437,12 +400,7 @@ function removeExistingCustomization(existingName, existingId) {
   };
 
   transmitToNetsuite(
-    restDomainBase,
-    accountId,
-    consumerKey,
-    consumerSecret,
-    tokenId,
-    tokenSecret,
+    restDomainBase,    
     scriptDeploy,
     action,
     params,
@@ -510,11 +468,6 @@ function removeProposed(proposedName) {
 
   transmitToNetsuite(
     restDomainBase,
-    accountId,
-    consumerKey,
-    consumerSecret,
-    tokenId,
-    tokenSecret,
     scriptDeploy,
     action,
     params,
@@ -578,12 +531,7 @@ function addBundle() {
           start(client)
         };
         transmitToNetsuite(
-          restDomainBase,
-          accountId,
-          consumerKey,
-          consumerSecret,
-          tokenId,
-          tokenSecret,
+          restDomainBase,          
           scriptDeploy,
           action,
           params,
@@ -629,12 +577,7 @@ function removeBundle(bundleID) {
     renderBundle();
   };
   transmitToNetsuite(
-    restDomainBase,
-    accountId,
-    consumerKey,
-    consumerSecret,
-    tokenId,
-    tokenSecret,
+    restDomainBase,    
     scriptDeploy,
     action,
     params,
@@ -666,9 +609,6 @@ function loginUser(client, id) {
     }
   );
 }
-
-
-
 function popModal(url, h) {
   localStorage.removeItem('zendesk-tiquet-id');
   localStorage.setItem('zendesk-tiquet-id', ticketNumber);
@@ -711,6 +651,10 @@ function changeStatus(action) {
       updateTicketStatus('Canceled');
      // start(client)
       break;
+      case 'close':
+      updateTicketStatus('Close');
+     // start(client)
+      break;
 
     default:
       console.log('status', action);
@@ -726,16 +670,8 @@ function removeLoader() {
 }
 
 
-/*
-//Date format
-function formatDate(date) {
-  var cdate = new Date(date);
-  var options = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  };
-  date = cdate.toLocaleDateString('es-ar', options);
-  return date;
-}
- */
+
+
+
+
+

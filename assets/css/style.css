@@ -112,6 +112,14 @@ a {
   color: #679dcf;
 }
 /*MAIN*/
+.btn-close-status {
+  background: #4863fa;
+  border-radius: 8px;
+  border: none;
+  color: #fff;
+  width: 100%;
+  margin-right: 5%;
+}
 .btn-aprove {
   background: #318e6a;
   border-radius: 8px;
@@ -128,7 +136,8 @@ a {
   width: 40%;
 }
 .btn-remove img,
-.btn-aprove img {
+.btn-aprove img, 
+.btn-close-status img {
   width: 10%;
 }
 input,
@@ -141,6 +150,11 @@ select {
   border: solid 1px #0000001a;
   /*box-shadow: 2px 5px 5px #0000001a;*/
 }
+input:focus,
+textarea:focus {
+    outline: none;
+    border: 2px solid#053561;   
+  }
 .btn-op {
   visibility: hidden;
 }
