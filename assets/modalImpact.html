@@ -20,26 +20,21 @@
 <body class="mx-auto body" style="overflow-y: hidden;">
     <div class="mod-body mx-auto">
         <div class="mod-head">
-            <h2 class="os-20 fw-bold px-0 pb-4 m-0 header">Lookup Customization</h2>
-            <h2 class="os-20 fw-bold px-0 pb-4 m-0 header2 colapse">Select Customizations to attach
-            </h2>
+            <h2 class="os-20 fw-bold px-0 pb-4 m-0 header text-center">Impact Analysis</h2>
+           
         </div>
         <div id="mod-inner" class="mod-inner">
             <div id="loader-pane" class="">
                 <div id="loader" class="mx-auto my-2"></div>
             </div>  
-                        
-            <div id="look-list" class="look-list colapse">         
-                    
+            <h2 class="os-20 fw-bold px-0 pb-4 m-0 header color text-start">Can Be Safely Modified or Delete</h2>           
+            <div id="look-list" class="look-list">                           
                 <table class="ui">
                     <thead>
                         <tr class="look-tr">
                             <th id="name" class="d-flex w-60">
-                                <input type="checkbox" id="lookUpselectAllCust" class="lookupSelectedCusts my-auto"
-                                    onclick="checkAll(this);" style="margin-right: 8px;">
-                                <span class="my-auto">Name</span>
-                            </th>
-                            <th id="type" class="look-th d-flex w-40">Script Id</th>
+                                <span class="my-auto">Customization</span>
+                            </th>                            
                         </tr>
                     </thead>                   
                     <tbody class="resultList" style=" 
@@ -50,8 +45,29 @@
                     max-height: 250px;
                     min-height: 250px;">                         
                     </tbody>
-                </table>
-                <button class="btn-form-close" id="addCustom" onclick="addCustom()">Add selected Customizations.</button>
+                </table>                
+            </div>
+            <h2 class="os-20 fw-bold px-0 pb-4 m-0 header color text-start">Cannot Be Safely Modified or Deleted</h2>
+            <div id="look-list" class="look-list">                           
+                <table class="ui">
+                    <thead>
+                        <tr class="look-tr">
+                            <th id="name" class="d-flex w-60">
+                                <span class="my-auto">Customization</span>
+                            </th>   
+                            <th id="type" class="look-th d-flex w-40">Warning</th>
+                            <th id="type" class="look-th d-flex w-40">Impacted Customizations</th>                         
+                        </tr>
+                    </thead>                   
+                    <tbody class="resultList" style=" 
+                    display: block;
+                    list-style: none;
+                    padding-left: 0;
+                    overflow-y: scroll;
+                    max-height: 250px;
+                    min-height: 250px;">                         
+                    </tbody>
+                </table>                
             </div>
         </div>
     </div>

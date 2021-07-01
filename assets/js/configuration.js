@@ -1,28 +1,33 @@
 
-let accountId = '1'
-let consumerKey = '2'
-let consumerSecret = '3'
-let tokenId = '4'
-let tokenSecret = '5'
+
 
 let groupsRequestAppropve = []
 let groupsApprove = []
 let client = ZAFClient.init();
+
+
+//carga las variables con los datos del manifest
+//y ejecuta los renders de cada grupo
 client.metadata().then(metadata => {
+    console.log(metadata.settings.requestApproveGroups)
     if (metadata.settings.requestApproveGroups !== 'null') {
         let group1 = metadata.settings.requestApproveGroups
         group1 = group1.split(',')
+        group1.forEach(e => {
+            groupsRequestAppropve.push(e)
+        })
         console.log(group1)
         rendergroup(group1)
     }
     if (metadata.settings.approveGroups !== 'null') {
         let group2 = metadata.settings.approveGroups
         group2 = group2.split(',')
+        group2.forEach(e => {
+            groupsApprove.push(e)
+        })
         console.log(group2)
         rendergroup2(group2)
     }
-
-
 })
 
 
@@ -34,19 +39,86 @@ client.metadata().then(metadata => {
 
 //obtiene los datos de cuenta netsuite
 $('.btn-acount').click(function () {
-    console.log('click')
+    //variables
+    let accountId
+    let consumerKey
+    let consumerSecret
+    let tokenId
+    let tokenSecret
+    //selecciona elementos del dom
     event.preventDefault();
     accountId = document.getElementById('accountId').value;
     consumerKey = document.getElementById('consumerKey').value;
     consumerSecret = document.getElementById('consumerSecret').value;
     tokenId = document.getElementById('tokenId').value;
     tokenSecret = document.getElementById('tokenSecret').value;
+    //guarga las crdenciales en el manifest
+    setNsCredentials(accountId, consumerKey, consumerSecret, tokenId, tokenSecret)
 })
+
+function setNsCredentials(accountId, consumerKey, consumerSecret, tokenId, tokenSecret) {
+    console.log('data', data)
+    client.metadata().then(metadata => {
+        let id = metadata.appId === 0 ? 500882 : metadata.appId
+        let settings2 = {
+            url: '/api/v2/apps/installations.json?include=app',
+            type: 'GET',
+            dataType: 'json'
+        };
+        client.request(settings2).then(
+            function (data) {
+                data.installations.forEach(e => {
+                    if (e.app_id === id) {
+                        let settings = {
+                            url: `/api/v2/apps/installations/${e.id}`,
+                            type: 'PUT',
+                            data: {
+                                "settings": {
+                                    "AccountId": accountId,
+                                    "ConsumerKey": consumerKey,
+                                    "ConsumerSecret": consumerSecret,
+                                    "TokenId": tokenId,
+                                    "TokenSecret": tokenSecret
+                                }
+                            },
+                            dataType: 'json'
+                        }
+                        client.request(settings).then(
+                            function (data) {
+                                console.log(data)
+                            },
+                            function (response) {
+                                console.log(response)
+                            }
+                        )
+                    }
+                })
+            },
+            function (response) {
+                console.log(response)
+            }
+        )
+    })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // agrega los grupos al manifest
 function addGroup() {
     let groupsRequest = document.getElementById('select-groups').value;
     if (!groupsRequestAppropve.includes(groupsRequest)) {
+        console.log(groupsRequestAppropve)
         groupsRequestAppropve.push(groupsRequest)
     }
     rendergroup(groupsRequestAppropve)
@@ -62,6 +134,7 @@ function addGroup2() {
     setgroup2(groupsApprove.join())
 
 }
+//renders
 function rendergroup(groupsRequestAppropve) {
     const groupsList = document.querySelector('.groups-request-list');
     groupsList.innerHTML = '';
@@ -92,35 +165,40 @@ function rendergroup2(groupsApprove) {
         <div class="btn-group dropdown w-25">
           <button type="button" class="btn-up dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
           <ul class="dropdown-menu">
-            <li><button class="dropdown-item" onclick="removeGroup('${group}')" data-value="${i}" id="bundle-delete">Remove</button></li>
+            <li><button class="dropdown-item" onclick="removeGroupsAppropve('${group}','${i}')" data-value="${i}" id="bundle-delete">Remove</button></li>
         </div>`;
         groupsList.appendChild(li);
         i++;
     });
 }
+//elimina de los grupos
+function removeGroupsRequestAppropve(name, i) {
+    console.log(name, i)
+    console.log(groupsRequestAppropve.includes(name))
+    groupsRequestAppropve.splice(i, 1)
 
-
-
-
-
-
-function removeGroupsRequestAppropve(name,i) {
-    console.log(name)
-    if (groupsRequestAppropve.includes(name)) {
-        groupsRequestAppropve.splice(0, 1)
-        
-        setgroup(groupsRequestAppropve)
-        rendergroup(groupsRequestAppropve)
-    }
+    console.log(groupsRequestAppropve)
+    setgroup(groupsRequestAppropve.join())
+    rendergroup(groupsRequestAppropve)
 
 }
+function removeGroupsAppropve(name, i) {
+    console.log(name, i)
+    console.log(groupsApprove.includes(name))
+    groupsApprove.splice(i, 1)
 
+    console.log(groupsApprove)
+    setgroup2(groupsApprove.join())
+    rendergroup2(groupsApprove)
 
+}
+//setea en el manifest los grupos
 function setgroup(requestApproveGroups) {
-    console.log('requestApproveGroups', requestApproveGroups)
-    if (requestApproveGroups === []){
-        requestApproveGroups = ''
+    if (requestApproveGroups.length === 0) {
+        console.log('entra')
+        requestApproveGroups = 'null'
     }
+    console.log('requestApproveGroups', requestApproveGroups)
     client.metadata().then(metadata => {
         let id = metadata.appId === 0 ? 500882 : metadata.appId
         let settings2 = {
@@ -160,6 +238,10 @@ function setgroup(requestApproveGroups) {
     })
 }
 function setgroup2(approveGroups) {
+    if (approveGroups.length === 0) {
+        console.log('entra')
+        approveGroups = 'null'
+    }
     console.log('approveGroups', approveGroups)
     client.metadata().then(metadata => {
         let id = metadata.appId === 0 ? 500882 : metadata.appId
@@ -200,7 +282,6 @@ function setgroup2(approveGroups) {
     })
 
 }
-
 // muestra los botones seun el rol de usuario
 client.get('currentUser').then(async function (data) {
     if (data['currentUser'].role === 'admin') {

@@ -38,15 +38,33 @@ function start(client) {
       ticketDescription = data.ticket.description;
       ticketStatus = data.ticket.status;
 
-      showInfo(data, userName);
-      showHome(data);
-      const isOperator =
-        userData?.groups.filter((element) => element.name === 'Operators')
-          .length > 0;
-      const isAdministrator =
-        userData?.groups.filter((element) => element.name === 'Administrators')
-          .length > 0;
-      await getCustomizations(isOperator, isAdministrator);
+
+      await client.metadata().then( async (metadata) => {
+
+        let approverGroups = metadata.settings.approveGroups
+        let requestApproveGroups = metadata.settings.requestApproveGroups
+
+        console.log('approveGroups', approverGroups)
+        console.log('requestApproveGroups', requestApproveGroups)
+
+
+
+
+
+        showInfo(data, userName);
+        showHome(data);
+        const isOperator =
+          userData?.groups.filter((element) => element.name === requestApproveGroups)
+            .length > 0;
+        const isAdministrator =
+          userData?.groups.filter((element) => element.name === approverGroups)
+            .length > 0;
+        await getCustomizations(isOperator, isAdministrator);
+
+      })
+
+
+
     });
   } catch (error) {
     console.log('error');
@@ -54,7 +72,7 @@ function start(client) {
 }
 //Connection with netsuite
 async function transmitToNetsuite(
-  url, 
+  url,
   scriptDeploy,
   action,
   formValues,
@@ -249,7 +267,7 @@ function getCustomizations(isOperator, isAdministrator) {
     }
 
 
-    localStorage.setItem('selectedCustomizationValues',  JSON.stringify(existingList));
+    localStorage.setItem('selectedCustomizationValues', JSON.stringify(existingList));
     if (results.proposedCusts != '') {
       localStorage.setItem(
         'ProposedCustomization',
@@ -271,7 +289,7 @@ function getCustomizations(isOperator, isAdministrator) {
   };
 
   transmitToNetsuite(
-    restDomainBase,    
+    restDomainBase,
     scriptDeploy,
     action,
     ticketId,
@@ -288,19 +306,19 @@ async function updateTicketStatus(newState) {
     description: ticketDescription,
     state: newState,
   };
-console.log(newState)
+  console.log(newState)
   const callback = (results) => {
     statusNS = results.statusBarState;
     console.log('Update Ticket Results to:', statusNS)
     start(client)
   };
   await transmitToNetsuite(
-    restDomainBase,    
+    restDomainBase,
     scriptDeploy,
     action,
     params,
     callback
-  ); 
+  );
 }
 /*SHOW INFO */
 function showInfo(data, userName) {
@@ -332,6 +350,11 @@ function showHome(data) {
   let btn3 = document.getElementById('lookup');
   btn3.addEventListener('click', () => {
     popModal('assets/modalList.html', '240');
+  });
+
+  let btn4 = document.getElementById('btn-impact');
+  btn4.addEventListener('click', () => {
+    popModal('assets/modalImpact.html', '550');
   });
 }
 /*ERRORES */
@@ -373,7 +396,7 @@ function renderlookup() {
   localStorage.removeItem('selectedCustomizationValues');
 }
 function erd(url) {
-      window.open(url, '_blank')
+  window.open(url, '_blank')
 }
 //Existing Customizations
 function removeExistingCustomization(existingName, existingId) {
@@ -400,7 +423,7 @@ function removeExistingCustomization(existingName, existingId) {
   };
 
   transmitToNetsuite(
-    restDomainBase,    
+    restDomainBase,
     scriptDeploy,
     action,
     params,
@@ -531,13 +554,13 @@ function addBundle() {
           start(client)
         };
         transmitToNetsuite(
-          restDomainBase,          
+          restDomainBase,
           scriptDeploy,
           action,
           params,
           callback,
         );
-          
+
         $('#errorBundle')[0].innerHTML = ''
       } else {
         $('#errorBundle')[0].innerHTML = '<p>You must enter six numbers</p>'
@@ -577,7 +600,7 @@ function removeBundle(bundleID) {
     renderBundle();
   };
   transmitToNetsuite(
-    restDomainBase,    
+    restDomainBase,
     scriptDeploy,
     action,
     params,
@@ -645,20 +668,20 @@ function changeStatus(action) {
       break;
     case 'approved':
       updateTicketStatus('Approve');
-     // start(client)
+      // start(client)
       break;
     case 'reject':
       updateTicketStatus('Canceled');
-     // start(client)
+      // start(client)
       break;
-      case 'close':
+    case 'close':
       updateTicketStatus('Close');
-     // start(client)
+      // start(client)
       break;
 
     default:
       console.log('status', action);
-     // start(client)
+      // start(client)
       break;
   }
 }

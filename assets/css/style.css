@@ -67,6 +67,9 @@ a {
 .vis {
   display: flex;
 }
+.color {
+  color: #053561 !important;
+}
 /*FUENTES*/
 
 .os-20 {
@@ -265,7 +268,7 @@ textarea:focus {
   margin: 0 auto 20px auto;
 }
 
-.btn-send {
+.btn-impact {
   width: 90%;
   margin-right: 5px;
   margin-left: 5px;
