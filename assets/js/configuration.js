@@ -38,7 +38,7 @@ client.metadata().then(metadata => {
 
 
 //obtiene los datos de cuenta netsuite
-$('.btn-acount').click(function () {
+$('.btn-acount').click( async function () {
     //variables
     let accountId
     let consumerKey
@@ -53,11 +53,12 @@ $('.btn-acount').click(function () {
     tokenId = document.getElementById('tokenId').value;
     tokenSecret = document.getElementById('tokenSecret').value;
     //guarga las crdenciales en el manifest
-    setNsCredentials(accountId, consumerKey, consumerSecret, tokenId, tokenSecret)
+   await setNsCredentials(accountId, consumerKey, consumerSecret, tokenId, tokenSecret)
+    
 })
 
 function setNsCredentials(accountId, consumerKey, consumerSecret, tokenId, tokenSecret) {
-    console.log('data', data)
+    
     client.metadata().then(metadata => {
         let id = metadata.appId === 0 ? 500882 : metadata.appId
         let settings2 = {

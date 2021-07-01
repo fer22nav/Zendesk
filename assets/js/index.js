@@ -37,20 +37,9 @@ function start(client) {
       ticketSubject = data.ticket.subject;
       ticketDescription = data.ticket.description;
       ticketStatus = data.ticket.status;
-
-
-      await client.metadata().then( async (metadata) => {
-
+      await client.metadata().then(async (metadata) => {
         let approverGroups = metadata.settings.approveGroups
         let requestApproveGroups = metadata.settings.requestApproveGroups
-
-        console.log('approveGroups', approverGroups)
-        console.log('requestApproveGroups', requestApproveGroups)
-
-
-
-
-
         showInfo(data, userName);
         showHome(data);
         const isOperator =
@@ -60,11 +49,7 @@ function start(client) {
           userData?.groups.filter((element) => element.name === approverGroups)
             .length > 0;
         await getCustomizations(isOperator, isAdministrator);
-
       })
-
-
-
     });
   } catch (error) {
     console.log('error');
@@ -157,7 +142,8 @@ function serviceNestsuite(
   token_secret,
   path
 ) {
-  function generateTbaHeader(
+
+   function generateTbaHeader(
     restDomainBase,
     accountId,
     consumerKey,
@@ -691,10 +677,6 @@ function removeLoader() {
     $('#loader-pane').removeClass('loader-pane')
   }
 }
-
-
-
-
 
 
 

@@ -74,11 +74,11 @@ a {
 
 .os-20 {
   font-family: 'Open Sans', sans-serif;
-  font-size: min(4vw, 20px);
+  font-size: min(4vw, 20px) ;
 }
 .os-16 {
   font-family: 'Open Sans', sans-serif;
-  font-size: min(4vw, 16px);
+  font-size: min(4vw, 16px), !important ;
 }
 .os-14 {
   font-family: 'Open Sans', sans-serif;
