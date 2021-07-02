@@ -10,6 +10,7 @@ let ticketStatus;
 let statusNS;
 let linkCR;
 let bundleID = 0;
+let crId
 
 let client = ZAFClient.init();
 start(client)
@@ -214,6 +215,11 @@ function getCustomizations(isOperator, isAdministrator) {
   const action = 'getCRData';
   const ticketId = { ticketID: ticketNumber };
   const callback = (results) => {
+
+    crId = results.crId
+    localStorage.setItem('crId', crId);
+   // setCrId(crId)
+    crId = results.crId
     bundlesList =
       results.affectedBundleID === ''
         ? []
@@ -265,6 +271,8 @@ function getCustomizations(isOperator, isAdministrator) {
     renderlookup();
     renderProposed();
     renderBundle();
+
+
   };
 
   const callbackError = (e) => {
@@ -292,6 +300,7 @@ async function updateTicketStatus(newState) {
     description: ticketDescription,
     state: newState,
   };
+
   console.log(newState)
   const callback = (results) => {
     statusNS = results.statusBarState;
@@ -621,6 +630,7 @@ function loginUser(client, id) {
 function popModal(url, h) {
   localStorage.removeItem('zendesk-tiquet-id');
   localStorage.setItem('zendesk-tiquet-id', ticketNumber);
+
   client
     .invoke('instances.create', {
       location: 'modal',
@@ -657,11 +667,11 @@ function changeStatus(action) {
       // start(client)
       break;
     case 'reject':
-      updateTicketStatus('Canceled');
+      updateTicketStatus('Reject');
       // start(client)
       break;
     case 'close':
-      updateTicketStatus('Close');
+      updateTicketStatus('Closed');
       // start(client)
       break;
 
@@ -680,3 +690,50 @@ function removeLoader() {
 
 
 
+
+
+
+
+/*
+
+function setCrId(crId) {
+     
+  console.log('crId', crId)
+  client.metadata().then(metadata => {
+      let id = metadata.appId === 0 ? 500882 : metadata.appId
+      let settings2 = {
+          url: '/api/v2/apps/installations.json?include=app',
+          type: 'GET',
+          dataType: 'json'
+      };
+      client.request(settings2).then(
+          function (data) {
+              data.installations.forEach(e => {
+                  if (e.app_id === id) {
+                      let settings = {
+                          url: `/api/v2/apps/installations/${e.id}`,
+                          type: 'PUT',
+                          data: {
+                              "settings": {
+                                  "crId": crId
+                              }
+                          },
+                          dataType: 'json'
+                      }
+                      client.request(settings).then(
+                          function (data) {
+                              console.log(data)
+                          },
+                          function (response) {
+                              console.log(response)
+                          }
+                      )
+                  }
+              })
+          },
+          function (response) {
+              console.log(response)
+          }
+      )
+  })
+}*/

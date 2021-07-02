@@ -1,5 +1,7 @@
 let client = ZAFClient.init();
-console.log('impact ')
+let ticketId 
+
+let accountId
 
 impactAnalisis()
 
@@ -8,27 +10,24 @@ async function impactAnalisis() {
     $('#pills-tabContent #loader').addClass('loader')
     $('#pills-tabContent #loader-pane').addClass('loader-pane')
     const scriptDeploy = 'flo_impact_analysis_restlet';
-    const ticketId = '21890'        //     { ticketID: ticketNumber };
+    
 
-
-    const callback = (response) => {
-        
-        
+    const callback = (response) => {       
         let impact_analysis_data = JSON.parse(response);
 
        
         impact_analysis_data = impact_analysis_data.data
-        console.log(impact_analysis_data)
 
         if (impact_analysis_data === null) {
             $('.impact-analisis').innerHtml =  '<table class="aui" style="size:10px"><tbody><tr><td>No Impact Analysis data</td></tr></tbody></table>';
                 console.log('null')
+                removeLoader()
         } else {
             let safe_data = impact_analysis_data.safe;
             let not_safe_data = impact_analysis_data.notSafe;
             let not_active_data = impact_analysis_data.notActive;
             
-            console.log(safe_data)
+           
             let pillsSafe =  document.querySelector('#pills-safe')
             let pillsNotsafe =  document.querySelector('#pills-notsafe')
             let pillsInactive =  document.querySelector('#pills-inactive')
@@ -44,20 +43,22 @@ async function impactAnalisis() {
                 const tr = document.createElement('tr');
                 tr.className = 'look-tr';
                 tr.innerHTML = `  <td class=" item d-flex w-60">
-                                    <p class="os-14 my-auto">${element.object}</p></td>
+                                    <p class="os-12 my-auto">${element.object}</p></td>
                                   <td class=" item d-flex w-40 my-auto">
-                                      <p class="os-14 my-auto">${element.warning}</p>
+                                      <p class="os-12 my-auto">${element.warning}</p>
                                   </td>
                                   <td class=" item d-flex w-40 my-auto">
-                                      <p class="os-14 my-auto">${element.impactedlinks}</p>
+                                      <p class="os-12 my-auto">${element.impactedlinks}</p>
                                   </td>
                                   `
                 dataNotsafe.appendChild(tr);
 
+                let anchor = document.querySelectorAll('.item p a')
+                anchor.forEach(e =>{    
+                    e.className = 'item-url'
+                    e.host = `${accountId}`
 
-
-
-                    console.log(element)
+                })
             });
 
 
@@ -72,27 +73,27 @@ async function impactAnalisis() {
                 let dataNotsafe = document.querySelector('.data-notsafe')
                 dataNotsafe.innerHTML = ''
 
-                console.log(not_safe_data)
-
                 not_safe_data.forEach(element => {
 
                     const tr = document.createElement('tr');
                     tr.className = 'look-tr';
                     tr.innerHTML = `  <td class=" item d-flex w-60">
-                                        <p class="os-14 my-auto">${element.object}</p></td>
+                                        <p class="os-12 my-auto">${element.object}</p></td>
                                       <td class=" item d-flex w-40 my-auto">
-                                          <p class="os-14 my-auto">${element.warning}</p>
+                                          <p class="os-12 my-auto">${element.warning}</p>
                                       </td>
                                       <td class=" item d-flex w-40 my-auto">
-                                          <p class="os-14 my-auto">${element.impactedlinks}</p>
+                                          <p class="os-12 my-auto">${element.impactedlinks}</p>
                                       </td>
                                       `
                     dataNotsafe.appendChild(tr);
+                    let anchor = document.querySelectorAll('.item p a')
+                    anchor.forEach(e =>{    
+                        e.className = 'item-url'
+                        e.host = `${accountId}`
 
+                    })
 
-
-
-                        console.log(element)
                 });
             }else{
                 pillsNotsafe.innerHTML = '<p class="os-16 fw-bold mt-5">No information available to display</p>'
@@ -101,28 +102,28 @@ async function impactAnalisis() {
              if (not_active_data.length != 0) {
                 let dataNotsafe = document.querySelector('.data-inactive')
                 dataNotsafe.innerHTML = ''
-
-                console.log(not_safe_data)
-
                 not_safe_data.forEach(element => {
-
                     const tr = document.createElement('tr');
                     tr.className = 'look-tr';
                     tr.innerHTML = `  <td class=" item d-flex w-60">
-                                        <p class="os-14 my-auto">${element.object}</p></td>
+                                        <p class="os-12 my-auto">${element.object}</p></td>
                                       <td class=" item d-flex w-40 my-auto">
-                                          <p class="os-14 my-auto">${element.warning}</p>
+                                          <p class="os-12 my-auto">${element.warning}</p>
                                       </td>
                                       <td class=" item d-flex w-40 my-auto">
-                                          <p class="os-14 my-auto">${element.impactedlinks}</p>
+                                          <p class="os-12 my-auto">${element.impactedlinks}</p>
                                       </td>
                                       `
                     dataNotsafe.appendChild(tr);
 
+                    let anchor = document.querySelectorAll('.item p a')
+                    anchor.forEach(e =>{    
+                        e.className = 'item-url'
+                        e.host = `${accountId}`
+
+                    })
 
 
-
-                        console.log(element)
                 });
 
             }else{
@@ -173,8 +174,9 @@ async function impactAnalisis() {
             '580ba69efedcd8f4bdd7ac7bec6bc0324245a56d24a66d52ab061e1c5cf3ab41';
         tokenSecret = metadata.settings.tokenSecret ? metadata.settings.tokenSecret :
             'ba3426be5d771f1346ef0b66e40c5da6796301ce2413ec0de3a210dfa2d0be5e';
+     ticketId =  localStorage.getItem('crId')
 
-
+           
 
         let restDomainBase = `https://${accountId.toLowerCase()}.restlets.api.netsuite.com`;
         return serviceNestsuite(
@@ -237,7 +239,6 @@ function serviceNestsuite(
     token_secret,
     path
 ) {
-
     function generateTbaHeader(
         restDomainBase,
         accountId,

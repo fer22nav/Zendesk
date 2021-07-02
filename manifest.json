@@ -1,5 +1,5 @@
 {
-  "name": "Stongpoint Integration",
+  "name": "Strongpoint Netsuite Integration",
   "author": {
     "name": "Strongpoint",
     "email": "javier@robotly.io",
@@ -47,6 +47,12 @@
     },
     {
       "name": "approveGroups",
+      "type": "hidden",
+      "required": false,
+      "default": "null"
+    },
+    {
+      "name": "approvalProcess",
       "type": "hidden",
       "required": false,
       "default": "null"
