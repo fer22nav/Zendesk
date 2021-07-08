@@ -77,8 +77,8 @@
 }
 
 .form {
-    width: 50%;
-    margin: 0 auto 0 auto;
+    width: 95%;
+    margin: 20px auto 20px auto;
 }
 input,
 select {
@@ -96,13 +96,12 @@ textarea:focus {
     border: 2px solid#053561;   
   }
 
-.btn-acount {
+.btn-change-account , .btn-add-account {
     background-color: #053561;
     color: #fff;
     padding: 5px 10px 5px 10px;
     border: none;
     border-radius: 6px;
-    margin: 50px auto 50px auto;
   }
 
 
@@ -160,18 +159,6 @@ textarea:focus {
     background: #053561;
     border-radius: 3px;
   }
-
-
-
-
-
-
-
-
-
-
-
-
   .custom-select-wrapper {
     position: relative;
     user-select: none;
@@ -276,4 +263,134 @@ textarea:focus {
 .open .arrow::after {
   left: 5px;
   transform: rotate(45deg);
+}
+.loader-text {
+  opacity: 0;
+  animation: opacity ease-in-out 2s;
+}
+
+.loader {  
+  position: relative;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #053561;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 5s linear infinite;
+  z-index: 1000;
+  opacity: 0;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+.descriptive{
+    color: #555;
+}
+.acc-ns{
+  background-color: #fff;
+  border:  solid 1px #305c91;
+  color: #053561;
+  padding: 30px;
+  border-radius: 8px;
+  position: relative;
+  margin: 25px auto 25px auto;
+  
+}
+.btn-acc {
+  position: absolute !important;
+    top: 5px !important;
+    right: 0px !important;
+}
+.btn-config {
+  height: 26px !important;
+  width: 26px   !important;
+  color: #fff;
+  margin-left: auto;
+  margin-right: 0;
+  border: none;
+  background: #053561;
+  border-radius: 3px;
+}
+
+#acc-container {
+  
+justify-content: center !important;
+}
+.header-acc {
+  width: 90%;
+  border-bottom: 1px solid #E8E8E8;
+
+}
+
+.header-acc-title {    
+  color: #053561;
+  cursor: default;
+  width: 100%;
+  font-weight: 700;
+  padding: 10px 10px 16px 0;
+  margin: 10px 0 8px 0;
+}
+
+#select-acc {
+  text-align-last: center !important;
+    width:100%;
+    border-radius: 1px;
+    border: 1px solid #ddd;
+    font-weight: 600;
+    color: #053561;
+    font-size: 16px;
+    height: 50px !important;
+}
+
+.option-acc {
+  text-align-last: center !important;
+    width:100%;
+    border-radius: 1px;
+    border: 1px solid #ddd;
+    font-weight: 600;
+    color: #053561;
+    font-size: 16px;
+    padding: 9px;
+    height: 50px !important;
+}
+
+
+.loader-pane1 {
+  padding-top: 10%;
+  z-index: 1000;
+  cursor: progress;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #0000002a;
+}
+.loader1 {  
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #053561;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 5s linear infinite;
+  z-index: 1000;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

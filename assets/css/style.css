@@ -62,10 +62,10 @@ a {
 }
 
 .hid {
-  display: none;
+  display: none !important;
 }
 .vis {
-  display: flex;
+  display: flex !important;
 }
 .color {
   color: #053561 !important;
@@ -109,6 +109,9 @@ a {
   background-color: #fed550;
   padding: 2px;
 }
+.statusbar , .btn-statuses{
+  display: flex;
+}
 .link {
   background-color: #f4f3f3;
   padding: 3px;
@@ -128,7 +131,7 @@ a {
   border-radius: 8px;
   border: none;
   color: #fff;
-  width: 50%;
+  width: 60%;
   margin-right: 5%;
 }
 .btn-remove {
@@ -141,7 +144,7 @@ a {
 .btn-remove img,
 .btn-aprove img, 
 .btn-close-status img {
-  width: 10%;
+  width: 8%;
 }
 input,
 select {
@@ -173,7 +176,7 @@ textarea:focus {
 
 .bundle-id-lista {
   position: relative;
-  width: 100%;
+  width: 90%;
   margin-top: 3px;
   background-color: #fff;
   border: solid 1px #0000001a;

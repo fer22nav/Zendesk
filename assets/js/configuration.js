@@ -1,6 +1,6 @@
 
-
-
+let loader1 = $('#loader-pane #loader')
+let loader2 = $('#loader-pane')
 let groupsRequestAppropve = []
 let groupsApprove = []
 let client = ZAFClient.init();
@@ -9,6 +9,7 @@ let client = ZAFClient.init();
 //carga las variables con los datos del manifest
 //y ejecuta los renders de cada grupo
 client.metadata().then(metadata => {
+
     if (metadata.settings.requestApproveGroups !== 'null') {
         let group1 = metadata.settings.requestApproveGroups
         group1 = group1.split(',')
@@ -25,23 +26,29 @@ client.metadata().then(metadata => {
         })
         rendergroup2(group2)
     }
+
+    if (metadata.settings.approvalProcess !== 'null') {
+        let approvalProcess = metadata.settings.approvalProcess
+        select(approvalProcess)
+
+
+    }
+
+
+
+
 })
-
-
-
-
-
-
-
-
 //obtiene los datos de cuenta netsuite
-$('.btn-acount').click(async function () {
+$('.btn-change-account').click(async function () {
+    loader1.addClass('loader1')
+    loader2.addClass('loader-pane1')
     //variables
     let accountId
     let consumerKey
     let consumerSecret
     let tokenId
     let tokenSecret
+    let accountNumber
     //selecciona elementos del dom
     event.preventDefault();
     accountId = document.getElementById('accountId').value;
@@ -49,13 +56,39 @@ $('.btn-acount').click(async function () {
     consumerSecret = document.getElementById('consumerSecret').value;
     tokenId = document.getElementById('tokenId').value;
     tokenSecret = document.getElementById('tokenSecret').value;
+    accountNumber = document.getElementById('select-acc').value;
     //guarga las crdenciales en el manifest
-    await setNsCredentials(accountId, consumerKey, consumerSecret, tokenId, tokenSecret)
+    switch (accountNumber) {
+        case '1':
+            await setNsCredentials1(accountId, consumerKey, consumerSecret, tokenId, tokenSecret)
+            break;
+        case '2':
+            await setNsCredentials2(accountId, consumerKey, consumerSecret, tokenId, tokenSecret)
+            break;
+        case '3':
+            await setNsCredentials3(accountId, consumerKey, consumerSecret, tokenId, tokenSecret)
+            break;
+        case '4':
+            await setNsCredentials4(accountId, consumerKey, consumerSecret, tokenId, tokenSecret)
+            break;
+        case '5':
+            await setNsCredentials5(accountId, consumerKey, consumerSecret, tokenId, tokenSecret)
+            break;
+
+        default:
+            break;
+    }
+
+    document.getElementById('form-user').reset();
+    setTimeout(() => {
+        renderAccount()
+    }, 2000)
+
 
 })
 
-function setNsCredentials(accountId, consumerKey, consumerSecret, tokenId, tokenSecret) {
-
+function setNsCredentials1(accountId, consumerKey, consumerSecret, tokenId, tokenSecret) {
+    console.log(accountId, consumerKey, consumerSecret, tokenId, tokenSecret, 1)
     client.metadata().then(metadata => {
         let id = metadata.appId === 0 ? 500882 : metadata.appId
         let settings2 = {
@@ -72,18 +105,19 @@ function setNsCredentials(accountId, consumerKey, consumerSecret, tokenId, token
                             type: 'PUT',
                             data: {
                                 "settings": {
-                                    "AccountId": accountId,
-                                    "ConsumerKey": consumerKey,
-                                    "ConsumerSecret": consumerSecret,
-                                    "TokenId": tokenId,
-                                    "TokenSecret": tokenSecret
+                                    "AccountId1": accountId,
+                                    "ConsumerKey1": consumerKey,
+                                    "ConsumerSecret1": consumerSecret,
+                                    "TokenId1": tokenId,
+                                    "TokenSecret1": tokenSecret
                                 }
                             },
                             dataType: 'json'
                         }
                         client.request(settings).then(
                             function (data) {
-                                // console.log(data)
+                                console.log(data)
+                                reload(client)
                             },
                             function (response) {
                                 console.log(response)
@@ -98,19 +132,186 @@ function setNsCredentials(accountId, consumerKey, consumerSecret, tokenId, token
         )
     })
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
+function setNsCredentials2(accountId, consumerKey, consumerSecret, tokenId, tokenSecret) {
+    console.log(accountId, consumerKey, consumerSecret, tokenId, tokenSecret, '2')
+    client.metadata().then(metadata => {
+        let id = metadata.appId === 0 ? 500882 : metadata.appId
+        let settings2 = {
+            url: '/api/v2/apps/installations.json?include=app',
+            type: 'GET',
+            dataType: 'json'
+        };
+        client.request(settings2).then(
+            function (data) {
+                data.installations.forEach(e => {
+                    if (e.app_id === id) {
+                        let settings = {
+                            url: `/api/v2/apps/installations/${e.id}`,
+                            type: 'PUT',
+                            data: {
+                                "settings": {
+                                    "AccountId2": accountId,
+                                    "ConsumerKey2": consumerKey,
+                                    "ConsumerSecret2": consumerSecret,
+                                    "TokenId2": tokenId,
+                                    "TokenSecret2": tokenSecret
+                                }
+                            },
+                            dataType: 'json'
+                        }
+                        client.request(settings).then(
+                            function (data) {
+                                console.log(data)
+                                reload(client)
+                            },
+                            function (response) {
+                                console.log(response)
+                            }
+                        )
+                    }
+                })
+            },
+            function (response) {
+                console.log(response)
+            }
+        )
+    })
+}
+function setNsCredentials3(accountId, consumerKey, consumerSecret, tokenId, tokenSecret) {
+    console.log(accountId, consumerKey, consumerSecret, tokenId, tokenSecret, '3')
+    client.metadata().then(metadata => {
+        let id = metadata.appId === 0 ? 500882 : metadata.appId
+        let settings2 = {
+            url: '/api/v2/apps/installations.json?include=app',
+            type: 'GET',
+            dataType: 'json'
+        };
+        client.request(settings2).then(
+            function (data) {
+                data.installations.forEach(e => {
+                    if (e.app_id === id) {
+                        let settings = {
+                            url: `/api/v2/apps/installations/${e.id}`,
+                            type: 'PUT',
+                            data: {
+                                "settings": {
+                                    "AccountId3": accountId,
+                                    "ConsumerKey3": consumerKey,
+                                    "ConsumerSecret3": consumerSecret,
+                                    "TokenId3": tokenId,
+                                    "TokenSecret3": tokenSecret
+                                }
+                            },
+                            dataType: 'json'
+                        }
+                        client.request(settings).then(
+                            function (data) {
+                                console.log(data)
+                                reload(client)
+                            },
+                            function (response) {
+                                console.log(response)
+                            }
+                        )
+                    }
+                })
+            },
+            function (response) {
+                console.log(response)
+            }
+        )
+    })
+}
+function setNsCredentials4(accountId, consumerKey, consumerSecret, tokenId, tokenSecret) {
+    console.log(accountId, consumerKey, consumerSecret, tokenId, tokenSecret, '4')
+    client.metadata().then(metadata => {
+        let id = metadata.appId === 0 ? 500882 : metadata.appId
+        let settings2 = {
+            url: '/api/v2/apps/installations.json?include=app',
+            type: 'GET',
+            dataType: 'json'
+        };
+        client.request(settings2).then(
+            function (data) {
+                data.installations.forEach(e => {
+                    if (e.app_id === id) {
+                        let settings = {
+                            url: `/api/v2/apps/installations/${e.id}`,
+                            type: 'PUT',
+                            data: {
+                                "settings": {
+                                    "AccountId4": accountId,
+                                    "ConsumerKey4": consumerKey,
+                                    "ConsumerSecret4": consumerSecret,
+                                    "TokenId4": tokenId,
+                                    "TokenSecret4": tokenSecret
+                                }
+                            },
+                            dataType: 'json'
+                        }
+                        client.request(settings).then(
+                            function (data) {
+                                console.log(data)
+                                reload(client)
+                            },
+                            function (response) {
+                                console.log(response)
+                            }
+                        )
+                    }
+                })
+            },
+            function (response) {
+                console.log(response)
+            }
+        )
+    })
+}
+function setNsCredentials5(accountId, consumerKey, consumerSecret, tokenId, tokenSecret) {
+    console.log(accountId, consumerKey, consumerSecret, tokenId, tokenSecret, '5')
+    client.metadata().then(metadata => {
+        let id = metadata.appId === 0 ? 500882 : metadata.appId
+        let settings2 = {
+            url: '/api/v2/apps/installations.json?include=app',
+            type: 'GET',
+            dataType: 'json'
+        };
+        client.request(settings2).then(
+            function (data) {
+                data.installations.forEach(e => {
+                    if (e.app_id === id) {
+                        let settings = {
+                            url: `/api/v2/apps/installations/${e.id}`,
+                            type: 'PUT',
+                            data: {
+                                "settings": {
+                                    "AccountId5": accountId,
+                                    "ConsumerKey5": consumerKey,
+                                    "ConsumerSecret5": consumerSecret,
+                                    "TokenId5": tokenId,
+                                    "TokenSecret5": tokenSecret
+                                }
+                            },
+                            dataType: 'json'
+                        }
+                        client.request(settings).then(
+                            function (data) {
+                                console.log(data)
+                                reload(client)
+                            },
+                            function (response) {
+                                console.log(response)
+                            }
+                        )
+                    }
+                })
+            },
+            function (response) {
+                console.log(response)
+            }
+        )
+    })
+}
 
 // agrega los grupos al manifest
 function addGroup() {
@@ -208,6 +409,8 @@ function setgroup(requestApproveGroups) {
                         client.request(settings).then(
                             function (data) {
                                 console.log(data)
+                                reload(client)                              
+                                
                             },
                             function (response) {
                                 console.log(response)
@@ -250,6 +453,52 @@ function setgroup2(approveGroups) {
                         client.request(settings).then(
                             function (data) {
                                 console.log(data)
+                                reload(client)
+                            },
+                            function (response) {
+                                console.log(response)
+                            }
+                        )
+                    }
+                })
+            },
+            function (response) {
+                console.log(response)
+            }
+        )
+    })
+
+}
+function setapprovalProcess(approvalProcess) {
+    client.metadata().then(metadata => {
+        let id = metadata.appId === 0 ? 502876 : metadata.appId
+        let settings2 = {
+            url: '/api/v2/apps/installations.json?include=app',
+            type: 'GET',
+            dataType: 'json'
+        };
+        client.request(settings2).then(
+            function (data) {
+                data.installations.forEach(e => {
+                    if (e.app_id === id) {
+                        let settings = {
+                            url: `/api/v2/apps/installations/${e.id}`,
+                            type: 'PUT',
+                            data: {
+                                "settings": {
+                                    "approvalProcess": approvalProcess
+                                }
+                            },
+                            dataType: 'json'
+                        }
+                        client.request(settings).then(
+                            function (data) {
+                                console.log(data)
+
+                                setTimeout(() => {
+                                    $(' #loader').css('display', 'hidden').fadeOut(2000)
+                                }, 2000)
+                                reload(client)
                             },
                             function (response) {
                                 console.log(response)
@@ -282,6 +531,7 @@ let settings = {
 client.request(settings).then(
     function (data) {
         data.groups.forEach(e => {
+            //groups
             const option = document.createElement('option');
             const option2 = document.createElement('option');
             option2.value = e.name
@@ -290,35 +540,107 @@ client.request(settings).then(
             option.innerHTML = e.name
             document.querySelector('#select-groups').appendChild(option)
             document.querySelector('#select-groups-2').appendChild(option2)
+
         });
     }
 );
+// select approval process
+function select(selectedValues) {
+    document.querySelector('.custom-select__trigger span').textContent = selectedValues
+}
+document.querySelector('.custom-select-wrapper').addEventListener('click', function () {
+    this.querySelector('.custom-select').classList.toggle('open');
+})
+for (const option of document.querySelectorAll(".custom-option")) {
+    option.addEventListener('click', function () {
+        if (!this.classList.contains('selected')) {
+            this.parentNode.querySelector('.custom-option.selected').classList.remove('selected');
+            this.classList.add('selected');
+            this.closest('.custom-select').querySelector('.custom-select__trigger span').textContent = this.textContent;
+            console.log(this.textContent)
+            $('#loader').css('opacity', '1')
+            setapprovalProcess(this.textContent)
 
-function setapprovalProcess(approvalProcess) {
-    client.metadata().then(metadata => {
+        }
+    })
+}
+window.addEventListener('click', function (e) {
+    const select = document.querySelector('.custom-select')
+    if (!select.contains(e.target)) {
+        select.classList.remove('open');
+    }
+});
+
+$('#select-groups-proces').change(function () {
+
+    console.log($(this)[0].value)
+
+})
+
+setTimeout(() => {
+    loader1.addClass('loader1')
+    loader2.addClass('loader-pane1')
+    renderAccount()
+}, 2000)
+
+function renderAccount() {
+    let accContainer = document.querySelector('#acc-container')
+    accContainer.innerHTML = ''
+    client.metadata().then(async function (metadata) {
         let id = metadata.appId === 0 ? 500882 : metadata.appId
         let settings2 = {
             url: '/api/v2/apps/installations.json?include=app',
             type: 'GET',
             dataType: 'json'
         };
-        client.request(settings2).then(
+        await client.request(settings2).then(
             function (data) {
                 data.installations.forEach(e => {
                     if (e.app_id === id) {
                         let settings = {
                             url: `/api/v2/apps/installations/${e.id}`,
                             type: 'PUT',
-                            data: {
-                                "settings": {
-                                    "approvalProcess": approvalProcess
-                                }
-                            },
                             dataType: 'json'
                         }
                         client.request(settings).then(
-                            function (data) {
-                                console.log(data)
+                            async function (data) {
+                                console.log(data.settings_objects)
+                                await data.settings_objects.forEach((element) => {
+                                    for (let i = 1; i < 6; i++) {
+                                        if (createArrAcount(i).includes(element.name)) {
+                                            let arr = createArrAcount(i)
+                                            if (element.value !== null) {
+                                                //console.log(element.name, element.value)
+                                                // console.log(element)
+                                                if (element.name === arr[0]) {
+
+
+                                                    let div = document.createElement('div')
+                                                    div.className = 'col-4'
+                                                    div.innerHTML = `
+                                                            <div class="acc-ns">
+                                                                <h2 class="os-16 p-0 mt-auto mb-2 fw-bold ">Accoutn ${i}</h2>
+                                                                <h2 class="os-14 p-0 mb-auto fw-bold">${element.value}</h2>
+                                                                <div class="btn-acc dropdown w-25">
+                                                                    <button type="button" class="btn-config dropdown-toggle" data-bs-toggle="dropdown"
+                                                                    aria-expanded="false"></button>
+                                                                    <ul class="dropdown-menu">
+                                                                        <li><button class=" os-14 dropdown-item" onclick="removeAccount('${i}')" data-value=""
+                                                                        id="acc-delete">Remove account</button>
+                                                                    </li>
+                                                                </div>
+                                                            </div>  `
+                                                    accContainer.appendChild(div)
+                                                }
+                                            }
+                                        }
+                                    }
+
+
+                                })
+
+                                $('#loader-pane #loader').removeClass('loader1').trigger("enable");
+                                $('#loader-pane').removeClass('loader-pane1')
                             },
                             function (response) {
                                 console.log(response)
@@ -333,45 +655,70 @@ function setapprovalProcess(approvalProcess) {
         )
     })
 
-}
-
-function select(selectedValues) {
-    document.querySelector('.custom-select__trigger span').textContent = selectedValues
-}
 
 
-document.querySelector('.custom-select-wrapper').addEventListener('click', function () {
-    this.querySelector('.custom-select').classList.toggle('open');
-})
-for (const option of document.querySelectorAll(".custom-option")) {
-    option.addEventListener('click', function () {
-        if (!this.classList.contains('selected')) {
-            this.parentNode.querySelector('.custom-option.selected').classList.remove('selected');
-            this.classList.add('selected');
-            this.closest('.custom-select').querySelector('.custom-select__trigger span').textContent = this.textContent;
-            console.log(this.textContent)
-            setapprovalProcess(this.textContent)
-        }
-    })
-}
-window.addEventListener('click', function (e) {
-    const select = document.querySelector('.custom-select')
-    if (!select.contains(e.target)) {
-        select.classList.remove('open');
+
+    function createArrAcount(i) {
+        let arrCredentials = []
+        arrCredentials.push(`AccountId${i}`)
+        arrCredentials.push(`ConsumerKey${i}`)
+        arrCredentials.push(`ConsumerSecret${i}`)
+        arrCredentials.push(`TokenId${i}`)
+        arrCredentials.push(`TokenSecret${i}`)
+        return arrCredentials
     }
-});
 
 
 
-
-
-$('#select-groups-proces').change(function () {
-
-    console.log($(this)[0].value)
+}
 
 
 
 
 
 
-})
+async function removeAccount(accountNumber) {
+    console.log(accountNumber)
+    loader1.addClass('loader1')
+    loader2.addClass('loader-pane1')
+    switch (accountNumber) {
+        case '1':
+            await setNsCredentials1('', '', '', '', '')
+            break;
+        case '2':
+            await setNsCredentials2('', '', '', '', '')
+            break;
+        case '3':
+            await setNsCredentials3('', '', '', '', '')
+            break;
+        case '4':
+            await setNsCredentials4('', '', '', '', '')
+            break;
+        case '5':
+            await setNsCredentials5('', '', '', '', '')
+            break;
+
+        default:
+            break;
+    }
+    setTimeout(() => {
+        renderAccount()
+    }, 2000)
+}
+
+
+
+
+function reload(client) {
+    var topBarClientPromise =  client.get('instances').then( function(instancesData) {
+        var instances = instancesData.instances;
+        for (var instanceGuid in instances) {
+          if (instances[instanceGuid].location === 'ticket_sidebar') {
+            return client.instance(instanceGuid);
+          }
+        }
+      });                                  
+      topBarClientPromise.then(function(topBarClient) {
+        topBarClient.trigger('reload');
+      });
+}

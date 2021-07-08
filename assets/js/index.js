@@ -13,12 +13,15 @@ let bundleID = 0;
 let crId
 
 let client = ZAFClient.init();
+
+client.on('reload', function () {
+  console.log('App reloaded')
+  start(client)
+});
+
+
+
 start(client)
-
-
-
-
-
 
 
 
@@ -40,16 +43,34 @@ function start(client) {
       ticketStatus = data.ticket.status;
       await client.metadata().then(async (metadata) => {
         let approverGroups = metadata.settings.approveGroups
-        let requestApproveGroups = metadata.settings.requestApproveGroups
+        let requestApproveGroups = 'Operators,Suport' // metadata.settings.requestApproveGroups 
+        let approvalProcess = metadata.settings.approvalProcess ? metadata.settings.approvalProcess : 'none'
+
+        /*  In SP Zendesk
+               In SP Netsuite
+               none       
+               */
+
+        requestApproveGroups = requestApproveGroups.split(',')
+        approverGroups = approverGroups.split(',')
+        approvalProcess = approvalProcess.split(',')
+        let isOperator
+        userData?.groups.forEach((e) => {
+          if (requestApproveGroups.includes(e.name)) {
+            isOperator = requestApproveGroups.includes(e.name)
+            return
+          }
+        })
+        let isAdministrator
+        userData?.groups.forEach((e) => {
+          if (approverGroups.includes(e.name)) {
+            isAdministrator = approverGroups.includes(e.name)
+            return
+          }
+        })
         showInfo(data, userName);
         showHome(data);
-        const isOperator =
-          userData?.groups.filter((element) => element.name === requestApproveGroups)
-            .length > 0;
-        const isAdministrator =
-          userData?.groups.filter((element) => element.name === approverGroups)
-            .length > 0;
-        await getCustomizations(isOperator, isAdministrator);
+        await getCustomizations(isOperator, isAdministrator, approvalProcess);
       })
     });
   } catch (error) {
@@ -57,6 +78,121 @@ function start(client) {
   }
 }
 //Connection with netsuite
+function getCustomizations(isOperator, isAdministrator, approvalProcess) {
+  // console.log(isOperator, isAdministrator, approvalProcess)
+  const scriptDeploy = 'flo_cr_api';
+  const action = 'getCRData';
+  const ticketId = { ticketID: ticketNumber };
+  const callback = (results) => {
+    let policyApplied = results.policyApplied
+    let levelRequired = results.clReq
+
+
+    $('#synchronized').text()
+    $('#policy').text(policyApplied)
+    $('#level').text(levelRequired)
+    crId = results.crId
+    localStorage.setItem('crId', crId);
+    bundlesList = results.affectedBundleID === '' ? [] : results.affectedBundleID.split(',');
+    linkCR = results.link;
+    statusNS = results.statusBarState;
+    if (statusNS == '') {
+      document.querySelector('#statusNS').textContent = 'N/S';
+    } else {
+      document.querySelector('#statusNS').textContent = statusNS;
+    }
+    var element = document.getElementById('linkCR');
+    element.href = linkCR;
+    let existingList = [];
+
+    results.custIds.forEach((id, idx) => {
+      existingList.push({ name: results.custNames[idx], id: id });
+    });
+
+
+    if (isOperator &&
+      ['', 'Not Started', 'In Progress'].includes(results.statusBarState) &&
+      (['In SP Zendesk', 'In SP Netsuite'].includes(approvalProcess[0]) && true)
+
+    ) {
+      document.getElementById('btn-request').style.display = 'flex';
+      // document.getElementById('btn-reject').style.display = 'flex';
+    }
+    if (isAdministrator && results.statusBarState === 'Pending Approval' &&
+      (['In SP Zendesk'].includes(approvalProcess[0]) && true)) {
+      document.getElementById('btn-approved').style.display = 'flex';
+      document.getElementById('btn-reject').style.display = 'flex';
+    }
+    if (isAdministrator && results.statusBarState === 'Approved' &&
+      (['In SP Zendesk'].includes(approvalProcess[0]) && true)) {
+      document.getElementById('btn-close-status').style.display = 'flex';
+    }
+
+    if (isAdministrator && !['Completed', 'Rejected', 'Cancelled'].includes(results.statusBarState) &&
+      (['none'].includes(approvalProcess[0]) && true)) {
+      document.getElementById('btn-close-status').style.display = 'flex';
+    }
+
+    localStorage.setItem('selectedCustomizationValues', JSON.stringify(existingList));
+    if (results.proposedCusts != '') {
+      localStorage.setItem(
+        'ProposedCustomization',
+        JSON.stringify(results.proposedCusts.split(','))
+      );
+    } else {
+      localStorage.setItem('ProposedCustomization', JSON.stringify([]));
+    }
+    renderlookup();
+    renderProposed();
+    renderBundle();
+
+
+  };
+
+  const callbackError = (e) => {
+    if (isOperator) {
+      document.getElementById('btn-request').style.display = 'flex';
+      document.getElementById('btn-reject').style.display = 'flex';
+    }
+  };
+
+  transmitToNetsuite(
+    restDomainBase,
+    scriptDeploy,
+    action,
+    ticketId,
+    callback,
+    callbackError
+  );
+}
+
+
+
+
+async function updateTicketStatus(newState) {
+  const scriptDeploy = 'flo_cr_api';
+  const action = 'createCR';
+  const params = {
+    ticketID: ticketNumber,
+    changeNum: ticketSubject,
+    description: ticketDescription,
+    state: newState,
+  };
+
+  console.log(newState)
+  const callback = (results) => {
+    statusNS = results.statusBarState;
+    console.log('Update Ticket Results to:', statusNS)
+    start(client)
+  };
+  await transmitToNetsuite(
+    restDomainBase,
+    scriptDeploy,
+    action,
+    params,
+    callback
+  );
+}
 async function transmitToNetsuite(
   url,
   scriptDeploy,
@@ -109,20 +245,33 @@ async function transmitToNetsuite(
     )
   })
 
-  const elementos = document.querySelectorAll('#infoNs');
+
   client
     .request(params)
     .then((results) => {
+      console.log(results)
+      const elementos = document.querySelectorAll('.statusbar');
       if (results.status === 'success') {
         removeLoader()
       }
-      for (i = 0; i < elementos.length; i++) {
-        elementos[i].classList.remove('hid');
-        elementos[i].classList.add('vis');
+      if (!results.inactive) {
+        console.log(!results.inactive)
+        for (i = 0; i < elementos.length; i++) {
+          elementos[i].classList.remove('hid');
+          elementos[i].classList.add('vis');
+        }
+      } else {
+        for (i = 0; i < elementos.length; i++) {
+          elementos[i].classList.add('hid');
+          elementos[i].classList.remove('vis');
+        }
       }
+
+
       callback(results)
     })
     .catch((e) => {
+      const elementos = document.querySelectorAll('#infoNs');
       for (i = 0; i < elementos.length; i++) {
         elementos[i].classList.remove('vis')
         elementos[i].classList.add('hid')
@@ -144,7 +293,7 @@ function serviceNestsuite(
   path
 ) {
 
-   function generateTbaHeader(
+  function generateTbaHeader(
     restDomainBase,
     accountId,
     consumerKey,
@@ -209,111 +358,6 @@ function serviceNestsuite(
     contentType: 'application/json',
   };
   return options;
-}
-function getCustomizations(isOperator, isAdministrator) {
-  const scriptDeploy = 'flo_cr_api';
-  const action = 'getCRData';
-  const ticketId = { ticketID: ticketNumber };
-  const callback = (results) => {
-
-    crId = results.crId
-    localStorage.setItem('crId', crId);
-   // setCrId(crId)
-    crId = results.crId
-    bundlesList =
-      results.affectedBundleID === ''
-        ? []
-        : results.affectedBundleID.split(',');
-    linkCR = results.link;
-    statusNS = results.statusBarState;
-
-    if (statusNS == '') {
-      const elementos = document.querySelectorAll('#infoNs');
-      for (i = 0; i < elementos.length; i++) {
-        elementos[i].classList.add('hid');
-        elementos[i].classList.remove('vis');
-      }
-      document.querySelector('#statusNS').textContent = 'N/S';
-    } else {
-      document.querySelector('#statusNS').textContent = statusNS;
-    }
-    var element = document.getElementById('linkCR');
-    element.href = linkCR;
-    let existingList = [];
-    results.custIds.forEach((id, idx) => {
-      existingList.push({ name: results.custNames[idx], id: id });
-    });
-    if (
-      isOperator &&
-      ['', 'Not Started', 'In Progress'].includes(results.statusBarState)
-    ) {
-      document.getElementById('btn-request').style.display = 'flex';
-      document.getElementById('btn-reject').style.display = 'flex';
-    }
-    if (isAdministrator && results.statusBarState === 'Pending Approval') {
-      document.getElementById('btn-approved').style.display = 'flex';
-      document.getElementById('btn-reject').style.display = 'flex';
-    }
-    if (isAdministrator && results.statusBarState === 'Approved') {
-      document.getElementById('btn-close-status').style.display = 'flex';
-    }
-
-
-    localStorage.setItem('selectedCustomizationValues', JSON.stringify(existingList));
-    if (results.proposedCusts != '') {
-      localStorage.setItem(
-        'ProposedCustomization',
-        JSON.stringify(results.proposedCusts.split(','))
-      );
-    } else {
-      localStorage.setItem('ProposedCustomization', JSON.stringify([]));
-    }
-    renderlookup();
-    renderProposed();
-    renderBundle();
-
-
-  };
-
-  const callbackError = (e) => {
-    if (isOperator) {
-      document.getElementById('btn-request').style.display = 'flex';
-      document.getElementById('btn-reject').style.display = 'flex';
-    }
-  };
-
-  transmitToNetsuite(
-    restDomainBase,
-    scriptDeploy,
-    action,
-    ticketId,
-    callback,
-    callbackError
-  );
-}
-async function updateTicketStatus(newState) {
-  const scriptDeploy = 'flo_cr_api';
-  const action = 'createCR';
-  const params = {
-    ticketID: ticketNumber,
-    changeNum: ticketSubject,
-    description: ticketDescription,
-    state: newState,
-  };
-
-  console.log(newState)
-  const callback = (results) => {
-    statusNS = results.statusBarState;
-    console.log('Update Ticket Results to:', statusNS)
-    start(client)
-  };
-  await transmitToNetsuite(
-    restDomainBase,
-    scriptDeploy,
-    action,
-    params,
-    callback
-  );
 }
 /*SHOW INFO */
 function showInfo(data, userName) {
@@ -697,7 +741,7 @@ function removeLoader() {
 /*
 
 function setCrId(crId) {
-     
+
   console.log('crId', crId)
   client.metadata().then(metadata => {
       let id = metadata.appId === 0 ? 500882 : metadata.appId

@@ -23,8 +23,6 @@
 </head>
 
 <body class="body">
- 
-  
   <div id="info" class="position-relative"></div>
   <div id="home"></div>
   <footer>
@@ -36,14 +34,14 @@
         <a href="https://mysite.github.io/support" target="_blank">Report bugs</a>
       </p>
     </div>
-  </footer> 
+  </footer>
   <!--HOME-->
   <!--INFO TICKET-->
-  <script id="info-template" type="text/x-handlebars-template">    
+  <script id="info-template" type="text/x-handlebars-template">
       <div  id="loader-pane" class="">
         <div id="loader" class="mx-auto my-2"></div>
       </div>
-    
+      <!--
       <div class='user container py-3'>
         <div class='row'>
           <div class='col-7 px-0 v-align-col'>
@@ -52,70 +50,73 @@
             </h3>
           </div>
           <div class='col-5 px-0 v-align-col'>
-        <!--<button class='btn-acount os-10'>
+        <button class='btn-acount os-10'>
               Change Account
-            </button>-->
+            </button>
           </div>
         </div>
       </div>
-      <div id="infoNs" class='user container py-3 '>        
+    -->
+      <div id="infoNs" class='user container '>
         <div class='row w-100'>
-          <div class='col-12 px-0 v-align-col'>
-            <h3 class='os-12 m-0 w-100'>
-              <span class='fw-bold os-16 me-2'>Status: </span><span class="status" id="statusNS"></span>
-            </h3>
-            <h3 class='os-12 m-0 w-100 mt-3'>
-              <span class='fw-bold os-16 me-2'>Link: </span><a class="link" id="linkCR"  target="_blank">Go to Record</a>
-            </h3>
-            <div class="d-flex my-3 w-100">
-              <button class='btn-aprove os-12 v-align justify-content-center py-1' id="btn-request"  style="display:none" name="request-to-approve"   onclick="changeStatus('request')" >
+          <div class='col px-0 '>
+            <div class=" py-1 border-bottom statusbar"  >
+              <h3 class='fw-bold os-14 w-40 my-auto'>Status:</h3>
+              <span class="status os-12 w-60 my-auto" id="statusNS"></span>
+            </div>
+
+            <div class=" py-1 border-bottom statusbar">
+              <h3 class='fw-bold os-14 w-40 my-auto'>Link:</h3>
+              <a class="link os-12 w-60 my-auto" id="linkCR" target="_blank">Go to Record</a>
+            </div>
+
+            <div class=" my-0 w-100 btn-statuses">
+              <button class='btn-aprove os-12 v-align justify-content-center mx-auto py-1 my-3' id="btn-request"  style="display:none" name="request-to-approve"   onclick="changeStatus('request')" >
                 <img src="./img/check.svg" alt="">
                 <p class='mb-0 mx-2 w-75'>
                   Request to approve
-                </p>                  
+                </p>
               </button>
-              <button class='btn-aprove os-12 v-align justify-content-center py-1' id="btn-approved" style="display:none" name="approved" onclick="changeStatus('approved')">
+              <button class='btn-aprove os-12 v-align justify-content-center py-1 my-3' id="btn-approved" style="display:none" name="approved" onclick="changeStatus('approved')">
                 <img src="./img/check.svg" alt="">
                 <p class='mb-0 mx-2 w-75'>
                   Approved
-                </p>                  
+                </p>
               </button>
-              <button class='btn-remove os-12 v-align justify-content-center py-1' id="btn-reject" style="display:none" name="reject" onclick="changeStatus('reject')" >
+              <button class='btn-remove os-12 v-align justify-content-center py-1 my-3' id="btn-reject" style="display:none" name="reject" onclick="changeStatus('reject')" >
                 <img src="./img/remove.svg" alt="">
                 <p class='mb-0 mx-2 w-50'>
                   Reject
-                </p>                  
+                </p>
               </button>
-              <button class='btn-close-status os-12 v-align justify-content-center mx-auto py-1' id="btn-close-status"   style="display:none" name="request-to-approve"   onclick="changeStatus('close')" >
+              <button class='btn-close-status os-12 v-align justify-content-center mx-auto py-1 my-3' id="btn-close-status"   style="display:none" name="request-to-approve"   onclick="changeStatus('close')" >
                 <span></span>
                 <p class='mb-0 mx-2 w-75'>
                   Close
-                </p>                  
+                </p>
               </button>
             </div>
-          </div>          
+          </div>
         </div>
       </div>
-      <div id="infoNs" class='info container py-3 px-0'>
+      <div id="infoNs" class='info container px-0'>
         <div class='row'>
           <div  class='col'>
-            <h3 class='os-12 w-100'>
-              <span class='fw-bold os-16'>
-                Synchronized with:
-              </span> Strongpoint CS Testing
-            </h3>
-            <h3 class='os-12 w-100'>
-              <span class='fw-bold os-16'>
-                Policy:
-              </span> Default
-            </h3>
-            <h3 class="os-12 w-100">
-              <span class='fw-bold os-16'>
-                Change Level Required:
-              </span> Log Changes Only
-            </h3>
+            <div class="d-flex py-1 border-bottom">
+              <h3 class='fw-bold os-14 w-40 my-auto'>Synchronized <br> with:</h3>
+              <span class='os-12 w-60 my-auto'  id = "synchronized"></span>
+            </div>
+
+            <div class="d-flex py-3 border-bottom">
+              <h3 class='fw-bold os-14 w-40 my-auto'>Policy:</h3>
+              <span class=' os-12 w-60 my-auto' id="policy"></span>
+             </div>
+
+            <div class="d-flex py-1 border-bottom">
+             <h3 class="fw-bold os-14 w-40 my-auto">Change Level <br> Required: </h3>
+             <span class=' os-12 w-60 my-auto'id="level"></span>
+            </div>
           </div>
-          
         </div>
       </div>
     </script>
@@ -123,39 +124,53 @@
   <script id="home-template" type="text/x-handlebars-template">
       <div class='body'>
         <div class='accordion' id='accordionExample'>
-          <div class="accordion-item">
-            <h2 class="accordion-header p-0 pt-2" id="headingOne">
-              <button class="accordion-button collapsed os-12 fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-controls="collapseOne">
+          <div class='accordion-item'>
+            <h2 class='accordion-header p-0 pt-2' id='headingOne'>
+              <button
+                class='accordion-button collapsed os-12 fw-bold'
+                type='button'
+                data-bs-toggle='collapse'
+                data-bs-target='#collapseOne'
+                aria-controls='collapseOne'
+              >
                 Bundle ID
               </button>
             </h2>
-            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" >
-              <div class="accordion-body p-0 pt-2">
+            <div
+              id='collapseOne'
+              class='accordion-collapse collapse'
+              aria-labelledby='headingOne'
+            >
+              <div class='accordion-body p-0 pt-2'>
                 <div class='container'>
                   <div class='row mb-2'>
-                    <div class='col px-0'>                      
-                      <div class="v-align">
+                    <div class='col px-0'>
+                      <div class='v-align'>
                         <input
                           class='os-10 me-1'
-                          type="text"
+                          type='text'
                           name='addbundle'
                           placeholder=''
                           id='inp-bundle'
                           required
                         />
-                        <button type="button"  class="btn-plus" onclick="addBundle()" >+</button>
-                      </div> 
-                      <span id="errorBundle" class="help-block error"></span>     
-                      <div id="bundle-id" class='bundle-id-lista '>
-                        <div id="loader-pane" class="">
-                          <div id="loader" class="mx-auto my-2"></div>
+                        <button
+                          type='button'
+                          class='btn-plus'
+                          onclick='addBundle()'
+                        >+</button>
+                      </div>
+                      <span id='errorBundle' class='help-block error'></span>
+                      <div id='bundle-id' class='bundle-id-lista'>
+                        <div id='loader-pane' class=''>
+                          <div id='loader' class='mx-auto my-2'></div>
                         </div>
-                        
-                        <ul class='bundle-list listas my-0 py-2'>                          
+
+                        <ul class='bundle-list listas my-0 py-2'>
                         </ul>
                       </div>
                     </div>
-                  </div>                  
+                  </div>
                 </div>
               </div>
             </div>
@@ -171,7 +186,7 @@
                 aria-controls='collapseThree'
               >
                 Existing Customization
-              </button>              
+              </button>
             </h2>
             <div
               id='collapseThree'
@@ -179,22 +194,25 @@
               aria-labelledby='headingThree'
             >
               <div class='accordion-body p-0 pt-2'>
-                <button class='btn-search os-12 v-align justify-content-center' id="proposed">
-                  <img class="icon-load" src="./img/loupe.svg" alt="">
+                <button
+                  class='btn-search os-12 v-align justify-content-center'
+                  id='proposed'
+                >
+                  <img class='icon-load' src='./img/loupe.svg' alt='' />
                   <p class='mb-0 mx-2 w-75'>
                     Look up Customization
-                  </p>                  
+                  </p>
                 </button>
                 <h3 class='os-16 fw-bold'>
                   Existing Customizations
                 </h3>
-                <div id="existing-customizations" class='bundle-id-lista'>
-                  <div id="loader-pane" class="">
-                    <div id="loader" class="mx-auto my-2"></div>
+                <div id='existing-customizations' class='bundle-id-lista'>
+                  <div id='loader-pane' class=''>
+                    <div id='loader' class='mx-auto my-2'></div>
                   </div>
                   <ul class='lookup-list listas my-0 py-2'>
                   </ul>
-                </div>                
+                </div>
               </div>
             </div>
           </div>
@@ -217,36 +235,39 @@
               aria-labelledby='headingTwo'
             >
               <div class='accordion-body p-0 pt-2'>
-                <button class='btn-search os-12 v-align justify-content-center' id="lookup">
+                <button
+                  class='btn-search os-12 v-align justify-content-center'
+                  id='lookup'
+                >
                   <p class='mb-0 ms-2 mb-1 w-75'>
                     Add Proposed Customization
                   </p>
-                  
+
                 </button>
                 <h3 class='os-16 fw-bold'>
                   Proposed Customizations
                 </h3>
-                <div id="proposed-customizations" class='bundle-id-lista'>
-                  <div id="loader-pane" class="">
-                    <div id="loader" class="mx-auto my-2"></div>
+                <div id='proposed-customizations' class='bundle-id-lista'>
+                  <div id='loader-pane' class=''>
+                    <div id='loader' class='mx-auto my-2'></div>
                   </div>
                   <ul class='proposed-lista listas my-0 py-2'>
                   </ul>
-                </div>   
+                </div>
               </div>
             </div>
-          </div>          
+          </div>
         </div>
         <div class='container'>
           <div class='row'>
             <div class='col-4 p-0'>
-              <button id="btn-impact" class='btn-impact os-10' >
+              <button id='btn-impact' class='btn-impact os-10'>
                 Impact Analisis
               </button>
             </div>
-            <div class='col-4 p-0'>              
+            <div class='col-4 p-0'>
             </div>
-            <div class='col-4 p-0'>              
+            <div class='col-4 p-0'>
             </div>
           </div>
         </div>
@@ -297,9 +318,10 @@
   <!--ERRORES-->
   <script id="error-template" type="text/x-handlebars-template">
       <p>
-        {{status}} - {{
-          statusText
-        }} error. Please report a bug at the link below.
+        {{status}}
+        -
+        {{statusText}}
+        error. Please report a bug at the link below.
       </p>
     </script>
 
@@ -317,12 +339,9 @@
   <script type="text/javascript"
     src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
 
-
   <script src="js/oauth-1.0a.js"></script>
   <script src="js/crypto-js.js"></script>
   <script src="js/index.js"></script>
-
-
 </body>
 
 </html>

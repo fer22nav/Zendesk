@@ -24,57 +24,20 @@
         <ul class="nav nav-pills flex-column px-4" id="pills-tab" role="tablist">
           <h2 class="title os-16 px-3">Strongpoint Netsuite Integration <br> admin page</h2>
           <li class="nav-item" role="presentation">
-            <a class=" nav-link  text-start os-12" id="pills-credentials" data-bs-toggle="pill" href="#pills-home"
-              role="tab" aria-controls="pills-home" aria-selected="true">Net Suite Credentials</a>
+            <a class=" nav-link text-start active os-12" id="pills-accounts" data-bs-toggle="pill"
+              href="#pills-accounts-select" role="tab" aria-controls="pills-profile" aria-selected="false">
+              Net Suite Credentials</a>
           </li>
           <li class="nav-item" role="presentation">
             <a class=" nav-link text-start os-12" id="pills-group" data-bs-toggle="pill"
               href="#pills-group-configuration" role="tab" aria-controls="pills-group" aria-selected="false">
               Group configurations</a>
           </li>
-
-          <!--
-          <li class="nav-item" role="presentation">
-            <a class=" nav-link text-start os-12" id="pills-accounts" data-bs-toggle="pill"
-              href="#pills-accounts-select" role="tab" aria-controls="pills-profile" aria-selected="false">
-              Select accounts</a>
-          </li>-->
-
         </ul>
       </div>
       <div class="content col-sm-9 mx-0 px-0">
         <div class="tab-content pb-4" id="pills-tabContent">
-          <div class="tab-pane fade  text-center" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-            <h3 class="py-2  os-16 title w-50 mx-auto">Add new Account</h3>
-            <form class="form" id="form-user">
-              <div class="form-group has-success mb-2 flex-column d-flex text-start">
-                <label class="os-14 pb-2 fw-bold" for="">Account Id</label>
-                <input class="m-16" type="text" name="accountId" placeholder="" id="accountId" />
-                <span id="error" class="help-block"></span>
-              </div>
-              <div class="form-group has-success mb-2  flex-column d-flex text-start">
-                <label class="os-14 pb-2 fw-bold" for="">Consumer Key</label>
-                <input class="m-16" type="text" name="consumerKey" placeholder="" id="consumerKey" />
-                <span id="error" class="help-block"></span>
-              </div>
-              <div class="form-group has-success mb-2  flex-column d-flex text-start">
-                <label class="os-14 pb-2 fw-bold" for="">Consumer Secret</label>
-                <input class="m-16" type="text" name="consumerSecret" placeholder="" id="consumerSecret" />
-                <span id="error" class="help-block"></span>
-              </div>
-              <div class="form-group has-success mb-2  flex-column d-flex text-start">
-                <label class="os-14 pb-2 fw-bold" for="">Token Id</label>
-                <input class="m-16" type="text" name="tokenId" placeholder="" id="tokenId" />
-                <span id="error" class="help-block"></span>
-              </div>
-              <div class="form-group has-success mb-2  flex-column d-flex text-start">
-                <label class="os-14 pb-2 fw-bold" for="">Token Secret</label>
-                <input class="m-16" type="text" name="tokenSecret" placeholder="" id="tokenSecret" />
-                <span id="error" class="help-block"></span>
-              </div>
-              <button class="btn-acount" type="submit">Change Account</button>
-            </form>
-          </div>
+
           <div class="tab-pane fade text-center" id="pills-group-configuration" role="tabpanel"
             aria-labelledby="pills-group-configuration">
             <div class="container">
@@ -87,9 +50,6 @@
                   </div>
                   <span id="errorBundle" class="help-block error"></span>
                   <div id="groups-request" class='groups-request'>
-                    <div id="loader-pane" class="">
-                      <div id="loader" class="mx-auto my-2"></div>
-                    </div>
                     <ul class='groups-request-list my-0 py-2'>
                     </ul>
                   </div>
@@ -102,17 +62,13 @@
                   </div>
                   <span id="errorBundle" class="help-block error"></span>
                   <div id="groups-approval" class='groups-approval'>
-                    <div id="loader-pane" class="">
-                      <div id="loader" class="mx-auto my-2"></div>
-                    </div>
-
                     <ul class='groups-approval-list my-0 py-2'>
                     </ul>
                   </div>
                 </div>
               </div>
               <div class="row my-5  justify-content-evenly">
-                <div class='col-4 mx-5 px-0'>
+                <div class='col-6 mx-5 px-0'>
                   <h3 class="py-2  os-16 title w-100 mx-auto">Approval process</h3>
                   <div class="d-flex">
                     <div class="custom-select-wrapper">
@@ -127,25 +83,93 @@
                         </div>
                       </div>
                     </div>
+                    <div id="loader" class="loader mx-3 my-auto">
+                    </div>
+
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <!--
-          <div class="tab-pane fade text-center" id="pills-accounts-select" role="tabpanel"
+
+          <div class="tab-pane fade text-center show active " id="pills-accounts-select" role="tabpanel"
             aria-labelledby="pills-accounts-select">
-            <h3 class="py-2  os-16 title w-50 mx-auto">Select Account</h3>
 
-
-
-
-
-
-
-
+            <div class="container p-0">
+              <div class="row header-acc mx-auto mt-4">
+                <div class="col-7 d-flex justify-content-end">
+                  <h3 class="py-2  os-16 header-acc-title  text-start ">Manage Accounts</h3>
+                </div>
+                <div class="col-5 d-flex justify-content-end">
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn-add-account my-auto os-12" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">
+                    Add Account
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3 class="py-2  os-16 header-acc-title w-50 mx-auto">Add new Account</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form class="form" id="form-user">
+                      <div class="form-group has-success mb-2 flex-column d-flex text-start">
+                        <select class="os-14" name="select-acc" id="select-acc">
+                          <option value="1" class="option-acc">Account 1</option>
+                          <option value="2" class="option-acc">Account 2</option>
+                          <option value="3" class="option-acc">Account 3</option>
+                          <option value="4" class="option-acc">Account 4</option>
+                          <option value="5" class="option-acc">Account 5</option>
+                        </select>
+                        <span id="error" class="help-block"></span>
+                      </div>
+                      <div class="form-group has-success mb-2 flex-column d-flex text-start">
+                        <label class="os-14 pb-2 fw-bold" for="">Account Id</label>
+                        <input class="m-16" type="text" name="accountId" placeholder="" required id="accountId" />
+                        <span id="error" class="help-block"></span>
+                      </div>
+                      <div class="form-group has-success mb-2  flex-column d-flex text-start">
+                        <label class="os-14 pb-2 fw-bold" for="">Consumer Key</label>
+                        <input class="m-16" type="text" name="consumerKey" placeholder="" required id="consumerKey" />
+                        <span id="error" class="help-block"></span>
+                      </div>
+                      <div class="form-group has-success mb-2  flex-column d-flex text-start">
+                        <label class="os-14 pb-2 fw-bold" for="">Consumer Secret</label>
+                        <input class="m-16" type="text" name="consumerSecret" placeholder="" required
+                          id="consumerSecret" />
+                        <span id="error" class="help-block"></span>
+                      </div>
+                      <div class="form-group has-success mb-2  flex-column d-flex text-start">
+                        <label class="os-14 pb-2 fw-bold" for="">Token Id</label>
+                        <input class="m-16" type="text" name="tokenId" placeholder="" required id="tokenId" />
+                        <span id="error" class="help-block"></span>
+                      </div>
+                      <div class="form-group has-success mb-2  flex-column d-flex text-start">
+                        <label class="os-14 pb-2 fw-bold" for="">Token Secret</label>
+                        <input class="m-16" type="text" name="tokenSecret" placeholder="" required id="tokenSecret" />
+                        <span id="error" class="help-block"></span>
+                      </div>
+                      <button class="btn-change-account my-3" data-bs-dismiss="modal">Save Account</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container">
+              <div id="loader-pane" class="">
+                <div id="loader" class="mx-auto my-2"></div>
+              </div>
+              <div class="row" id="acc-container"></div>
+            </div>
           </div>
-          -->
+
         </div>
       </div>
     </div>
